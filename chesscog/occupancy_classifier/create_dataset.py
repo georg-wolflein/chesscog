@@ -6,6 +6,7 @@ import json
 import numpy as np
 import chess
 import os
+import shutil
 
 from chesscog import DATA_DIR
 from chesscog.util import sort_corner_points
@@ -16,8 +17,10 @@ SQUARE_SIZE = 50
 BOARD_SIZE = 8 * SQUARE_SIZE
 IMG_SIZE = BOARD_SIZE + 2 * SQUARE_SIZE
 
-os.makedirs(OUT_DIR / "empty", exist_ok=True)
-os.makedirs(OUT_DIR / "occupied", exist_ok=True)
+for c in ("empty", "occupied"):
+    folder = OUT_DIR / c
+    shutil.rmtree(folder, ignore_errors=True)
+    os.makedirs(folder, exist_ok=True)
 
 
 def crop_square(img, square: chess.Square, turn: chess.Color) -> np.ndarray:
@@ -54,9 +57,10 @@ def extract_squares_from_sample(id: str):
         target_class = "empty" if board.piece_at(
             square) is None else "occupied"
         piece_img = crop_square(unwarped, square, label["white_turn"])
-        piece_img = Image.fromarray(piece_img, "RGB")
-        piece_img.save(OUT_DIR / target_class /
-                       f"{id}_{chess.square_name(square)}.png")
+        with Image.fromarray(piece_img, "RGB") as piece_img:
+            # piece_img = piece_img.convert("L")
+            piece_img.save(OUT_DIR / target_class /
+                           f"{id}_{chess.square_name(square)}.png")
 
 
 if __name__ == "__main__":

@@ -12,7 +12,7 @@ zip_file = DATA_DIR / "render.zip"
 print("Downloading dataset...")
 gdd.download_file_from_google_drive(file_id="1fTX22T5nMjwzJBy228yEESapAY5TEVII",
                                     dest_path=zip_file,
-                                    overwrite=True,
+                                    overwrite=False,
                                     showsize=True)
 
 print("Unzipping dataset...")

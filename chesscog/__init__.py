@@ -1,7 +1,4 @@
 from pathlib import Path
 import os
 
-if "DATA_DIR" in os.environ:
-    DATA_DIR = Path(os.environ["DATA_DIR"])
-else:
-    DATA_DIR = Path(__file__).parent.parent / "data"
+DATA_DIR = Path(os.getenv("DATA_DIR", Path.home() / "chess_data"))
