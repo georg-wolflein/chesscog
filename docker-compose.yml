@@ -1,0 +1,7 @@
+version: "3.8"
+services:
+  main:
+    build:
+      context: .
+    volumes:
+      - "~/chess_data:/data"

@@ -5,8 +5,10 @@ import zipfile
 import shutil
 from pathlib import Path
 
-render_dir = Path(__file__) / "render"
-zip_file = render_dir.parent / "render.zip"
+from chesscog import DATA_DIR
+
+render_dir = DATA_DIR / "render"
+zip_file = DATA_DIR / "render.zip"
 print("Downloading dataset...")
 gdd.download_file_from_google_drive(file_id="1fTX22T5nMjwzJBy228yEESapAY5TEVII",
                                     dest_path=zip_file,
