@@ -10,7 +10,7 @@ import os
 from chesscog import DATA_DIR
 from chesscog.util import sort_corner_points
 
-RENDERS_DIR = DATA_DIR / "synthesised" / "render"
+RENDERS_DIR = DATA_DIR / "render"
 OUT_DIR = DATA_DIR / "occupancy"
 SQUARE_SIZE = 50
 BOARD_SIZE = 8 * SQUARE_SIZE
