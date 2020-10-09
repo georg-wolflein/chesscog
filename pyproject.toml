@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "chess-recognition"
+version = "0.1.0"
+description = ""
+authors = ["Georg Wölflein <georgw7777@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+googledrivedownloader = "^0.4"
+opencv-python = "^4.4.0"
+numpy = "^1.19.2"
+pillow = "^7.2.0"
+matplotlib = "^3.3.2"
+python-chess = "^1.1.0"
+
+[tool.poetry.dev-dependencies]
+jupyterlab = "^2.2.8"
+autopep8 = "^1.5.4"
+pylint = "^2.6.0"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
