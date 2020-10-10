@@ -3,5 +3,10 @@ services:
   main:
     build:
       context: .
+    runtime: nvidia
+    shm_size: "1g"
+    ulimits:
+      memlock: -1
+      stack: 67108864
     volumes:
       - "~/chess_data:/data"
