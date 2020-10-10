@@ -1,4 +1,4 @@
-FROM python:3
+FROM pytorch/pytorch
 
 RUN mkdir -p /chess /data
 WORKDIR /chess
@@ -11,4 +11,4 @@ RUN poetry install
 
 VOLUME /data
 
-CMD python -m chesscog.synthesized_data.download_dataset
+CMD python -m chesscog.occupancy_classifier.train
