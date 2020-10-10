@@ -12,6 +12,8 @@ numpy = "^1.19.2"
 pillow = "^7.2.0"
 matplotlib = "^3.3.2"
 python-chess = "^1.1.0"
+torch = "^1.6.0"
+torchvision = "^0.7.0"
 
 [tool.poetry.dev-dependencies]
 jupyterlab = "^2.2.8"

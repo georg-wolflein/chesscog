@@ -10,9 +10,9 @@ from chesscog import DATA_DIR
 render_dir = DATA_DIR / "render"
 zip_file = DATA_DIR / "render.zip"
 print("Downloading dataset...")
-gdd.download_file_from_google_drive(file_id="1fTX22T5nMjwzJBy228yEESapAY5TEVII",
+gdd.download_file_from_google_drive(file_id="1XClmGJwEWNcIkwaH0VLuvvAY3qk_CRJh",
                                     dest_path=zip_file,
-                                    overwrite=False,
+                                    overwrite=True,
                                     showsize=True)
 
 print("Unzipping dataset...")
