@@ -3,7 +3,8 @@ services:
   main:
     build:
       context: .
-    runtime: nvidia
+      dockerfile: "docker/main.Dockerfile"
+    runtime: "nvidia"
     shm_size: "1g"
     ulimits:
       memlock: -1
