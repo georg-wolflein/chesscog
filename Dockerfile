@@ -30,4 +30,4 @@ RUN poetry install
 COPY chesscog ./chesscog
 
 
-CMD python -m chesscog.occupancy_classifier.train
+CMD poetry run jupyter lab --no-browser --allow-root --ip 0.0.0.0 --port 8888 --NotebookApp.password "sha1:ee6cc5205a00:1c3b701b60c0abba31f350d40912b3769acccc85"

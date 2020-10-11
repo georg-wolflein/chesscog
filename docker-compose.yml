@@ -3,8 +3,10 @@ services:
   main:
     build:
       context: .
-      dockerfile: "docker/main.Dockerfile"
+      dockerfile: "Dockerfile"
     runtime: "nvidia"
+    ports:
+      - "8888:8888"
     shm_size: "1g"
     ulimits:
       memlock: -1
