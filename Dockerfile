@@ -12,7 +12,7 @@ RUN apt update && \
 
 # Install poetry
 RUN pip install --upgrade pip && \
-    pip install poetry wheel
+    pip install poetry
 
 
 # Setup data mount
@@ -26,6 +26,9 @@ WORKDIR /chess
 COPY poetry.lock pyproject.toml ./
 RUN poetry install
 ENV PYTHONPATH "/chess:${PYTHONPATH}"
+
+# Fix for tensorboard
+RUN poetry run pip install wheel
 
 # Copy files
 COPY chesscog ./chesscog
