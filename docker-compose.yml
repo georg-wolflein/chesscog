@@ -7,9 +7,11 @@ services:
     runtime: "nvidia"
     ports:
       - "8888:8888"
+      - "9999:9999"
     shm_size: "1g"
     ulimits:
       memlock: -1
       stack: 67108864
     volumes:
       - "~/chess_data:/data"
+      - "~/scratch:/chess/scratch"
