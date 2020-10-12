@@ -12,7 +12,7 @@ RUN apt update && \
 
 # Install poetry
 RUN pip install --upgrade pip && \
-    pip install poetry
+    pip install poetry wheel
 
 
 # Setup data mount
