@@ -15,6 +15,7 @@ python-chess = "^1.1.0"
 torch = "^1.6.0"
 torchvision = "^0.7.0"
 tensorboard = "^2.3.0"
+wheel = "^0.35.1"
 
 [tool.poetry.dev-dependencies]
 jupyterlab = "^2.2.8"
