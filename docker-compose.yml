@@ -14,4 +14,5 @@ services:
       stack: 67108864
     volumes:
       - "~/chess_data:/data"
+      - "~/chess/config:/config"
       - "~/scratch:/chess/scratch"

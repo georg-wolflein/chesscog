@@ -1,0 +1,16 @@
+DATASET:
+  SPLIT:
+    VAL: .03
+    TEST: .1
+  PATH: data://occupancy
+  WORKERS: 2
+  BATCH_SIZE: 128
+  TRANSFORMS:
+    CENTER_CROP: [100, 100]
+    RESIZE: [100, 100]
+
+TRAINING:
+  OPTIMIZER:
+    NAME: Adam
+    LEARNING_RATE: 0.001
+  EPOCHS: 2
