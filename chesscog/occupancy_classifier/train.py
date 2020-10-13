@@ -9,7 +9,9 @@ import numpy as np
 from pathlib import Path
 from datetime import datetime
 import logging
+import argparse
 
+from chesscog import RUNS_DIR, CONFIG_DIR
 from chesscog.config import CfgNode as CN
 from chesscog.util.training import build_optimizer_from_config, AccuracyAggregator
 from .dataset import build_dataset
@@ -17,7 +19,7 @@ from .dataset import build_dataset
 logger = logging.getLogger(__name__)
 
 
-class Net100(nn.Module):
+class CNN100(nn.Module):
     def __init__(self):
         super().__init__()
         # Input size: 100x100
@@ -42,19 +44,47 @@ class Net100(nn.Module):
         return x
 
 
-def train(cfg: CN):
+class CNN50(nn.Module):
+    def __init__(self):
+        super().__init__()
+        # Input size: 50x50
+        self.conv1 = nn.Conv2d(3, 16, 3)  # 48
+        self.pool1 = nn.MaxPool2d(2, 2)  # 24
+        self.conv2 = nn.Conv2d(16, 32, 3)  # 22
+        self.pool2 = nn.MaxPool2d(2, 2)  # 11
+        self.fc1 = nn.Linear(64 * 11 * 11, 1000)
+        self.fc2 = nn.Linear(1000, 2)
+
+    def forward(self, x):
+        x = self.pool1(F.relu(self.conv1(x)))
+        x = self.pool2(F.relu(self.conv2(x)))
+        x = x.view(-1, 64 * 10 * 10)
+        x = F.relu(self.fc1(x))
+        x = self.fc2(x)
+        return x
+
+
+NETWORKS = {
+    "CNN50": CNN50,
+    "CNN100": CNN100
+}
+
+
+def train(cfg: CN, run_dir: Path) -> nn.Module:
+    logger.info(f"Starting training in {run_dir}")
     dataset, train_loader, val_loader, test_loader = build_dataset(cfg)
 
-    net = Net100()
+    model = NETWORKS[cfg.TRAINING.NETWORK]()
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-    net.to(device)
+    model.to(device)
 
     criterion = nn.CrossEntropyLoss()
     optimizer = build_optimizer_from_config(cfg.TRAINING.OPTIMIZER,
-                                            net.parameters())
+                                            model.parameters())
 
     step = 0
-    run_id = Path("runs") / datetime.now().strftime('%b%d_%H-%M-%S')
+    run_id = run_dir \
+        datetime.now().strftime("_%Y-%m-%d_%H-%M-%S")
     train_writer = SummaryWriter(run_id / "train")
     val_writer = SummaryWriter(run_id / "val")
     accuracies = AccuracyAggregator(len(dataset.classes))
@@ -73,7 +103,7 @@ def train(cfg: CN):
             optimizer.zero_grad()
 
             # Forward pass
-            outputs = net(inputs)
+            outputs = model(inputs)
 
             # Backward pass
             loss = criterion(outputs, labels)
@@ -116,11 +146,32 @@ def train(cfg: CN):
         writer.close()
 
     logger.info("Finished training")
+    return model
 
 
 if __name__ == "__main__":
-    from chesscog import CONFIG_DIR
+    def _train(config: str):
+        run_dir = RUNS_DIR / "occupancy_classifier" / config
+        cfg = CN.load_yaml_with_base(
+            str(CONFIG_DIR / "occupancy_classifier" / f"{config}.yaml"))
+        model = train(cfg)
+        torch.save(model, run_dir / "model.pt")
 
-    cfg = CN.load_yaml_with_base(
-        str(CONFIG_DIR / "occupancy_classifier" / "base.yaml"))
-    train(cfg)
+    # Read available configs
+    configs = [x.stem for x in (CONFIG_DIR / "occupancy_classifier").glob("*.yaml")
+               if not x.stem.startswith("_")]
+
+    # Set up argument parser
+    parser = argparse.ArgumentParser(description="Train the network.")
+    parser.add_argument("--config", help="the configuration to train (default: all)",
+                        type=str, choices=config, default=None)
+    args = parser.parse_args()
+
+    # Train
+    if args.config is None:
+        logger.info("Training all configurations one by one")
+        for config in configs:
+            _train(config)
+    else:
+        logger.info(f"Training the {args.config} configuration")
+        _train(args.config)

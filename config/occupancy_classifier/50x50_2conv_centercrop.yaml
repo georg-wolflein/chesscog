@@ -1,0 +1,12 @@
+_BASE_: config://occupancy_classifier/_base.yaml
+
+RUN:
+  DESCRIPTION: 50x50 input size (obtained by cropping only the center 50x50 pixels that contain the square), 2 convolutional layers
+
+DATASET:
+  TRANSFORMS:
+    CENTER_CROP: [50, 50]
+    RESIZE: [50, 50]
+
+TRAINING:
+  NETWORK: CNN50
