@@ -11,7 +11,8 @@ BASE_KEY = "_BASE_"
 class CfgNode(_CfgNode):
 
     @classmethod
-    def load_yaml_with_base(cls, filename: str) -> _CfgNode:
+    def load_yaml_with_base(cls, filename: typing.Union[str, Path]) -> _CfgNode:
+        filename = str(filename)
         with PathManager.open(filename, "r") as f:
             cfg = cls.load_cfg(f)
         if BASE_KEY in cfg:

@@ -3,6 +3,7 @@ import torchvision
 from torchvision import transforms as T
 import typing
 import logging
+from fvcore.common.config import PathManager
 
 from chesscog.config import CfgNode as CN
 
@@ -13,13 +14,14 @@ def build_transforms(cfg: CN) -> typing.Callable:
     transforms = cfg.DATASET.TRANSFORMS
     return T.Compose([
         T.CenterCrop(transforms.CENTER_CROP),
-        T.Resize(transforms.RESIZE)
+        T.Resize(transforms.RESIZE),
+        T.ToTensor()
     ])
 
 
 def build_dataset(cfg: CN):
     transform = build_transforms(cfg)
-    dataset = torchvision.datasets.ImageFolder(root=cfg.DATASET.PATH,
+    dataset = torchvision.datasets.ImageFolder(root=PathManager.get_local_path(cfg.DATASET.PATH),
                                                transform=transform)
     n_total = len(dataset)
     n_val = int(cfg.DATASET.SPLIT.VAL * n_total)
@@ -33,10 +35,10 @@ def build_dataset(cfg: CN):
                                                                   n_val, n_test),
                                                                  generator=torch.Generator().manual_seed(42))
     train_loader = torch.utils.data.DataLoader(train_set, batch_size=cfg.DATASET.BATCH_SIZE,
-                                               shuffle=True, num_workers=cfg.DATASET.NUM_WORKERS)
+                                               shuffle=True, num_workers=cfg.DATASET.WORKERS)
     val_loader = torch.utils.data.DataLoader(val_set, batch_size=cfg.DATASET.BATCH_SIZE,
-                                             shuffle=True, num_workers=cfg.DATASET.NUM_WORKERS)
+                                             shuffle=True, num_workers=cfg.DATASET.WORKERS)
     test_loader = torch.utils.data.DataLoader(test_set, batch_size=cfg.DATASET.BATCH_SIZE,
-                                              shuffle=False, num_workers=cfg.DATASET.NUM_WORKERS)
+                                              shuffle=False, num_workers=cfg.DATASET.WORKERS)
 
     return dataset, train_loader, val_loader, test_loader
