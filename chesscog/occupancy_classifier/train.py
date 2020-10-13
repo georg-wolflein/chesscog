@@ -52,13 +52,13 @@ class CNN50(nn.Module):
         self.pool1 = nn.MaxPool2d(2, 2)  # 24
         self.conv2 = nn.Conv2d(16, 32, 3)  # 22
         self.pool2 = nn.MaxPool2d(2, 2)  # 11
-        self.fc1 = nn.Linear(64 * 11 * 11, 1000)
+        self.fc1 = nn.Linear(32 * 11 * 11, 1000)
         self.fc2 = nn.Linear(1000, 2)
 
     def forward(self, x):
         x = self.pool1(F.relu(self.conv1(x)))
         x = self.pool2(F.relu(self.conv2(x)))
-        x = x.view(-1, 64 * 11 * 11)
+        x = x.view(-1, 32 * 11 * 11)
         x = F.relu(self.fc1(x))
         x = self.fc2(x)
         return x
