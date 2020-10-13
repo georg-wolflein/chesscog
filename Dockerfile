@@ -36,5 +36,5 @@ COPY chesscog ./chesscog
 VOLUME [ "/chess/scratch" ]
 
 
-CMD poetry run tensorboard --logdir . & \
+CMD poetry run tensorboard --logdir . --host 0.0.0.0 --port 9999  & \
     poetry run jupyter lab --no-browser --allow-root --ip 0.0.0.0 --port 8888 --NotebookApp.password "sha1:ee6cc5205a00:1c3b701b60c0abba31f350d40912b3769acccc85"
