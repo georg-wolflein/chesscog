@@ -83,10 +83,9 @@ def train(cfg: CN, run_dir: Path) -> nn.Module:
                                             model.parameters())
 
     step = 0
-    run_id = run_dir \
-        datetime.now().strftime("_%Y-%m-%d_%H-%M-%S")
-    train_writer = SummaryWriter(run_id / "train")
-    val_writer = SummaryWriter(run_id / "val")
+
+    train_writer = SummaryWriter(run_dir / "train")
+    val_writer = SummaryWriter(run_dir / "val")
     accuracies = AccuracyAggregator(len(dataset.classes))
     val_accuracies = AccuracyAggregator(len(dataset.classes))
     log_every_n = 100
@@ -127,7 +126,7 @@ def train(cfg: CN, run_dir: Path) -> nn.Module:
                     val_losses = list()
                     for val_i, data in enumerate(val_loader, 1):
                         inputs, labels = (x.to(device) for x in data)
-                        outputs = net(inputs)
+                        outputs = model(inputs)
                         loss = criterion(outputs, labels)
                         val_losses.append(loss.item())
                         val_accuracies.add_batch(outputs, labels)
@@ -151,10 +150,11 @@ def train(cfg: CN, run_dir: Path) -> nn.Module:
 
 if __name__ == "__main__":
     def _train(config: str):
-        run_dir = RUNS_DIR / "occupancy_classifier" / config
+        run_dir = RUNS_DIR / "occupancy_classifier" / config / \
+            datetime.now().strftime("_%Y-%m-%d_%H-%M-%S")
         cfg = CN.load_yaml_with_base(
             str(CONFIG_DIR / "occupancy_classifier" / f"{config}.yaml"))
-        model = train(cfg)
+        model = train(cfg, run_dir)
         torch.save(model, run_dir / "model.pt")
 
     # Read available configs
@@ -164,7 +164,7 @@ if __name__ == "__main__":
     # Set up argument parser
     parser = argparse.ArgumentParser(description="Train the network.")
     parser.add_argument("--config", help="the configuration to train (default: all)",
-                        type=str, choices=config, default=None)
+                        type=str, choices=configs, default=None)
     args = parser.parse_args()
 
     # Train
