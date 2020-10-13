@@ -58,7 +58,7 @@ class CNN50(nn.Module):
     def forward(self, x):
         x = self.pool1(F.relu(self.conv1(x)))
         x = self.pool2(F.relu(self.conv2(x)))
-        x = x.view(-1, 64 * 10 * 10)
+        x = x.view(-1, 64 * 11 * 11)
         x = F.relu(self.fc1(x))
         x = self.fc2(x)
         return x
