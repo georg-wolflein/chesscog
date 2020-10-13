@@ -25,6 +25,11 @@ RUN mkdir -p /config
 ENV CONFIG_DIR /config
 VOLUME /config
 
+# Setup run mount
+RUN mkdir -p /chess/runs
+ENV RUN_DIR /chess/runs
+VOLUME /chess/runs
+
 # Install dependencies
 RUN mkdir -p /chess
 WORKDIR /chess

@@ -15,4 +15,5 @@ services:
     volumes:
       - "~/chess_data:/data"
       - "~/chess-recognition/config:/config"
+      - "~/chess-recognition/runs:/chess/runs"
       - "~/scratch:/chess/scratch"
