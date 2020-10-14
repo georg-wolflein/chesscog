@@ -1,9 +1,8 @@
 import torch
-from torch import nn, optim
+from torch import nn
 from torch.utils.tensorboard import SummaryWriter
 import torchvision
 from torchvision import transforms as T
-import torch.nn.functional as F
 import matplotlib.pyplot as plt
 import numpy as np
 from pathlib import Path
@@ -15,53 +14,9 @@ from chesscog import RUNS_DIR, CONFIG_DIR
 from chesscog.config import CfgNode as CN
 from chesscog.util.training import build_optimizer_from_config, AccuracyAggregator
 from .dataset import build_dataset
+from .networks import CNN50, CNN100
 
 logger = logging.getLogger(__name__)
-
-
-class CNN100(nn.Module):
-    def __init__(self):
-        super().__init__()
-        # Input size: 100x100
-        self.conv1 = nn.Conv2d(3, 16, 5)  # 96
-        self.pool1 = nn.MaxPool2d(2, 2)  # 48
-        self.conv2 = nn.Conv2d(16, 32, 5)  # 44
-        self.pool2 = nn.MaxPool2d(2, 2)  # 22
-        self.conv3 = nn.Conv2d(32, 64, 3)  # 20
-        self.pool3 = nn.MaxPool2d(2, 2)  # 10
-        self.fc1 = nn.Linear(64 * 10 * 10, 1000)
-        self.fc2 = nn.Linear(1000, 256)
-        self.fc3 = nn.Linear(256, 2)
-
-    def forward(self, x):
-        x = self.pool1(F.relu(self.conv1(x)))
-        x = self.pool2(F.relu(self.conv2(x)))
-        x = self.pool3(F.relu(self.conv3(x)))
-        x = x.view(-1, 64 * 10 * 10)
-        x = F.relu(self.fc1(x))
-        x = F.relu(self.fc2(x))
-        x = self.fc3(x)
-        return x
-
-
-class CNN50(nn.Module):
-    def __init__(self):
-        super().__init__()
-        # Input size: 50x50
-        self.conv1 = nn.Conv2d(3, 16, 3)  # 48
-        self.pool1 = nn.MaxPool2d(2, 2)  # 24
-        self.conv2 = nn.Conv2d(16, 32, 3)  # 22
-        self.pool2 = nn.MaxPool2d(2, 2)  # 11
-        self.fc1 = nn.Linear(32 * 11 * 11, 1000)
-        self.fc2 = nn.Linear(1000, 2)
-
-    def forward(self, x):
-        x = self.pool1(F.relu(self.conv1(x)))
-        x = self.pool2(F.relu(self.conv2(x)))
-        x = x.view(-1, 32 * 11 * 11)
-        x = F.relu(self.fc1(x))
-        x = self.fc2(x)
-        return x
 
 
 NETWORKS = {
@@ -151,7 +106,7 @@ def train(cfg: CN, run_dir: Path) -> nn.Module:
 if __name__ == "__main__":
     def _train(config: str):
         run_dir = RUNS_DIR / "occupancy_classifier" / config / \
-            datetime.now().strftime("_%Y-%m-%d_%H-%M-%S")
+            datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         cfg = CN.load_yaml_with_base(
             str(CONFIG_DIR / "occupancy_classifier" / f"{config}.yaml"))
         model = train(cfg, run_dir)

@@ -15,7 +15,8 @@ def build_transforms(cfg: CN) -> typing.Callable:
     return T.Compose([
         T.CenterCrop(transforms.CENTER_CROP),
         T.Resize(transforms.RESIZE),
-        T.ToTensor()
+        T.ToTensor(),
+        T.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
     ])
 
 
