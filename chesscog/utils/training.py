@@ -1,7 +1,7 @@
 import torch
 import numpy as np
 
-from chesscog.config import CfgNode as CN
+from chesscog.utils.config import CfgNode as CN
 
 
 class AccuracyAggregator():

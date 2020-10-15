@@ -3,9 +3,9 @@ import torchvision
 from torchvision import transforms as T
 import typing
 import logging
-from fvcore.common.config import PathManager
 
-from chesscog.config import CfgNode as CN
+from chesscog.utils.config import CfgNode as CN
+from chesscog.utils.io import URI
 
 logger = logging.getLogger(__name__)
 
@@ -22,7 +22,7 @@ def build_transforms(cfg: CN) -> typing.Callable:
 
 def build_dataset(cfg: CN):
     transform = build_transforms(cfg)
-    dataset = torchvision.datasets.ImageFolder(root=PathManager.get_local_path(cfg.DATASET.PATH),
+    dataset = torchvision.datasets.ImageFolder(root=URI(cfg.DATASET.PATH),
                                                transform=transform)
     n_total = len(dataset)
     n_val = int(cfg.DATASET.SPLIT.VAL * n_total)

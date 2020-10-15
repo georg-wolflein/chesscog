@@ -10,9 +10,9 @@ from datetime import datetime
 import logging
 import argparse
 
-from chesscog import RUNS_DIR, CONFIG_DIR
-from chesscog.config import CfgNode as CN
-from chesscog.util.training import build_optimizer_from_config, AccuracyAggregator
+from chesscog.utils.config import CfgNode as CN
+from chesscog.utils.training import build_optimizer_from_config, AccuracyAggregator
+from chesscog.utils.io import URI
 from .dataset import build_dataset
 from .networks import CNN50, CNN100
 
@@ -104,16 +104,17 @@ def train(cfg: CN, run_dir: Path) -> nn.Module:
 
 
 if __name__ == "__main__":
+    configs_dir = URI("config://") / "occupancy_classifier"
+
     def _train(config: str):
-        run_dir = RUNS_DIR / "occupancy_classifier" / config / \
+        run_dir = URI("runs://") / "occupancy_classifier" / config / \
             datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        cfg = CN.load_yaml_with_base(
-            str(CONFIG_DIR / "occupancy_classifier" / f"{config}.yaml"))
+        cfg = CN.load_yaml_with_base(configs_dir / f"{config}.yaml")
         model = train(cfg, run_dir)
         torch.save(model, run_dir / "model.pt")
 
     # Read available configs
-    configs = [x.stem for x in (CONFIG_DIR / "occupancy_classifier").glob("*.yaml")
+    configs = [x.stem for x in configs_dir.glob("*.yaml")
                if not x.stem.startswith("_")]
 
     # Set up argument parser
