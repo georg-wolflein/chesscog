@@ -35,7 +35,7 @@ def train(cfg: CN, run_dir: Path) -> nn.Module:
     optimizer = build_optimizer_from_config(cfg.TRAINING.OPTIMIZER,
                                             model.parameters())
 
-    writer = {mode: SummaryWriter(run_dir / str(mode))
+    writer = {mode: SummaryWriter(run_dir / mode.value)
               for mode in {Datasets.TRAIN, Datasets.VAL}}
     aggregator = {mode: AccuracyAggregator(len(classes))
                   for mode in {Datasets.TRAIN, Datasets.VAL}}
