@@ -5,16 +5,15 @@ import functools
 MODELS = {}
 
 
-def _register_model(input_size: int):
-
-    def wrapper(cls):
-        MODELS[cls.__name__] = cls
-        cls.input_size = input_size
-    return wrapper
+def _register_model(cls):
+    MODELS[cls.__name__] = cls
+    return cls
 
 
-@_register_model(100)
+@_register_model
 class CNN100_3Conv_3Pool_3FC(nn.Module):
+    input_size = 100
+
     def __init__(self):
         super().__init__()
         # Input size: 100x100
@@ -39,8 +38,10 @@ class CNN100_3Conv_3Pool_3FC(nn.Module):
         return x
 
 
-@_register_model(100)
+@_register_model
 class CNN100_3Conv_3Pool_2FC(nn.Module):
+    input_size = 100
+
     def __init__(self):
         super().__init__()
         # Input size: 100x100
@@ -63,8 +64,10 @@ class CNN100_3Conv_3Pool_2FC(nn.Module):
         return x
 
 
-@_register_model(50)
+@_register_model
 class CNN50_2Conv_2Pool_3FC(nn.Module):
+    input_size = 50
+
     def __init__(self):
         super().__init__()
         # Input size: 50x50
@@ -86,8 +89,10 @@ class CNN50_2Conv_2Pool_3FC(nn.Module):
         return x
 
 
-@_register_model(50)
+@_register_model
 class CNN50_2Conv_2Pool_2FC(nn.Module):
+    input_size = 50
+
     def __init__(self):
         super().__init__()
         # Input size: 50x50
@@ -107,8 +112,10 @@ class CNN50_2Conv_2Pool_2FC(nn.Module):
         return x
 
 
-@_register_model(50)
+@_register_model
 class CNN50_3Conv_1Pool_2FC(nn.Module):
+    input_size = 50
+
     def __init__(self):
         super().__init__()
         # Input size: 50x50
@@ -130,8 +137,10 @@ class CNN50_3Conv_1Pool_2FC(nn.Module):
         return x
 
 
-@_register_model(50)
+@_register_model
 class CNN50_3Conv_1Pool_3FC(nn.Module):
+    input_size = 50
+
     def __init__(self):
         super().__init__()
         # Input size: 50x50
