@@ -8,96 +8,108 @@ import numpy as np
 from pathlib import Path
 from datetime import datetime
 import logging
+import typing
 import argparse
+import functools
+import shutil
 
+from chesscog.utils import device
 from chesscog.utils.config import CfgNode as CN
 from chesscog.utils.training import build_optimizer_from_config, AccuracyAggregator
 from chesscog.utils.io import URI
-from .dataset import build_dataset
-from .networks import CNN50, CNN100
+from .dataset import build_datasets, build_data_loader, Datasets
+from .models import MODELS
 
 logger = logging.getLogger(__name__)
 
 
-NETWORKS = {
-    "CNN50": CNN50,
-    "CNN100": CNN100
-}
-
-
 def train(cfg: CN, run_dir: Path) -> nn.Module:
     logger.info(f"Starting training in {run_dir}")
-    dataset, train_loader, val_loader, test_loader = build_dataset(cfg)
+    datasets, classes = build_datasets(cfg)
+    dataset = datasets[Datasets.ALL]
 
-    model = NETWORKS[cfg.TRAINING.NETWORK]()
-    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-    model.to(device)
+    model = MODELS[cfg.TRAINING.MODEL]()
+    device(model)
 
     criterion = nn.CrossEntropyLoss()
     optimizer = build_optimizer_from_config(cfg.TRAINING.OPTIMIZER,
                                             model.parameters())
 
-    step = 0
+    writer = {mode: SummaryWriter(run_dir / str(mode))
+              for mode in {Datasets.TRAIN, Datasets.VAL}}
+    aggregator = {mode: AccuracyAggregator(len(classes))
+                  for mode in {Datasets.TRAIN, Datasets.VAL}}
+    loader = {mode: build_data_loader(cfg, datasets, mode)
+              for mode in {Datasets.TRAIN, Datasets.VAL}}
 
-    train_writer = SummaryWriter(run_dir / "train")
-    val_writer = SummaryWriter(run_dir / "val")
-    accuracies = AccuracyAggregator(len(dataset.classes))
-    val_accuracies = AccuracyAggregator(len(dataset.classes))
-    log_every_n = 100
+    def log(step: int, loss: float, mode: Datasets):
+        if mode == Datasets.TRAIN:
+            logger.info(f"Step {step:5d}: loss {loss:.3f}")
 
-    for epoch in range(cfg.TRAINING.EPOCHS):
+        w, agg = (x[mode] for x in (writer, aggregator))
 
-        for i, data in enumerate(train_loader):
-            accuracies.reset()
+        w.add_scalar("Loss", loss, step)
+        w.add_scalar("Accuracy", agg.accuracy, step)
+        for c, idx in dataset.class_to_idx.items():
+            w.add_scalar(f"Accuracy/{c}", agg[idx], step)
 
-            # Get the current minibatch
-            inputs, labels = (x.to(device) for x in data)
-
+    def perform_iteration(data: typing.Tuple[torch.Tensor, torch.Tensor], mode: Datasets):
+        inputs, labels = map(device, data)
+        with torch.set_grad_enabled(mode == Datasets.TRAIN):
             # Reset gradients
             optimizer.zero_grad()
 
             # Forward pass
             outputs = model(inputs)
 
-            # Backward pass
+            # Compute loss
             loss = criterion(outputs, labels)
-            loss.backward()
 
-            # Log metrics
-            with torch.no_grad():
-                accuracies.add_batch(outputs, labels)
-                logger.info(
-                    f"Step {step:5d}, loss {loss.item():.3f}, acc {accuracies.accuracy:.3f}")
+            if mode == Datasets.TRAIN:
+                loss.backward()
 
-                train_writer.add_scalar("Loss", loss.item(), step)
-                train_writer.add_scalar("Accuracy", accuracies.accuracy, step)
-                for c, idx in dataset.class_to_idx.items():
-                    train_writer.add_scalar(
-                        f"Accuracy/{c}", accuracies[idx], step)
+        with torch.no_grad():
+            aggregator[mode].add_batch(outputs, labels)
 
-                if step % log_every_n == 0:
-                    # Compute validation metrics
-                    val_accuracies.reset()
-                    val_losses = list()
-                    for val_i, data in enumerate(val_loader, 1):
-                        inputs, labels = (x.to(device) for x in data)
-                        outputs = model(inputs)
-                        loss = criterion(outputs, labels)
-                        val_losses.append(loss.item())
-                        val_accuracies.add_batch(outputs, labels)
-                    val_writer.add_scalar("Loss", np.mean(val_losses), step)
-                    val_writer.add_scalar(
-                        "Accuracy", val_accuracies.accuracy, step)
-                    for c, idx in dataset.class_to_idx.items():
-                        val_writer.add_scalar(
-                            f"Accuracy/{c}", val_accuracies[idx], step)
-            # Perform optimisation
+        # Perform optimisation
+        if mode == Datasets.TRAIN:
             optimizer.step()
+
+        # Return
+        return loss.item()
+
+    step = 0
+    log_every_n = 100
+    # Loop over epochs (passes over the whole dataset)
+    for epoch in range(cfg.TRAINING.EPOCHS):
+
+        # Iterate the training set
+        for i, data in enumerate(loader[Datasets.TRAIN]):
+            aggregator[Datasets.TRAIN].reset()
+
+            # Perform training iteration
+            loss = perform_iteration(data, mode=Datasets.TRAIN)
+            log(step, loss, Datasets.TRAIN)
+
+            # Validate entire validation dataset
+            if step % log_every_n == 0:
+                aggregator[Datasets.VAL].reset()
+
+                # Iterate entire val dataset
+                perform_val_iteration = functools.partial(perform_iteration,
+                                                          mode=Datasets.VAL)
+                losses = map(perform_val_iteration,
+                             loader[Datasets.VAL])
+
+                # Gather losses and log
+                loss = np.mean(list(losses))
+                log(step, loss, Datasets.VAL)
             step += 1
 
-    for writer in (train_writer, val_writer):
-        writer.flush()
-        writer.close()
+    # Clean up
+    for w in writer.values:
+        w.flush()
+        w.close()
 
     logger.info("Finished training")
     return model
@@ -107,9 +119,14 @@ if __name__ == "__main__":
     configs_dir = URI("config://") / "occupancy_classifier"
 
     def _train(config: str):
-        run_dir = URI("runs://") / "occupancy_classifier" / config / \
-            datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         cfg = CN.load_yaml_with_base(configs_dir / f"{config}.yaml")
+        run_dir = URI("runs://") / "occupancy_classifier" / config
+        if run_dir.exists():
+            logger.warning(
+                f"The folder {run_dir} already exists and will be overwritten by this run")
+            shutil.rmtree(run_dir, ignore_errors=True)
+
+        # Train the model and save it
         model = train(cfg, run_dir)
         torch.save(model, run_dir / "model.pt")
 

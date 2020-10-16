@@ -1,4 +1,11 @@
 import numpy as np
+import torch
+
+_device = "cuda" if torch.cuda.is_available() else "cpu"
+
+
+def device(x: torch.Tensor, device: str = _device) -> torch.Tensor:
+    return x.to(device)
 
 
 def sort_corner_points(points: np.ndarray) -> np.ndarray:

@@ -1,7 +1,0 @@
-_BASE_: config://occupancy_classifier/_base.yaml
-
-RUN:
-  DESCRIPTION: 100x100 input size, 3 convolutional layers
-
-TRAINING:
-  NETWORK: CNN100
