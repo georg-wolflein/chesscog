@@ -27,8 +27,12 @@ class _URIFlavour(_PosixFlavour):
             return super().splitroot(part, sep=sep)
 
 
-class URI(PurePath):
+class URI(Path):
     _flavour = _URIFlavour()
+
+    def _init(self, *args, **kwargs):
+        self._local_path = PathManager.resolve(self)
+        super()._init()
 
     @property
     def scheme(self) -> str:
@@ -42,7 +46,7 @@ class URI(PurePath):
         return self.root + self._flavour.join(self.parts[begin:])
 
     def __str__(self) -> str:
-        return str(self.resolve())
+        return str(self._local_path)
 
     def __repr__(self) -> str:
         s = ""
@@ -50,21 +54,6 @@ class URI(PurePath):
             s += self.scheme + ":" + self._flavour.sep * 2
         s += self.path
         return "{}({!r})".format(self.__class__.__name__, s)
-
-    def resolve(self) -> Path:
-        return PathManager.resolve(self)
-
-    @functools.wraps(Path.open)
-    def open(self, *args, **kwargs):
-        return self.resolve().open(*args, **kwargs)
-
-    @functools.wraps(Path.glob)
-    def glob(self, *args, **kwargs):
-        return self.resolve().glob(*args, *kwargs)
-
-    @functools.wraps(Path.exists)
-    def exists(self, *args, **kwargs):
-        return self.resolve().exists(*args, **kwargs)
 
 
 class PathManager:
