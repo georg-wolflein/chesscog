@@ -107,7 +107,7 @@ def train(cfg: CN, run_dir: Path) -> nn.Module:
             step += 1
 
     # Clean up
-    for w in writer.values:
+    for w in writer.values():
         w.flush()
         w.close()
 
