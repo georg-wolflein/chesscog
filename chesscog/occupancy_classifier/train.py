@@ -107,7 +107,7 @@ def train(cfg: CN, run_dir: Path) -> nn.Module:
                 losses.append(perform_iteration(data, mode=Datasets.TRAIN))
 
                 if step % log_every_n == 0:
-                    loss = np.mean(list(val_losses))
+                    loss = np.mean(list(losses))
                     log(step, loss, Datasets.TRAIN)
                     aggregator[Datasets.TRAIN].reset()
                     losses = []
