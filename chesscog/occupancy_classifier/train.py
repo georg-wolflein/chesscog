@@ -88,7 +88,7 @@ def train(cfg: CN, run_dir: Path) -> nn.Module:
 
         for p in model.parameters():
             p.requires_grad = False
-        parameters = model.parameters() if phase.PARAMS == "all" \
+        parameters = list(model.parameters()) if phase.PARAMS == "all" \
             else model.params[phase.PARAMS]
         for p in parameters:
             p.requires_grad = True
