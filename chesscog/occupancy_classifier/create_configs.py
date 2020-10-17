@@ -45,4 +45,4 @@ if __name__ == "__main__":
                                      create_phase(epochs=1, lr=.0001, params="all")]
 
             with config_file.open("w") as f:
-                f.write(C.dump())
+                C.dump(stream=f)

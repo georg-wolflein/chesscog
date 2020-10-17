@@ -1,11 +1,23 @@
 import numpy as np
 import torch
+import typing
+import functools
 
 _device = "cuda" if torch.cuda.is_available() else "cpu"
 
+T = typing.Union[torch.Tensor, typing.List[torch.Tensor], tuple]
 
-def device(x: torch.Tensor, device: str = _device) -> torch.Tensor:
-    return x.to(device)
+
+def device(x: T, dev: str = _device) -> T:
+    to = functools.partial(device, dev=dev)
+    if isinstance(x, torch.Tensor):
+        return x.to(dev)
+    elif isinstance(x, list):
+        return list(map(to, x))
+    elif isinstance(x, tuple):
+        return tuple(map(to, x))
+    else:
+        raise TypeError
 
 
 def sort_corner_points(points: np.ndarray) -> np.ndarray:
