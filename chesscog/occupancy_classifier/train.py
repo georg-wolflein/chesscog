@@ -9,6 +9,7 @@ from pathlib import Path
 from datetime import datetime
 import logging
 import typing
+import copy
 import argparse
 import functools
 import shutil
@@ -30,6 +31,9 @@ def train(cfg: CN, run_dir: Path) -> nn.Module:
 
     model = MODELS[cfg.TRAINING.MODEL]()
     device(model)
+
+    best_weights, best_accuracy, best_step = copy.deepcopy(
+        model.state_dict()), 0., 0
 
     criterion = nn.CrossEntropyLoss()
 
@@ -115,6 +119,15 @@ def train(cfg: CN, run_dir: Path) -> nn.Module:
                     # Gather losses and log
                     loss = np.mean(list(losses))
                     log(step, loss, Datasets.VAL)
+
+                # Save weights if we get a better performance
+                accuracy = aggregator[Datasets.VAL].accuracy
+                if accuracy > best_accuracy:
+                    best_accuracy = accuracy
+                    best_weights = copy.deepcopy(model.state_dict())
+                    best_step = step
+
+                # Get ready for next step
                 step += 1
 
     # Clean up
@@ -123,6 +136,10 @@ def train(cfg: CN, run_dir: Path) -> nn.Module:
         w.close()
 
     logger.info("Finished training")
+
+    logger.info(
+        f"Restoring best weight state (step {best_step} with validation accuracy of {best_accuracy})")
+    model.load_state_dict(best_weights)
     return model
 
 
