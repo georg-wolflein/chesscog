@@ -16,7 +16,7 @@ import shutil
 
 from chesscog.utils import device
 from chesscog.utils.config import CfgNode as CN
-from chesscog.utils.training import build_optimizer_from_config, AccuracyAggregator
+from chesscog.utils.training import build_optimizer_from_config, StatsAggregator
 from chesscog.utils.io import URI
 from .dataset import build_datasets, build_data_loader, Datasets
 from .models import MODELS
@@ -51,7 +51,7 @@ def train(cfg: CN, run_dir: Path) -> nn.Module:
 
     writer = {mode: SummaryWriter(run_dir / mode.value)
               for mode in {Datasets.TRAIN, Datasets.VAL}}
-    aggregator = {mode: AccuracyAggregator(len(classes))
+    aggregator = {mode: StatsAggregator(classes)
                   for mode in {Datasets.TRAIN, Datasets.VAL}}
     loader = {mode: build_data_loader(cfg, datasets, mode)
               for mode in {Datasets.TRAIN, Datasets.VAL}}
@@ -63,9 +63,11 @@ def train(cfg: CN, run_dir: Path) -> nn.Module:
         w, agg = (x[mode] for x in (writer, aggregator))
 
         w.add_scalar("Loss", loss, step)
-        w.add_scalar("Accuracy", agg.accuracy, step)
-        for c, idx in dataset.class_to_idx.items():
-            w.add_scalar(f"Accuracy/{c}", agg[idx], step)
+        w.add_scalar("Accuracy", agg.accuracy(), step)
+        for c in classes:
+            w.add_scalar(f"Precision/{c}", agg.precision(c), step)
+            w.add_scalar(f"Recall/{c}", agg.recall(c), step)
+            w.add_scalar(f"F1 score/{c}", agg.f1_score(c), step)
 
     def perform_iteration(data: typing.Tuple[torch.Tensor, torch.Tensor], mode: Datasets):
         inputs, labels = map(device, data)
