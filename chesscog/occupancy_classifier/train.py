@@ -97,28 +97,33 @@ def train(cfg: CN, run_dir: Path) -> nn.Module:
 
         # Loop over epochs (passes over the whole dataset)
         for epoch in range(phase.EPOCHS):
+            aggregator[Datasets.TRAIN].reset()
 
             # Iterate the training set
+            losses = []
             for i, data in enumerate(loader[Datasets.TRAIN]):
-                aggregator[Datasets.TRAIN].reset()
 
                 # Perform training iteration
-                loss = perform_iteration(data, mode=Datasets.TRAIN)
-                log(step, loss, Datasets.TRAIN)
+                losses.append(perform_iteration(data, mode=Datasets.TRAIN))
 
-                # Validate entire validation dataset
                 if step % log_every_n == 0:
+                    loss = np.mean(list(val_losses))
+                    log(step, loss, Datasets.TRAIN)
+                    aggregator[Datasets.TRAIN].reset()
+                    losses = []
+
+                    # Validate entire validation dataset
                     aggregator[Datasets.VAL].reset()
 
                     # Iterate entire val dataset
                     perform_val_iteration = functools.partial(perform_iteration,
                                                               mode=Datasets.VAL)
-                    losses = map(perform_val_iteration,
-                                 loader[Datasets.VAL])
+                    val_losses = map(perform_val_iteration,
+                                     loader[Datasets.VAL])
 
                     # Gather losses and log
-                    loss = np.mean(list(losses))
-                    log(step, loss, Datasets.VAL)
+                    val_loss = np.mean(list(val_losses))
+                    log(step, val_loss, Datasets.VAL)
 
                 # Save weights if we get a better performance
                 accuracy = aggregator[Datasets.VAL].accuracy
