@@ -2,15 +2,17 @@ import numpy as np
 import torch
 import typing
 import functools
+from collections.abc import Iterable
 
 _device = "cuda" if torch.cuda.is_available() else "cpu"
 
-T = typing.Union[torch.Tensor, typing.List[torch.Tensor], tuple, dict]
+T = typing.Union[torch.Tensor, torch.nn.Module, typing.List[torch.Tensor],
+                 tuple, dict, typing.Generator]
 
 
 def device(x: T, dev: str = _device) -> T:
     to = functools.partial(device, dev=dev)
-    if isinstance(x, torch.Tensor):
+    if isinstance(x, (torch.Tensor, torch.nn.Module)):
         return x.to(dev)
     elif isinstance(x, list):
         return list(map(to, x))
@@ -18,6 +20,8 @@ def device(x: T, dev: str = _device) -> T:
         return tuple(map(to, x))
     elif isinstance(x, dict):
         return {k: to(v) for k, v in x.items()}
+    elif isinstance(x, Iterable):
+        return map(to, x)
     else:
         raise TypeError
 
