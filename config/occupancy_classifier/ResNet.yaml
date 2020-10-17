@@ -1,0 +1,22 @@
+DATASET:
+  TRANSFORMS:
+    CENTER_CROP:
+    - 100
+    - 100
+    RESIZE:
+    - 100
+    - 100
+TRAINING:
+  MODEL: ResNet
+  PHASES:
+  - EPOCHS: 1
+    OPTIMIZER:
+      LEARNING_RATE: 0.001
+      NAME: Adam
+    PARAMS: head
+  - EPOCHS: 1
+    OPTIMIZER:
+      LEARNING_RATE: 0.0001
+      NAME: Adam
+    PARAMS: all
+_BASE_: config://occupancy_classifier/_base.yaml

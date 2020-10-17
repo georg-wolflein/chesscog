@@ -82,8 +82,12 @@ def train(cfg: CN, run_dir: Path) -> nn.Module:
     # Loop over training phases
     for phase in cfg.TRAINING.PHASES:
 
+        for p in model.parameters():
+            p.requires_grad = False
         parameters = model.parameters() if phase.PARAMS == "all" \
             else model.params[phase.PARAMS]
+        for p in parameters:
+            p.requires_grad = True
         optimizer = build_optimizer_from_config(phase.OPTIMIZER,
                                                 parameters)
 
