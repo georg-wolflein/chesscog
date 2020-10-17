@@ -140,7 +140,7 @@ def train(cfg: CN, run_dir: Path) -> nn.Module:
                     log(step, val_loss, Datasets.VAL)
 
                 # Save weights if we get a better performance
-                accuracy = aggregator[Datasets.VAL].accuracy
+                accuracy = aggregator[Datasets.VAL].accuracy()
                 if accuracy > best_accuracy:
                     best_accuracy = accuracy
                     best_weights = copy.deepcopy(model.state_dict())
