@@ -1,4 +1,5 @@
 from torch import nn
+from torchvision import models
 import torch.nn.functional as F
 import functools
 
@@ -13,6 +14,7 @@ def _register_model(cls):
 @_register_model
 class CNN100_3Conv_3Pool_3FC(nn.Module):
     input_size = 100
+    pretrained = False
 
     def __init__(self):
         super().__init__()
@@ -41,6 +43,7 @@ class CNN100_3Conv_3Pool_3FC(nn.Module):
 @_register_model
 class CNN100_3Conv_3Pool_2FC(nn.Module):
     input_size = 100
+    pretrained = False
 
     def __init__(self):
         super().__init__()
@@ -67,6 +70,7 @@ class CNN100_3Conv_3Pool_2FC(nn.Module):
 @_register_model
 class CNN50_2Conv_2Pool_3FC(nn.Module):
     input_size = 50
+    pretrained = False
 
     def __init__(self):
         super().__init__()
@@ -92,6 +96,7 @@ class CNN50_2Conv_2Pool_3FC(nn.Module):
 @_register_model
 class CNN50_2Conv_2Pool_2FC(nn.Module):
     input_size = 50
+    pretrained = False
 
     def __init__(self):
         super().__init__()
@@ -115,6 +120,7 @@ class CNN50_2Conv_2Pool_2FC(nn.Module):
 @_register_model
 class CNN50_3Conv_1Pool_2FC(nn.Module):
     input_size = 50
+    pretrained = False
 
     def __init__(self):
         super().__init__()
@@ -140,6 +146,7 @@ class CNN50_3Conv_1Pool_2FC(nn.Module):
 @_register_model
 class CNN50_3Conv_1Pool_3FC(nn.Module):
     input_size = 50
+    pretrained = False
 
     def __init__(self):
         super().__init__()
@@ -162,3 +169,22 @@ class CNN50_3Conv_1Pool_3FC(nn.Module):
         x = F.relu(self.fc2(x))
         x = self.fc3(x)
         return x
+
+
+@_register_model
+class AlexNet(nn.Module):
+    input_size = 100
+    pretrained = True
+
+    def __init__(self):
+        super().__init__()
+        self.model = models.alexnet(pretrained=True)
+        for param in self.model.parameters():
+            param.requires_grad = False
+        self.model.classifier[6] = nn.Linear(4096, 2)
+        self.params = {
+            "head": list(self.model.classifier.parameters())
+        }
+
+    def forward(self, x):
+        return self.model(x)

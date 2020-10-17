@@ -32,8 +32,6 @@ def train(cfg: CN, run_dir: Path) -> nn.Module:
     device(model)
 
     criterion = nn.CrossEntropyLoss()
-    optimizer = build_optimizer_from_config(cfg.TRAINING.OPTIMIZER,
-                                            model.parameters())
 
     writer = {mode: SummaryWriter(run_dir / mode.value)
               for mode in {Datasets.TRAIN, Datasets.VAL}}
@@ -80,31 +78,40 @@ def train(cfg: CN, run_dir: Path) -> nn.Module:
 
     step = 0
     log_every_n = 100
-    # Loop over epochs (passes over the whole dataset)
-    for epoch in range(cfg.TRAINING.EPOCHS):
 
-        # Iterate the training set
-        for i, data in enumerate(loader[Datasets.TRAIN]):
-            aggregator[Datasets.TRAIN].reset()
+    # Loop over training phases
+    for phase in cfg.TRAINING.PHASES:
 
-            # Perform training iteration
-            loss = perform_iteration(data, mode=Datasets.TRAIN)
-            log(step, loss, Datasets.TRAIN)
+        parameters = model.parameters() if phase.PARAMS == "all" \
+            else model.params[phase.PARAMS]
+        optimizer = build_optimizer_from_config(phase.OPTIMIZER,
+                                                parameters)
 
-            # Validate entire validation dataset
-            if step % log_every_n == 0:
-                aggregator[Datasets.VAL].reset()
+        # Loop over epochs (passes over the whole dataset)
+        for epoch in range(phase.EPOCHS):
 
-                # Iterate entire val dataset
-                perform_val_iteration = functools.partial(perform_iteration,
-                                                          mode=Datasets.VAL)
-                losses = map(perform_val_iteration,
-                             loader[Datasets.VAL])
+            # Iterate the training set
+            for i, data in enumerate(loader[Datasets.TRAIN]):
+                aggregator[Datasets.TRAIN].reset()
 
-                # Gather losses and log
-                loss = np.mean(list(losses))
-                log(step, loss, Datasets.VAL)
-            step += 1
+                # Perform training iteration
+                loss = perform_iteration(data, mode=Datasets.TRAIN)
+                log(step, loss, Datasets.TRAIN)
+
+                # Validate entire validation dataset
+                if step % log_every_n == 0:
+                    aggregator[Datasets.VAL].reset()
+
+                    # Iterate entire val dataset
+                    perform_val_iteration = functools.partial(perform_iteration,
+                                                              mode=Datasets.VAL)
+                    losses = map(perform_val_iteration,
+                                 loader[Datasets.VAL])
+
+                    # Gather losses and log
+                    loss = np.mean(list(losses))
+                    log(step, loss, Datasets.VAL)
+                step += 1
 
     # Clean up
     for w in writer.values():

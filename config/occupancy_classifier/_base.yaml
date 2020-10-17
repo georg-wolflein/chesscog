@@ -10,8 +10,10 @@ DATASET:
     RESIZE: [100, 100]
 
 TRAINING:
-  OPTIMIZER:
-    NAME: Adam
-    LEARNING_RATE: 0.001
-  EPOCHS: 2
-  MODEL: CNN100
+  MODEL: CNN100_3Conv_3Pool_2FC
+  PHASES:
+    - PARAMS: all
+      EPOCHS: 2
+      OPTIMIZER:
+        NAME: Adam
+        LEARNING_RATE: 0.001

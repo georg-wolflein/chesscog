@@ -31,5 +31,18 @@ if __name__ == "__main__":
             C.TRAINING = CN()
             C.TRAINING.MODEL = name
 
+            if model.pretrained:
+                def create_phase(epochs: int, lr: float, params: str):
+                    return {
+                        "EPOCHS": epochs,
+                        "PARAMS": params,
+                        "OPTIMIZER": {
+                            "NAME": "Adam",
+                            "LEARNING_RATE": lr
+                        }
+                    }
+                C.TRAINING.PHASES = [create_phase(epochs=1, lr=.001, params="head"),
+                                     create_phase(epochs=1, lr=.0001, params="all")]
+
             with config_file.open("w") as f:
                 f.write(C.dump())

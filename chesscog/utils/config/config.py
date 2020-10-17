@@ -12,6 +12,18 @@ BASE_KEY = "_BASE_"
 
 class CfgNode(_CfgNode):
 
+    def __init__(self, init_dict=None, key_list=None, new_allowed=False):
+        def ensure_cfgnode(item):
+            if isinstance(item, dict) and not isinstance(item, _CfgNode):
+                return CfgNode(item)
+            else:
+                return item
+        if init_dict is not None:
+            init_dict = {key: value if not isinstance(value, list) else list(map(ensure_cfgnode, value))
+                         for key, value in init_dict.items()}
+
+        super().__init__(init_dict=init_dict, key_list=key_list, new_allowed=new_allowed)
+
     @classmethod
     def load_yaml_with_base(cls, filename: os.PathLike) -> CfgNode:
         uri = URI(filename)
