@@ -26,6 +26,18 @@ logger = logging.getLogger(__name__)
 
 def train(cfg: CN, run_dir: Path) -> nn.Module:
     logger.info(f"Starting training in {run_dir}")
+
+    # Create folder
+    if run_dir.exists():
+        logger.warning(
+            f"The folder {run_dir} already exists and will be overwritten by this run")
+        shutil.rmtree(run_dir, ignore_errors=True)
+    run_dir.mkdir(exist_ok=True)
+
+    # Store config
+    with (run_dir / "config.yaml").open("w") as f:
+        cfg.dump(stream=f)
+
     datasets, classes = build_datasets(cfg)
     dataset = datasets[Datasets.ALL]
 
@@ -154,10 +166,6 @@ if __name__ == "__main__":
     def _train(config: str):
         cfg = CN.load_yaml_with_base(configs_dir / f"{config}.yaml")
         run_dir = URI("runs://") / "occupancy_classifier" / config
-        if run_dir.exists():
-            logger.warning(
-                f"The folder {run_dir} already exists and will be overwritten by this run")
-            shutil.rmtree(run_dir, ignore_errors=True)
 
         # Train the model and save it
         model = train(cfg, run_dir)

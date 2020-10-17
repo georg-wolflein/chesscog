@@ -4,6 +4,8 @@ from typing import Dict, Any
 from pathlib import Path
 from yacs.config import CfgNode as _CfgNode
 import typing
+import functools
+import yaml
 
 from chesscog.utils.io import URI
 
@@ -45,3 +47,13 @@ class CfgNode(_CfgNode):
                     child[path_segment] = CfgNode()
                 child = child[path_segment]
             child[prop] = value
+
+    def dump(self, **kwargs):
+        def convert_node(cfg_node):
+            if isinstance(cfg_node, list):
+                return [convert_node(v) for v in cfg_node]
+            if isinstance(cfg_node, dict):
+                return {k: convert_node(v) for k, v in cfg_node.items()}
+            else:
+                return cfg_node
+        return yaml.safe_dump(convert_node(self), **kwargs)
