@@ -5,7 +5,7 @@ import functools
 
 _device = "cuda" if torch.cuda.is_available() else "cpu"
 
-T = typing.Union[torch.Tensor, typing.List[torch.Tensor], tuple]
+T = typing.Union[torch.Tensor, typing.List[torch.Tensor], tuple, dict]
 
 
 def device(x: T, dev: str = _device) -> T:
@@ -16,6 +16,8 @@ def device(x: T, dev: str = _device) -> T:
         return list(map(to, x))
     elif isinstance(x, tuple):
         return tuple(map(to, x))
+    elif isinstance(x, dict):
+        return {k: to(v) for k, v in x.items()}
     else:
         raise TypeError
 
