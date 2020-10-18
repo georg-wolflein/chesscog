@@ -75,10 +75,8 @@ def train(cfg: CN, run_dir: Path) -> nn.Module:
             # Reset gradients
             optimizer.zero_grad()
 
-            # Forward pass
+            # Forward pass and compute loss
             outputs = model(inputs)
-
-            # Compute loss
             loss = criterion(outputs, labels)
 
             if mode == Datasets.TRAIN:
@@ -96,6 +94,9 @@ def train(cfg: CN, run_dir: Path) -> nn.Module:
 
     step = 0
     log_every_n = 100
+
+    # Ensure we're in training mode
+    model.train()
 
     # Loop over training phases
     for phase in cfg.TRAINING.PHASES:
@@ -127,6 +128,7 @@ def train(cfg: CN, run_dir: Path) -> nn.Module:
                     losses = []
 
                     # Validate entire validation dataset
+                    model.eval()
                     aggregator[Datasets.VAL].reset()
 
                     # Iterate entire val dataset
@@ -138,6 +140,7 @@ def train(cfg: CN, run_dir: Path) -> nn.Module:
                     # Gather losses and log
                     val_loss = np.mean(list(val_losses))
                     log(step, val_loss, Datasets.VAL)
+                    model.train()
 
                 # Save weights if we get a better performance
                 accuracy = aggregator[Datasets.VAL].accuracy()

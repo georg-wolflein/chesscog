@@ -41,8 +41,8 @@ if __name__ == "__main__":
                             "LEARNING_RATE": lr
                         }
                     }
-                C.TRAINING.PHASES = [create_phase(epochs=1, lr=.0001, params="head"),
-                                     create_phase(epochs=2, lr=.00001, params="all")]
+                C.TRAINING.PHASES = [create_phase(epochs=1, lr=.001, params="head"),
+                                     create_phase(epochs=2, lr=.0001, params="all")]
 
             with config_file.open("w") as f:
                 C.dump(stream=f)

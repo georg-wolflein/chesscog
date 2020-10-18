@@ -47,6 +47,7 @@ def evaluate(run: str, include_heading: bool = False) -> str:
     model_path = next(run_dir.glob("model*.pt"))
     model = torch.load(model_path)
     model = device(model)
+    model.eval()
     datasets, classes = build_datasets(cfg)
 
     def _eval():
