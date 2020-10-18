@@ -8,19 +8,14 @@ import chess
 import os
 import shutil
 
-from chesscog import DATA_DIR
-from chesscog.util import sort_corner_points
+from chesscog.utils import sort_corner_points
+from chesscog.utils.io import URI
 
-RENDERS_DIR = DATA_DIR / "render"
-OUT_DIR = DATA_DIR / "occupancy"
+RENDERS_DIR = URI("data://render")
+OUT_DIR = URI("data://occupancy")
 SQUARE_SIZE = 50
 BOARD_SIZE = 8 * SQUARE_SIZE
 IMG_SIZE = BOARD_SIZE + 2 * SQUARE_SIZE
-
-for c in ("empty", "occupied"):
-    folder = OUT_DIR / c
-    shutil.rmtree(folder, ignore_errors=True)
-    os.makedirs(folder, exist_ok=True)
 
 
 def crop_square(img, square: chess.Square, turn: chess.Color) -> np.ndarray:
@@ -58,13 +53,16 @@ def extract_squares_from_sample(id: str):
             square) is None else "occupied"
         piece_img = crop_square(unwarped, square, label["white_turn"])
         with Image.fromarray(piece_img, "RGB") as piece_img:
-            # piece_img = piece_img.convert("L")
             piece_img.save(OUT_DIR / target_class /
                            f"{id}_{chess.square_name(square)}.png")
 
 
 if __name__ == "__main__":
-    samples = list(RENDERS_DIR.glob("*.png"))
+    for c in ("empty", "occupied"):
+        folder = OUT_DIR / c
+        shutil.rmtree(folder, ignore_errors=True)
+        os.makedirs(folder, exist_ok=True)
+        samples = list(RENDERS_DIR.glob("*.png"))
     for i, img_file in enumerate(samples):
         if i % int(len(samples) / 100) == 0:
             print(f"{i / len(samples)*100:.0f}%")
