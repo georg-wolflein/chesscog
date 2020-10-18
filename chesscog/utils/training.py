@@ -1,4 +1,5 @@
 import torch
+import typing
 import numpy as np
 
 from chesscog.utils.config import CfgNode as CN

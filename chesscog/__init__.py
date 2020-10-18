@@ -6,7 +6,7 @@ def _setup_logger(level: int = logging.INFO):
     root = logging.getLogger()
     root.setLevel(level)
 
-    handler = logging.StreamHandler(sys.stdout)
+    handler = logging.StreamHandler(sys.stderr)
     handler.setLevel(level)
     formatter = logging.Formatter(
         "[%(asctime)s] {%(filename)s:%(lineno)d} %(levelname)s - %(message)s")

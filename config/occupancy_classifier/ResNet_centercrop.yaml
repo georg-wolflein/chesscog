@@ -11,12 +11,12 @@ TRAINING:
   PHASES:
   - EPOCHS: 1
     OPTIMIZER:
-      LEARNING_RATE: 0.001
+      LEARNING_RATE: 0.0001
       NAME: Adam
     PARAMS: head
-  - EPOCHS: 1
+  - EPOCHS: 2
     OPTIMIZER:
-      LEARNING_RATE: 0.0001
+      LEARNING_RATE: 1.0e-05
       NAME: Adam
     PARAMS: all
 _BASE_: config://occupancy_classifier/_base.yaml

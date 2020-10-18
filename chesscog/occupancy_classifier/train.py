@@ -1,3 +1,4 @@
+import argparse
 import torch
 from torch import nn
 from torch.utils.tensorboard import SummaryWriter
@@ -10,7 +11,6 @@ from datetime import datetime
 import logging
 import typing
 import copy
-import argparse
 import functools
 import shutil
 
@@ -159,6 +159,7 @@ def train(cfg: CN, run_dir: Path) -> nn.Module:
     logger.info(
         f"Restoring best weight state (step {best_step} with validation accuracy of {best_accuracy})")
     model.load_state_dict(best_weights)
+    torch.save(model, run_dir / f"model_{best_step}.pt")
     return model
 
 
@@ -170,8 +171,7 @@ if __name__ == "__main__":
         run_dir = URI("runs://") / "occupancy_classifier" / config
 
         # Train the model and save it
-        model = train(cfg, run_dir)
-        torch.save(model, run_dir / "model.pt")
+        train(cfg, run_dir)
 
     # Read available configs
     configs = [x.stem for x in configs_dir.glob("*.yaml")

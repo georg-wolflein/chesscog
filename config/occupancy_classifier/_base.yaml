@@ -13,7 +13,7 @@ TRAINING:
   MODEL: CNN100_3Conv_3Pool_2FC
   PHASES:
     - PARAMS: all
-      EPOCHS: 2
+      EPOCHS: 3
       OPTIMIZER:
         NAME: Adam
         LEARNING_RATE: 0.001
