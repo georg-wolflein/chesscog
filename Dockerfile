@@ -10,6 +10,9 @@ RUN apt update && \
     update-alternatives --install /usr/bin/python python /usr/bin/python3.8 1 && \
     update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 1
 
+# OpenGL is needed for OpenCV
+RUN apt install -y libgl1-mesa-glx
+
 # Install poetry
 RUN pip install --upgrade pip && \
     pip install poetry
