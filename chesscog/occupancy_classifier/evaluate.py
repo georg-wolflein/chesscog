@@ -74,7 +74,7 @@ if __name__ == "__main__":
     parser.add_argument("--run", help="the run to evaluate",
                         type=str, choices=runs, default=None)
     parser.add_argument("--out", help="output CSV file", type=str,
-                        default="runs://occupancy_classifier/evaluation.csv")
+                        default="results://occupancy_classifier.csv")
     args = parser.parse_args()
 
     # Evaluate

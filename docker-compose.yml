@@ -16,4 +16,6 @@ services:
       - "~/chess_data:/data"
       - "~/chess-recognition/config:/config"
       - "~/chess-recognition/runs:/chess/runs"
+      - "~/chess-recognition/results:/chess/results"
+      - "~/chess-recognition/models:/chess/models"
       - "~/scratch:/chess/scratch"

@@ -10,6 +10,10 @@ _CONFIG_DIR = Path(os.getenv("CONFIG_DIR",
                              Path(__file__).parent.parent.parent.parent / "config"))
 _RUNS_DIR = Path(os.getenv("RUNS_DIR",
                            Path(__file__).parent.parent.parent.parent / "runs"))
+_RESULTS_DIR = Path(os.getenv("RESULTS_DIR",
+                              Path(__file__).parent.parent.parent.parent / "results"))
+_MODELS_DIR = Path(os.getenv("MODELS_DIR",
+                             Path(__file__).parent.parent.parent.parent / "models"))
 
 
 def _register_translator(scheme: str, path: Path):
@@ -22,3 +26,5 @@ def _register_translator(scheme: str, path: Path):
 _register_translator("data", _DATA_DIR)
 _register_translator("config", _CONFIG_DIR)
 _register_translator("runs", _RUNS_DIR)
+_register_translator("results", _RESULTS_DIR)
+_register_translator("models", _MODELS_DIR)

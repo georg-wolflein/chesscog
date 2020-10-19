@@ -33,6 +33,16 @@ RUN mkdir -p /chess/runs
 ENV RUN_DIR /chess/runs
 VOLUME /chess/runs
 
+# Setup results mount
+RUN mkdir -p /chess/results
+ENV RESULTS_DIR /chess/results
+VOLUME /chess/results
+
+# Setup models mount
+RUN mkdir -p /chess/models
+ENV MODELS_DIR /chess/models
+VOLUME /chess/models
+
 # Install dependencies
 RUN mkdir -p /chess
 WORKDIR /chess
