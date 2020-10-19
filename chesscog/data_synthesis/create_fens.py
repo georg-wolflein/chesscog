@@ -2,8 +2,10 @@ import chess.pgn
 from pathlib import Path
 import numpy as np
 
-dataset_path = Path("Carlsen.pgn")
-fens_path = Path("fens.txt")
+from chesscog.utils.io import URI
+
+dataset_path = URI("data://games.pgn")
+fens_path = URI("data://fens.txt")
 
 fens = set()
 with dataset_path.open("r") as pgn:

@@ -1,6 +1,9 @@
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 import typing
+import json
+
+from chesscog.utils.io import URI
 
 
 def draw_board_edges(img: Image, corners: typing.List[typing.List[int]]):
@@ -67,13 +70,10 @@ def visualise_groundtruth(img: Image, label: dict):
 
 
 if __name__ == "__main__":
-    import json
-    from pathlib import Path
-
     start = 0
     for i in range(start, start+5):
         id = f"{i:04d}"
-        dataset_dir = Path("render")
+        dataset_dir = URI("data://render")
 
         img = Image.open(dataset_dir / (id + ".png"))
         with (dataset_dir / (id + ".json")).open("r") as f:

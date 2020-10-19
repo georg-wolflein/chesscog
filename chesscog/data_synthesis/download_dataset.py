@@ -3,12 +3,11 @@
 from google_drive_downloader import GoogleDriveDownloader as gdd
 import zipfile
 import shutil
-from pathlib import Path
 
-from chesscog import DATA_DIR
+from chesscog.utils.io import URI
 
-render_dir = DATA_DIR / "render"
-zip_file = DATA_DIR / "render.zip"
+render_dir = URI("data://render")
+zip_file = URI("data://render.zip")
 print("Downloading dataset...")
 gdd.download_file_from_google_drive(file_id="1XClmGJwEWNcIkwaH0VLuvvAY3qk_CRJh",
                                     dest_path=zip_file,
