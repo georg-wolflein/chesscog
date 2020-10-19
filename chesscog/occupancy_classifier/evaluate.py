@@ -7,7 +7,7 @@ import typing
 import logging
 
 from chesscog.occupancy_classifier import models
-from chesscog.occupancy_classifier.dataset import build_datasets, build_data_loader, Datasets
+from chesscog.occupancy_classifier.dataset import build_dataset, build_data_loader, Datasets
 from chesscog.utils.config import CfgNode as CN
 from chesscog.utils.io import URI
 from chesscog.utils.training import StatsAggregator
@@ -48,14 +48,16 @@ def evaluate(run: str, include_heading: bool = False) -> str:
     model = torch.load(model_path)
     model = device(model)
     model.eval()
-    datasets, classes = build_datasets(cfg)
+    datasets = {mode: build_dataset(cfg, mode)
+                for mode in (Datasets.TRAIN, Datasets.VAL)}
+    classes = datasets[Datasets.TRAIN].classes
 
     def _eval():
         if include_heading:
             yield _csv_heading(classes)
-        for dataset in (Datasets.TRAIN, Datasets.VAL, Datasets.TEST):
+        for mode, dataset in datasets.items():
             # Load dataset
-            loader = build_data_loader(cfg, datasets, dataset)
+            loader = build_data_loader(cfg, dataset, mode)
             # Compute statistics over whole dataset
             agg = StatsAggregator(classes)
             for images, labels in device(loader):

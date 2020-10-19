@@ -50,7 +50,7 @@ def train(cfg: CN, run_dir: Path) -> nn.Module:
     datasets = {mode: build_dataset(cfg, mode)
                 for mode in modes}
     classes = datasets[Datasets.TRAIN].classes
-    loader = {mode: build_data_loader(cfg, datasets, mode)
+    loader = {mode: build_data_loader(cfg, datasets[mode], mode)
               for mode in modes}
     writer = {mode: SummaryWriter(run_dir / mode.value)
               for mode in modes}
