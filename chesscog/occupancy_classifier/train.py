@@ -18,7 +18,7 @@ from chesscog.utils import device
 from chesscog.utils.config import CfgNode as CN
 from chesscog.utils.training import build_optimizer_from_config, StatsAggregator
 from chesscog.utils.io import URI
-from .dataset import build_datasets, build_data_loader, Datasets
+from .dataset import build_dataset, build_data_loader, Datasets
 from .models import MODELS
 
 logger = logging.getLogger(__name__)
@@ -38,9 +38,6 @@ def train(cfg: CN, run_dir: Path) -> nn.Module:
     with (run_dir / "config.yaml").open("w") as f:
         cfg.dump(stream=f)
 
-    datasets, classes = build_datasets(cfg)
-    dataset = datasets[Datasets.ALL]
-
     model = MODELS[cfg.TRAINING.MODEL]()
     device(model)
 
@@ -49,12 +46,16 @@ def train(cfg: CN, run_dir: Path) -> nn.Module:
 
     criterion = nn.CrossEntropyLoss()
 
-    writer = {mode: SummaryWriter(run_dir / mode.value)
-              for mode in {Datasets.TRAIN, Datasets.VAL}}
-    aggregator = {mode: StatsAggregator(classes)
-                  for mode in {Datasets.TRAIN, Datasets.VAL}}
+    modes = {Datasets.TRAIN, Datasets.VAL}
+    datasets = {mode: build_dataset(cfg, mode)
+                for mode in modes}
+    classes = datasets[Datasets.TRAIN].classes
     loader = {mode: build_data_loader(cfg, datasets, mode)
-              for mode in {Datasets.TRAIN, Datasets.VAL}}
+              for mode in modes}
+    writer = {mode: SummaryWriter(run_dir / mode.value)
+              for mode in modes}
+    aggregator = {mode: StatsAggregator(classes)
+                  for mode in modes}
 
     def log(step: int, loss: float, mode: Datasets):
         if mode == Datasets.TRAIN:

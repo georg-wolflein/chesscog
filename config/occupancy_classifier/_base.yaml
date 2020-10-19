@@ -1,7 +1,4 @@
 DATASET:
-  SPLIT:
-    VAL: .03
-    TEST: .1
   PATH: data://occupancy
   WORKERS: 2
   BATCH_SIZE: 128

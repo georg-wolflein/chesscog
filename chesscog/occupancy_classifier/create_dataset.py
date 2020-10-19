@@ -29,9 +29,9 @@ def crop_square(img, square: chess.Square, turn: chess.Color) -> np.ndarray:
                int(SQUARE_SIZE * (col + .5)): int(SQUARE_SIZE * (col + 2.5))]
 
 
-def extract_squares_from_sample(id: str):
-    img = Image.open(RENDERS_DIR / (id + ".png"))
-    with (RENDERS_DIR / (id + ".json")).open("r") as f:
+def extract_squares_from_sample(id: str, subset: str = ""):
+    img = Image.open(RENDERS_DIR / subset / (id + ".png"))
+    with (RENDERS_DIR / subset / (id + ".json")).open("r") as f:
         label = json.load(f)
 
     src_points = np.array(label["corners"], dtype=np.float)
@@ -53,17 +53,18 @@ def extract_squares_from_sample(id: str):
             square) is None else "occupied"
         piece_img = crop_square(unwarped, square, label["white_turn"])
         with Image.fromarray(piece_img, "RGB") as piece_img:
-            piece_img.save(OUT_DIR / target_class /
+            piece_img.save(OUT_DIR / subset / target_class /
                            f"{id}_{chess.square_name(square)}.png")
 
 
 if __name__ == "__main__":
-    for c in ("empty", "occupied"):
-        folder = OUT_DIR / c
-        shutil.rmtree(folder, ignore_errors=True)
-        os.makedirs(folder, exist_ok=True)
-        samples = list(RENDERS_DIR.glob("*.png"))
-    for i, img_file in enumerate(samples):
-        if i % int(len(samples) / 100) == 0:
-            print(f"{i / len(samples)*100:.0f}%")
-        extract_squares_from_sample(img_file.stem)
+    for subset in ("train", "val", "test"):
+        for c in ("empty", "occupied"):
+            folder = OUT_DIR / subset / c
+            shutil.rmtree(folder, ignore_errors=True)
+            os.makedirs(folder, exist_ok=True)
+            samples = list((RENDERS_DIR / subset).glob("*.png"))
+        for i, img_file in enumerate(samples):
+            if i % int(len(samples) / 100) == 0:
+                print(f"{i / len(samples)*100:.0f}%")
+            extract_squares_from_sample(img_file.stem, subset)
