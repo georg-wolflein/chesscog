@@ -14,6 +14,8 @@ _RESULTS_DIR = Path(os.getenv("RESULTS_DIR",
                               Path(__file__).parent.parent.parent.parent / "results"))
 _MODELS_DIR = Path(os.getenv("MODELS_DIR",
                              Path(__file__).parent.parent.parent.parent / "models"))
+_REPORT_DIR = Path(os.getenv("REPORT_DIR",
+                             Path(__file__).parent.parent.parent.parent.parent / "chess-recognition-report"))
 
 
 def _register_translator(scheme: str, path: Path):
@@ -28,3 +30,4 @@ _register_translator("config", _CONFIG_DIR)
 _register_translator("runs", _RUNS_DIR)
 _register_translator("results", _RESULTS_DIR)
 _register_translator("models", _MODELS_DIR)
+_register_translator("report", _REPORT_DIR)
