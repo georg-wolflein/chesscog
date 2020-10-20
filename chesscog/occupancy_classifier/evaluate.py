@@ -16,9 +16,11 @@ from chesscog.utils import device
 logger = logging.getLogger(__name__)
 
 
-def _csv(agg: StatsAggregator, run: str, mode: Datasets) -> str:
+def _csv(model: torch.nn.Module, agg: StatsAggregator, run: str, mode: Datasets) -> str:
+    params = sum([np.prod(p.size()) for p in model.parameters()])
     return ",".join(map(str, [run,
                               mode.value,
+                              params,
                               agg.accuracy(),
                               *map(agg.precision, agg.classes),
                               *map(agg.recall, agg.classes),
@@ -32,6 +34,7 @@ def _csv_heading(classes: typing.List[str]) -> str:
         return [f"{metric}/{c}" for c in classes]
     return ",".join(["run",
                      "dataset",
+                     "parameters",
                      "accuracy",
                      *class_headings("precision"),
                      *class_headings("recall"),
@@ -63,7 +66,7 @@ def evaluate(run: str, include_heading: bool = False) -> str:
             for images, labels in device(loader):
                 predictions = model(images)
                 agg.add_batch(predictions, labels)
-            yield _csv(agg, run, mode)
+            yield _csv(model, agg, run, mode)
     return "\n".join(_eval())
 
 
