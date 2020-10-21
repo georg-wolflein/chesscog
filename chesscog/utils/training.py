@@ -52,7 +52,7 @@ class StatsAggregator():
     def f1_score(self, cls: str) -> float:
         precision = self.precision(cls)
         recall = self.recall(cls)
-        return 2 * precision * recall / (precision + recall)
+        return _fraction(2 * precision * recall, precision + recall)
 
 
 def build_optimizer_from_config(optimizer_cfg: CN, params) -> torch.optim.Optimizer:

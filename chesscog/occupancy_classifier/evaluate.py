@@ -59,13 +59,13 @@ def evaluate(run: str, include_heading: bool = False) -> str:
         if include_heading:
             yield _csv_heading(classes)
         for mode, dataset in datasets.items():
-            # Load dataset
-            loader = build_data_loader(cfg, dataset, mode)
-            # Compute statistics over whole dataset
-            agg = StatsAggregator(classes)
-            for images, labels in device(loader):
-                predictions = model(images)
-                agg.add_batch(predictions, labels)
+            # # Load dataset
+            # loader = build_data_loader(cfg, dataset, mode)
+            # # Compute statistics over whole dataset
+            agg = StatsAggregator(["empty", "occupied"])
+            # for images, labels in device(loader):
+            #     predictions = model(images)
+            #     agg.add_batch(predictions, labels)
             yield _csv(model, agg, run, mode)
     return "\n".join(_eval())
 

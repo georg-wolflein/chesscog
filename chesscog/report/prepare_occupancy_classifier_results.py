@@ -22,6 +22,8 @@ if __name__ == "__main__":
     df["context"] = "\\cmark"
     df["context"].loc[df["centercrop"]] = "\\xmark"
     df.index = df.index.str.replace("_centercrop", "")
+    df["parameters"] = df["val_parameters"]
+    df.drop(columns=["train_parameters", "val_parameters"])
 
     regex = re.compile(r"CNN(\d+)_(\d+)Conv_(\d+)Pool_(\d+)FC")
     df.index = df.index.str.replace(

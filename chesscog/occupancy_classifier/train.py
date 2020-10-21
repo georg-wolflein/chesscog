@@ -32,7 +32,7 @@ def train(cfg: CN, run_dir: Path) -> nn.Module:
         logger.warning(
             f"The folder {run_dir} already exists and will be overwritten by this run")
         shutil.rmtree(run_dir, ignore_errors=True)
-    run_dir.mkdir(exist_ok=True)
+    run_dir.mkdir(parents=True, exist_ok=True)
 
     # Store config
     with (run_dir / "config.yaml").open("w") as f:
