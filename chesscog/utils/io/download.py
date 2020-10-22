@@ -20,7 +20,7 @@ def _get_members(f: zipfile.ZipFile) -> typing.Iterator[zipfile.ZipInfo]:
     prefix = os.path.commonprefix(parts)
     if prefix:
         prefix += "/"
-        offset = len(prefix)
+    offset = len(prefix)
     # Alter file names
     for zipinfo in f.infolist():
         name = zipinfo.filename
