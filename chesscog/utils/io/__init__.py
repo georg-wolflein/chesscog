@@ -2,6 +2,7 @@ from pathlib import Path
 import os
 
 from .path_manager import PathManager, URI, PathTranslator
+from .download import download_zip_folder_from_google_drive
 
 
 _DATA_DIR = Path(os.getenv("DATA_DIR",

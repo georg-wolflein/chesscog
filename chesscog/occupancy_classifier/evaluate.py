@@ -93,7 +93,7 @@ if __name__ == "__main__":
                         type=str, default=None, choices=[x.value for x in Datasets])
     parser.add_argument("--out", help="output folder", type=str,
                         default="results://occupancy_classifier")
-    parser.add_argument("--find-mistakes", help="whether to output all misclassifications",
+    parser.add_argument("--find-mistakes", help="whether to output all misclassification images",
                         dest="find_mistakes", action="store_true")
     parser.set_defaults(find_mistakes=False)
     args = parser.parse_args()
