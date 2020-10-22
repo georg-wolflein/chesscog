@@ -68,7 +68,6 @@ class PathManagerBase:
         if not isinstance(path, _URI):
             path = _URI(path)
         if path.scheme:
-            print(path.scheme, self._handlers)
             if path.scheme not in self._handlers:
                 raise NotImplementedError
             return self._handlers[path.scheme](path)

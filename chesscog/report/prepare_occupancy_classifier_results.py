@@ -4,16 +4,16 @@ import re
 from chesscog.utils.io import URI
 
 if __name__ == "__main__":
-    df = pd.read_csv(URI("results://occupancy_classifier.csv"))
+    df = pd.read_csv(URI("results://occupancy_classifier/evaluate.csv"))
     df["misclassified"] = df["confusion_matrix/0/1"] + df["confusion_matrix/1/0"]
     df["accuracy"] *= 100
 
     df_train = df[df["dataset"] == "train"] \
-        .set_index("run") \
+        .set_index("model") \
         .drop(columns="dataset") \
         .rename(columns=lambda x: f"train_{x}")
     df_val = df[df["dataset"] == "val"] \
-        .set_index("run") \
+        .set_index("model") \
         .drop(columns="dataset") \
         .rename(columns=lambda x: f"val_{x}")
     df = pd.concat((df_train, df_val), axis="columns")

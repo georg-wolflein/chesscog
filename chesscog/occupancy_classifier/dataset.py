@@ -4,11 +4,15 @@ from torchvision import transforms as T
 import typing
 import logging
 from enum import Enum
+import numpy as np
 
 from chesscog.utils.config import CfgNode as CN
 from chesscog.utils.io import URI
 
 logger = logging.getLogger(__name__)
+
+_MEAN = np.array([0.485, 0.456, 0.406])
+_STD = np.array([0.229, 0.224, 0.225])
 
 
 class Datasets(Enum):
@@ -24,9 +28,15 @@ def build_transforms(cfg: CN, mode: Datasets) -> typing.Callable:
         *([T.RandomHorizontalFlip()] if mode == Datasets.TRAIN else []),
         T.Resize(transforms.RESIZE),
         T.ToTensor(),
-        T.Normalize(mean=[0.485, 0.456, 0.406],
-                    std=[0.229, 0.224, 0.225])
+        T.Normalize(mean=_MEAN, std=_STD)
     ])
+
+
+def unnormalize(x: typing.Union[torch.Tensor, np.ndarray]) -> typing.Union[torch.Tensor, np.ndarray]:
+    # x must by pytorch-style ([..., 3, W, H])
+    mean = _MEAN[..., np.newaxis, np.newaxis]
+    std = _MEAN[..., np.newaxis, np.newaxis]
+    return x * std + mean
 
 
 def build_dataset(cfg: CN, mode: Datasets) -> torch.utils.data.Dataset:

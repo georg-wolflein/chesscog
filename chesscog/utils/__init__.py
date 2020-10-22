@@ -4,13 +4,13 @@ import typing
 import functools
 from collections.abc import Iterable
 
-_device = "cuda" if torch.cuda.is_available() else "cpu"
+DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 T = typing.Union[torch.Tensor, torch.nn.Module, typing.List[torch.Tensor],
                  tuple, dict, typing.Generator]
 
 
-def device(x: T, dev: str = _device) -> T:
+def device(x: T, dev: str = DEVICE) -> T:
     to = functools.partial(device, dev=dev)
     if isinstance(x, (torch.Tensor, torch.nn.Module)):
         return x.to(dev)

@@ -17,12 +17,21 @@ class StatsAggregator():
         self.classes = classes
         self.class_to_idx = {c: i for i, c in enumerate(classes)}
         self.reset()
+        self.mistakes = []
 
     def reset(self):
         self.confusion_matrix = np.zeros((len(self.classes), len(self.classes)),
                                          dtype=np.uint32)
+        self.mistakes = []
 
-    def add_batch(self, one_hot_outputs: torch.Tensor, labels: torch.Tensor):
+    def add_batch(self, one_hot_outputs: torch.Tensor, labels: torch.Tensor, inputs: torch.Tensor = None):
+        """Add a batch to compute statistics over.
+
+        Args:
+            one_hot_outputs (torch.Tensor): the one hot outputs of the model
+            labels (torch.Tensor): the groundtruth labels
+            inputs (torch.Tensor, optional): the inputs (if supplied, will be used to keep track of mistakes)
+        """
         outputs = one_hot_outputs.cpu().argmax(axis=-1).numpy()
         labels = labels.cpu().numpy()
         for predicted_class, _ in enumerate(self.classes):
@@ -31,6 +40,10 @@ class StatsAggregator():
                 actual_mask = labels == actual_class
                 self.confusion_matrix[predicted_class,
                                       actual_class] += (actual_mask & predicted_mask).sum()
+        if inputs is not None:
+            mistakes_mask = outputs != labels
+            mistakes = inputs[mistakes_mask].cpu().numpy()
+            self.mistakes.extend(mistakes)
 
     def accuracy(self) -> float:
         correct = np.trace(self.confusion_matrix)  # sum along diagonal

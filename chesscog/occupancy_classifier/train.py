@@ -26,6 +26,7 @@ logger = logging.getLogger(__name__)
 
 def train(cfg: CN, run_dir: Path) -> nn.Module:
     logger.info(f"Starting training in {run_dir}")
+    model_name = run_dir.name
 
     # Create folder
     if run_dir.exists():
@@ -35,7 +36,7 @@ def train(cfg: CN, run_dir: Path) -> nn.Module:
     run_dir.mkdir(parents=True, exist_ok=True)
 
     # Store config
-    with (run_dir / "config.yaml").open("w") as f:
+    with (run_dir / f"{model_name}.yaml").open("w") as f:
         cfg.dump(stream=f)
 
     model = MODELS[cfg.TRAINING.MODEL]()
@@ -163,7 +164,9 @@ def train(cfg: CN, run_dir: Path) -> nn.Module:
     logger.info(
         f"Restoring best weight state (step {best_step} with validation accuracy of {best_accuracy})")
     model.load_state_dict(best_weights)
-    torch.save(model, run_dir / f"model_{best_step}.pt")
+    torch.save(model, run_dir / f"{model_name}.pt")
+    with (run_dir / f"{model_name}.txt").open("w") as f:
+        f.write(f"exported at step: {best_step}")
     return model
 
 
