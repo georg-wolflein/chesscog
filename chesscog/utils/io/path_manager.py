@@ -27,12 +27,8 @@ class _URIFlavour(_PosixFlavour):
             return super().splitroot(part, sep=sep)
 
 
-class URI(Path):
+class _URI(Path):
     _flavour = _URIFlavour()
-
-    def _init(self, *args, **kwargs):
-        self._local_path = PathManager.resolve(self)
-        super()._init()
 
     @property
     def scheme(self) -> str:
@@ -45,9 +41,6 @@ class URI(Path):
         begin = 1 if self.drive or self.root else 0
         return self.root + self._flavour.join(self.parts[begin:])
 
-    def __str__(self) -> str:
-        return str(self._local_path)
-
     def __repr__(self) -> str:
         s = ""
         if self.scheme:
@@ -56,28 +49,41 @@ class URI(Path):
         return "{}({!r})".format(self.__class__.__name__, s)
 
 
-class PathManager:
+class URI(_URI):
 
-    _handlers = {}
+    def _init(self, *args, **kwargs):
+        self._local_path = PathManager.resolve(self)
+        super()._init()
 
-    @classmethod
-    def resolve(cls, path: os.PathLike) -> Path:
-        if not isinstance(path, URI):
-            path = URI(path)
+    def __str__(self) -> str:
+        return str(self._local_path)
+
+
+class PathManagerBase:
+
+    def __init__(self):
+        self._handlers = {}
+
+    def resolve(self, path: os.PathLike) -> Path:
+        if not isinstance(path, _URI):
+            path = _URI(path)
         if path.scheme:
-            if path.scheme not in cls._handlers:
+            print(path.scheme, self._handlers)
+            if path.scheme not in self._handlers:
                 raise NotImplementedError
-            return cls._handlers[path.scheme](path)
+            return self._handlers[path.scheme](path)
         else:
             return Path(path.path)
 
-    @classmethod
-    def register_handler(cls, scheme: str) -> typing.Callable:
+    def register_handler(self, scheme: str) -> typing.Callable:
         def decorator(func: typing.Callable[[os.PathLike], Path]):
-            cls._handlers[scheme] = func
+            self._handlers[scheme] = func
             logger.debug(f"Registered path handler for scheme {scheme}")
             return func
         return decorator
+
+
+PathManager = PathManagerBase()
 
 
 class PathTranslator(abc.ABC):
