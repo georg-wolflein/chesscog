@@ -24,7 +24,7 @@ jobs:
       - run:
           command: |
             mkdir test-results
-            poetry run pytest --junitxml=test-results/junit.xml
+            poetry run python -m pytest --junitxml=test-results/junit.xml
       - store_test_results:
           path: test-results
       - store_artifacts:
