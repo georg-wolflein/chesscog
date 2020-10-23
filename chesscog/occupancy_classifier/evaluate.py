@@ -73,7 +73,7 @@ def evaluate(model_path: Path, datasets: typing.List[Datasets], output_folder: P
                                                       if find_mistakes else dict()))
 
             yield _csv(model, agg, model_name, mode)
-            if include_heading:
+            if find_mistakes:
                 imgs = torch.tensor(agg.mistakes)
                 img = torchvision.utils.make_grid(
                     imgs).numpy().transpose((1, 2, 0))
