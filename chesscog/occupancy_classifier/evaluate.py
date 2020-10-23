@@ -103,7 +103,7 @@ if __name__ == "__main__":
     output_folder.mkdir(parents=True, exist_ok=True)
     output_csv = output_folder / "evaluate.csv"
     with output_csv.open("w") as f:
-        models = list(URI("runs://occupancy_classifier/*/*.pt")) \
+        models = list(URI("runs://occupancy_classifier").glob("*/*.pt")) \
             if args.model is None else [URI(args.model)]
         datasets = [Datasets.TRAIN, Datasets.VAL] \
             if args.dataset is None else [d for d in Datasets if d.value == args.dataset]
