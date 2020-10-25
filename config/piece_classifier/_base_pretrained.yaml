@@ -1,4 +1,4 @@
-_BASE_: config://piece_classifier/_base_pretrained.yaml
+_BASE_: config://piece_classifier/_base.yaml
 
 DATASET:
   PHASES:

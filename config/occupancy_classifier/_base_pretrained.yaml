@@ -1,4 +1,4 @@
-_BASE_: config://occupancy_classifier/_base_pretrained.yaml
+_BASE_: config://occupancy_classifier/_base.yaml
 
 DATASET:
   PHASES:
