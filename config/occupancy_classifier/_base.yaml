@@ -2,6 +2,7 @@ _BASE_: config://_classifier_base.yaml
 
 DATASET:
   PATH: data://occupancy
+  BATCH_SIZE: 128
   TRANSFORMS:
     CENTER_CROP: [100, 100]
     RESIZE: [100, 100]
