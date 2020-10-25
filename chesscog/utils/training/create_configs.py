@@ -12,7 +12,7 @@ def create_configs(classifier: str, include_centercrop: bool = False):
 
     logger.info(f"Removing YAML files from {config_dir}.")
     for f in config_dir.glob("*.yaml"):
-        if f.name != "_base.yaml":
+        if not f.name.startswith("_"):
             f.unlink()
 
     for name, model in MODELS_REGISTRY[classifier.upper()].items():

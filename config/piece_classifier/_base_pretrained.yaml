@@ -1,0 +1,14 @@
+_BASE_: config://piece_classifier/_base_pretrained.yaml
+
+DATASET:
+  PHASES:
+    - EPOCHS: 2
+      OPTIMIZER:
+        LEARNING_RATE: 0.001
+        NAME: Adam
+      PARAMS: head
+    - EPOCHS: 4
+      OPTIMIZER:
+        LEARNING_RATE: 0.0001
+        NAME: Adam
+      PARAMS: all
