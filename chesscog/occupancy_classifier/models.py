@@ -3,18 +3,19 @@ from torchvision import models
 import torch.nn.functional as F
 import functools
 
-MODELS = {}
+from chesscog.utils.config import CfgNode as CN
+from chesscog.utils.registry import Registry
+from chesscog.utils.models import MODELS_REGISTRY
+
 NUM_CLASSES = 2
 
-
-def _register_model(cls):
-    MODELS[cls.__name__] = cls
-    return cls
+MODEL_REGISTRY = Registry()
+MODELS_REGISTRY.register_as("OCCUPANCY_CLASSIFIER")(MODEL_REGISTRY)
 
 
-@_register_model
+@MODEL_REGISTRY.register
 class CNN100_3Conv_3Pool_3FC(nn.Module):
-    input_size = 100
+    input_size = 100, 100
     pretrained = False
 
     def __init__(self):
@@ -41,9 +42,9 @@ class CNN100_3Conv_3Pool_3FC(nn.Module):
         return x
 
 
-@_register_model
+@MODEL_REGISTRY.register
 class CNN100_3Conv_3Pool_2FC(nn.Module):
-    input_size = 100
+    input_size = 100, 100
     pretrained = False
 
     def __init__(self):
@@ -68,9 +69,9 @@ class CNN100_3Conv_3Pool_2FC(nn.Module):
         return x
 
 
-@_register_model
+@MODEL_REGISTRY.register
 class CNN50_2Conv_2Pool_3FC(nn.Module):
-    input_size = 50
+    input_size = 50, 50
     pretrained = False
 
     def __init__(self):
@@ -94,9 +95,9 @@ class CNN50_2Conv_2Pool_3FC(nn.Module):
         return x
 
 
-@_register_model
+@MODEL_REGISTRY.register
 class CNN50_2Conv_2Pool_2FC(nn.Module):
-    input_size = 50
+    input_size = 50, 50
     pretrained = False
 
     def __init__(self):
@@ -118,9 +119,9 @@ class CNN50_2Conv_2Pool_2FC(nn.Module):
         return x
 
 
-@_register_model
+@MODEL_REGISTRY.register
 class CNN50_3Conv_1Pool_2FC(nn.Module):
-    input_size = 50
+    input_size = 50, 50
     pretrained = False
 
     def __init__(self):
@@ -144,9 +145,9 @@ class CNN50_3Conv_1Pool_2FC(nn.Module):
         return x
 
 
-@_register_model
+@MODEL_REGISTRY.register
 class CNN50_3Conv_1Pool_3FC(nn.Module):
-    input_size = 50
+    input_size = 50, 50
     pretrained = False
 
     def __init__(self):
@@ -172,9 +173,9 @@ class CNN50_3Conv_1Pool_3FC(nn.Module):
         return x
 
 
-@_register_model
+@MODEL_REGISTRY.register
 class AlexNet(nn.Module):
-    input_size = 100
+    input_size = 100, 100
     pretrained = True
 
     def __init__(self):
@@ -190,9 +191,9 @@ class AlexNet(nn.Module):
         return self.model(x)
 
 
-@_register_model
+@MODEL_REGISTRY.register
 class ResNet(nn.Module):
-    input_size = 100
+    input_size = 100, 100
     pretrained = True
 
     def __init__(self):
@@ -208,9 +209,9 @@ class ResNet(nn.Module):
         return self.model(x)
 
 
-@_register_model
+@MODEL_REGISTRY.register
 class VGG(nn.Module):
-    input_size = 100
+    input_size = 100, 100
     pretrained = True
 
     def __init__(self):

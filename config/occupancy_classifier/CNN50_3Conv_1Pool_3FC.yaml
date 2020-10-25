@@ -1,11 +1,11 @@
 DATASET:
   TRANSFORMS:
-    CENTER_CROP:
-    - 100
-    - 100
+    CENTER_CROP: null
     RESIZE:
     - 50
     - 50
 TRAINING:
-  MODEL: CNN50_3Conv_1Pool_3FC
+  MODEL:
+    NAME: CNN50_3Conv_1Pool_3FC
+    REGISTRY: OCCUPANCY_CLASSIFIER
 _BASE_: config://occupancy_classifier/_base.yaml

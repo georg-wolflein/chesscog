@@ -7,5 +7,7 @@ DATASET:
     - 50
     - 50
 TRAINING:
-  MODEL: CNN50_3Conv_1Pool_2FC
+  MODEL:
+    NAME: CNN50_3Conv_1Pool_2FC
+    REGISTRY: OCCUPANCY_CLASSIFIER
 _BASE_: config://occupancy_classifier/_base.yaml

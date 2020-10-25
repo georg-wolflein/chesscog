@@ -1,16 +1,8 @@
-DATASET:
-  PATH: data://pieces
-  WORKERS: 2
-  BATCH_SIZE: 128
-  TRANSFORMS:
-    CENTER_CROP: [100, 100]
-    RESIZE: [100, 100]
+_BASE_: config://_classifier_base.yaml
 
-TRAINING:
-  MODEL: CNN100_3Conv_3Pool_3FC
-  PHASES:
-    - PARAMS: all
-      EPOCHS: 3
-      OPTIMIZER:
-        NAME: Adam
-        LEARNING_RATE: 0.001
+DATASET:
+  PATH: data://occupancy
+  TRANSFORMS:
+    CENTER_CROP: null
+    RESIZE: [100, 200]
+    RANDOM_HORIZONTAL_FLIP: null

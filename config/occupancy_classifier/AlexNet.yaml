@@ -1,13 +1,13 @@
 DATASET:
   TRANSFORMS:
-    CENTER_CROP:
-    - 100
-    - 100
+    CENTER_CROP: null
     RESIZE:
     - 100
     - 100
 TRAINING:
-  MODEL: AlexNet
+  MODEL:
+    NAME: AlexNet
+    REGISTRY: OCCUPANCY_CLASSIFIER
   PHASES:
   - EPOCHS: 1
     OPTIMIZER:

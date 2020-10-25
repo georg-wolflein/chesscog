@@ -3,9 +3,9 @@ DATASET:
     CENTER_CROP: null
     RESIZE:
     - 100
-    - 100
+    - 200
 TRAINING:
   MODEL:
     NAME: CNN100_3Conv_3Pool_3FC
-    REGISTRY: OCCUPANCY_CLASSIFIER
-_BASE_: config://occupancy_classifier/_base.yaml
+    REGISTRY: PIECE_CLASSIFIER
+_BASE_: config://piece_classifier/_base.yaml

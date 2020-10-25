@@ -31,17 +31,18 @@ class Datasets(Enum):
     TEST = "test"
 
 
-def build_transforms(cfg: CN, mode: Datasets, random_horizontal_flip: bool = True) -> typing.Callable:
+def build_transforms(cfg: CN, mode: Datasets) -> typing.Callable:
     transforms = cfg.DATASET.TRANSFORMS
-    return T.Compose([
-        T.CenterCrop(transforms.CENTER_CROP),
-        *([T.RandomHorizontalFlip()]
-          if mode == Datasets.TRAIN and random_horizontal_flip
-          else []),
-        T.Resize(transforms.RESIZE),
-        T.ToTensor(),
-        T.Normalize(mean=_MEAN, std=_STD)
-    ])
+    t = []
+    if transforms.CENTER_CROP:
+        t.append(T.CenterCrop(transforms.CENTER_CROP))
+    if mode == Datasets.TRAIN and transforms.RANDOM_HORIZONTAL_FLIP:
+        t.append(T.RandomHorizontalFlip(transforms.RANDOM_HORIZONTAL_FLIP))
+    if transforms.RESIZE:
+        t.append(T.Resize(transforms.RESIZE))
+    t.extend([T.ToTensor(),
+              T.Normalize(mean=_MEAN, std=_STD)])
+    return T.Compose(t)
 
 
 def unnormalize(x: typing.Union[torch.Tensor, np.ndarray]) -> typing.Union[torch.Tensor, np.ndarray]:

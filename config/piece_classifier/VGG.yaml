@@ -3,11 +3,11 @@ DATASET:
     CENTER_CROP: null
     RESIZE:
     - 100
-    - 100
+    - 200
 TRAINING:
   MODEL:
-    NAME: ResNet
-    REGISTRY: OCCUPANCY_CLASSIFIER
+    NAME: VGG
+    REGISTRY: PIECE_CLASSIFIER
   PHASES:
   - EPOCHS: 1
     OPTIMIZER:
@@ -19,4 +19,4 @@ TRAINING:
       LEARNING_RATE: 0.0001
       NAME: Adam
     PARAMS: all
-_BASE_: config://occupancy_classifier/_base.yaml
+_BASE_: config://piece_classifier/_base.yaml

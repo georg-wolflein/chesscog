@@ -67,12 +67,3 @@ class StatsAggregator():
         precision = self.precision(cls)
         recall = self.recall(cls)
         return _fraction(2 * precision * recall, precision + recall)
-
-
-def build_optimizer_from_config(optimizer_cfg: CN, params) -> torch.optim.Optimizer:
-    optimizers = {
-        "Adam": lambda: torch.optim.Adam(params, lr=optimizer_cfg.LEARNING_RATE)
-    }
-    if optimizer_cfg.NAME not in optimizers:
-        raise NotImplementedError
-    return optimizers[optimizer_cfg.NAME]()
