@@ -23,7 +23,8 @@ def create_configs(classifier: str, include_centercrop: bool = False):
 
             size = model.input_size
             C = CN()
-            C._BASE_ = "config://" + classifier + "/_base.yaml"
+            suffix = "_pretrained" if model.pretrained else ""
+            C._BASE_ = f"config://{classifier}/_base{suffix}.yaml"
             C.DATASET = CN()
             C.DATASET.TRANSFORMS = CN()
             C.DATASET.TRANSFORMS.CENTER_CROP = (50, 50) \
@@ -33,19 +34,6 @@ def create_configs(classifier: str, include_centercrop: bool = False):
             C.TRAINING.MODEL = CN()
             C.TRAINING.MODEL.REGISTRY = classifier.upper()
             C.TRAINING.MODEL.NAME = name
-
-            if model.pretrained:
-                def create_phase(epochs: int, lr: float, params: str):
-                    return {
-                        "EPOCHS": epochs,
-                        "PARAMS": params,
-                        "OPTIMIZER": {
-                            "NAME": "Adam",
-                            "LEARNING_RATE": lr
-                        }
-                    }
-                C.TRAINING.PHASES = [create_phase(epochs=1, lr=.001, params="head"),
-                                     create_phase(epochs=2, lr=.0001, params="all")]
 
             with config_file.open("w") as f:
                 C.dump(stream=f)

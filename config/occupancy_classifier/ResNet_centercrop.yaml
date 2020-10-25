@@ -10,15 +10,4 @@ TRAINING:
   MODEL:
     NAME: ResNet
     REGISTRY: OCCUPANCY_CLASSIFIER
-  PHASES:
-  - EPOCHS: 1
-    OPTIMIZER:
-      LEARNING_RATE: 0.001
-      NAME: Adam
-    PARAMS: head
-  - EPOCHS: 2
-    OPTIMIZER:
-      LEARNING_RATE: 0.0001
-      NAME: Adam
-    PARAMS: all
-_BASE_: config://occupancy_classifier/_base.yaml
+_BASE_: config://occupancy_classifier/_base_pretrained.yaml
