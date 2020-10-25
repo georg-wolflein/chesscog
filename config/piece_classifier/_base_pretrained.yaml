@@ -1,6 +1,6 @@
 _BASE_: config://piece_classifier/_base.yaml
 
-DATASET:
+TRAINING:
   PHASES:
     - EPOCHS: 2
       OPTIMIZER:

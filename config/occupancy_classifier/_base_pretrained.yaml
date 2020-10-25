@@ -1,6 +1,6 @@
 _BASE_: config://occupancy_classifier/_base.yaml
 
-DATASET:
+TRAINING:
   PHASES:
     - EPOCHS: 1
       OPTIMIZER:
