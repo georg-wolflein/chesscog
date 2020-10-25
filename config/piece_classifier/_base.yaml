@@ -1,7 +1,7 @@
 _BASE_: config://_classifier_base.yaml
 
 DATASET:
-  PATH: data://occupancy
+  PATH: data://pieces
   TRANSFORMS:
     CENTER_CROP: null
     RESIZE: [100, 200]
