@@ -57,7 +57,7 @@ def evaluate(model_path: Path, datasets: typing.List[Datasets], output_folder: P
     model.eval()
     datasets = {mode: build_dataset(cfg, mode)
                 for mode in datasets}
-    classes = datasets[Datasets.TRAIN].classes
+    classes = next(iter(datasets.values())).classes
 
     def _eval():
         if include_heading:
@@ -74,14 +74,21 @@ def evaluate(model_path: Path, datasets: typing.List[Datasets], output_folder: P
 
             yield _csv(model, agg, model_name, mode)
             if find_mistakes:
-                imgs = torch.tensor(agg.mistakes)
-                img = torchvision.utils.make_grid(
-                    imgs).numpy().transpose((1, 2, 0))
-                img = Image.fromarray(img)
+                groundtruth, mistakes = zip(*sorted(agg.mistakes,
+                                                    key=lambda x: x[0]))
+                imgs = torch.tensor(mistakes).permute((0, 2, 3, 1))
+                imgs = unnormalize(imgs).permute((0, 3, 1, 2))
+                img = torchvision.utils.make_grid(imgs, pad_value=1, nrow=4)
+                img = img.numpy().transpose((1, 2, 0)) * 255
+                img = Image.fromarray(img.astype(np.uint8))
                 mistakes_file = output_folder / \
                     f"{model_name}_{mode.value}_mistakes.png"
                 logger.info(f"Writing mistakes to {mistakes_file}")
                 img.save(mistakes_file)
+                groundtruth_file = output_folder / \
+                    f"{model_name}_{mode.value}_groundtruth.csv"
+                with groundtruth_file.open("w") as f:
+                    f.write(",".join(map(str, groundtruth)))
     return "\n".join(_eval())
 
 

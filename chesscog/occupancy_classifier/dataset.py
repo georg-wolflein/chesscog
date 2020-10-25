@@ -33,10 +33,8 @@ def build_transforms(cfg: CN, mode: Datasets) -> typing.Callable:
 
 
 def unnormalize(x: typing.Union[torch.Tensor, np.ndarray]) -> typing.Union[torch.Tensor, np.ndarray]:
-    # x must by pytorch-style ([..., 3, W, H])
-    mean = _MEAN[..., np.newaxis, np.newaxis]
-    std = _MEAN[..., np.newaxis, np.newaxis]
-    return x * std + mean
+    # x must be of the form ([..., W, H, 3])
+    return x * _STD + _MEAN
 
 
 def build_dataset(cfg: CN, mode: Datasets) -> torch.utils.data.Dataset:

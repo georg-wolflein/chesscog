@@ -38,7 +38,7 @@ def download_zip_folder_from_google_drive(file_id: str, destination: os.PathLike
     with tempfile.TemporaryDirectory() as tmp_dir:
         zip_file = Path(tmp_dir) / f"{destination.name}.zip"
         logger.info(f"Downloading {file_id} to {zip_file}")
-        gdd.download_file_from_google_drive(file_id="1XClmGJwEWNcIkwaH0VLuvvAY3qk_CRJh",
+        gdd.download_file_from_google_drive(file_id=file_id,
                                             dest_path=zip_file,
                                             overwrite=True,
                                             showsize=show_size)

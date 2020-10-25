@@ -5,7 +5,7 @@ from chesscog.utils.io import download_zip_folder_from_google_drive
 
 
 ensure_model = functools.partial(download_zip_folder_from_google_drive,
-                                 "1mLaSIh7KzGeMuyGmhtwIYVVVN6l_eC1k",
+                                 "1MUGB_OlcbHFyHh2BwtkXXi6ZBPeEfHtQ",
                                  "models://occupancy_classifier")
 
 

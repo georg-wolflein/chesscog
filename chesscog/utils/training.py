@@ -43,7 +43,8 @@ class StatsAggregator():
         if inputs is not None:
             mistakes_mask = outputs != labels
             mistakes = inputs[mistakes_mask].cpu().numpy()
-            self.mistakes.extend(mistakes)
+            groundtruth = map(self.classes.__getitem__, labels[mistakes_mask])
+            self.mistakes.extend(zip(groundtruth, mistakes))
 
     def accuracy(self) -> float:
         correct = np.trace(self.confusion_matrix)  # sum along diagonal
