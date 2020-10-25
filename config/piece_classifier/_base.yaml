@@ -1,5 +1,5 @@
 DATASET:
-  PATH: data://occupancy
+  PATH: data://pieces
   WORKERS: 2
   BATCH_SIZE: 128
   TRANSFORMS:

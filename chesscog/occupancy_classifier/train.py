@@ -18,7 +18,7 @@ from chesscog.utils import device
 from chesscog.utils.config import CfgNode as CN
 from chesscog.utils.training import build_optimizer_from_config, StatsAggregator
 from chesscog.utils.io import URI
-from .dataset import build_dataset, build_data_loader, Datasets
+from chesscog.utils.dataset import build_dataset, build_data_loader, Datasets
 from .models import MODELS
 
 logger = logging.getLogger(__name__)

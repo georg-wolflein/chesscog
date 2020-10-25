@@ -9,7 +9,7 @@ import logging
 from PIL import Image
 
 from chesscog.occupancy_classifier import models as _models
-from chesscog.occupancy_classifier.dataset import build_dataset, build_data_loader, Datasets, unnormalize
+from chesscog.utils.dataset import build_dataset, build_data_loader, Datasets, unnormalize
 from chesscog.utils.config import CfgNode as CN
 from chesscog.utils.io import URI
 from chesscog.utils.training import StatsAggregator

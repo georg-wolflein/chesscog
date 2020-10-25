@@ -5,6 +5,7 @@ import typing
 import logging
 from enum import Enum
 import numpy as np
+import chess
 
 from chesscog.utils.config import CfgNode as CN
 from chesscog.utils.io import URI
@@ -15,17 +16,28 @@ _MEAN = np.array([0.485, 0.456, 0.406])
 _STD = np.array([0.229, 0.224, 0.225])
 
 
+def color_name(color: chess.Color):
+    return {chess.WHITE: "white",
+            chess.BLACK: "black"}[color]
+
+
+def piece_name(piece: chess.Piece) -> str:
+    return f"{color_name(piece.color)}_{chess.piece_name(piece.piece_type)}"
+
+
 class Datasets(Enum):
     TRAIN = "train"
     VAL = "val"
     TEST = "test"
 
 
-def build_transforms(cfg: CN, mode: Datasets) -> typing.Callable:
+def build_transforms(cfg: CN, mode: Datasets, random_horizontal_flip: bool = True) -> typing.Callable:
     transforms = cfg.DATASET.TRANSFORMS
     return T.Compose([
         T.CenterCrop(transforms.CENTER_CROP),
-        *([T.RandomHorizontalFlip()] if mode == Datasets.TRAIN else []),
+        *([T.RandomHorizontalFlip()]
+          if mode == Datasets.TRAIN and random_horizontal_flip
+          else []),
         T.Resize(transforms.RESIZE),
         T.ToTensor(),
         T.Normalize(mean=_MEAN, std=_STD)

@@ -18,7 +18,7 @@ BOARD_SIZE = 8 * SQUARE_SIZE
 IMG_SIZE = BOARD_SIZE + 2 * SQUARE_SIZE
 
 
-def crop_square(img, square: chess.Square, turn: chess.Color) -> np.ndarray:
+def crop_square(img: np.ndarray, square: chess.Square, turn: chess.Color) -> np.ndarray:
     rank = chess.square_rank(square)
     file = chess.square_file(square)
     if turn == chess.WHITE:
@@ -39,7 +39,7 @@ def extract_squares_from_sample(id: str, subset: str = ""):
     dst_points = np.array([[SQUARE_SIZE, SQUARE_SIZE],  # top left
                            [BOARD_SIZE + SQUARE_SIZE, SQUARE_SIZE],  # top right
                            [BOARD_SIZE + SQUARE_SIZE, BOARD_SIZE + \
-                            SQUARE_SIZE],  # bottom right,
+                            SQUARE_SIZE],  # bottom right
                            [SQUARE_SIZE, BOARD_SIZE + SQUARE_SIZE]  # bottom left
                            ], dtype=np.float)
     transformation_matrix, mask = cv2.findHomography(src_points, dst_points)
@@ -63,7 +63,7 @@ if __name__ == "__main__":
             folder = OUT_DIR / subset / c
             shutil.rmtree(folder, ignore_errors=True)
             os.makedirs(folder, exist_ok=True)
-            samples = list((RENDERS_DIR / subset).glob("*.png"))
+        samples = list((RENDERS_DIR / subset).glob("*.png"))
         for i, img_file in enumerate(samples):
             if i % int(len(samples) / 100) == 0:
                 print(f"{i / len(samples)*100:.0f}%")
