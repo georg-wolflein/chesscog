@@ -8,4 +8,4 @@ TRAINING:
   MODEL:
     NAME: InceptionV3
     REGISTRY: PIECE_CLASSIFIER
-_BASE_: config://piece_classifier/_base_pretrained.yaml
+_BASE_: config://piece_classifier/_base_override_InceptionV3.yaml

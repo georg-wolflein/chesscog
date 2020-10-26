@@ -23,8 +23,12 @@ def create_configs(classifier: str, include_centercrop: bool = False):
 
             size = model.input_size
             C = CN()
-            suffix = "_pretrained" if model.pretrained else ""
-            C._BASE_ = f"config://{classifier}/_base{suffix}.yaml"
+            override_base = f"config://{classifier}/_base_override_{name}.yaml"
+            if URI(override_base).exists():
+                C._BASE_ = override_base
+            else:
+                suffix = "_pretrained" if model.pretrained else ""
+                C._BASE_ = f"config://{classifier}/_base{suffix}.yaml"
             C.DATASET = CN()
             C.DATASET.TRANSFORMS = CN()
             C.DATASET.TRANSFORMS.CENTER_CROP = (50, 50) \

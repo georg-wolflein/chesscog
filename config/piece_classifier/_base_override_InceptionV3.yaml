@@ -1,0 +1,4 @@
+_BASE_: config://piece_classifier/_base_pretrained.yaml
+
+DATASET:
+  BATCH_SIZE: 32
