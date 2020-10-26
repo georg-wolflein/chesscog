@@ -7,3 +7,11 @@ DATASET:
     CENTER_CROP: null
     RESIZE: [100, 200]
     RANDOM_HORIZONTAL_FLIP: null
+
+TRAINING:
+  PHASES:
+    - EPOCHS: 6
+      OPTIMIZER:
+        LEARNING_RATE: 0.001
+        NAME: Adam
+      PARAMS: all
