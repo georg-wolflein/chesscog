@@ -2,8 +2,8 @@ DATASET:
   TRANSFORMS:
     CENTER_CROP: null
     RESIZE:
-    - 100
-    - 200
+    - 299
+    - 299
 TRAINING:
   MODEL:
     NAME: InceptionV3

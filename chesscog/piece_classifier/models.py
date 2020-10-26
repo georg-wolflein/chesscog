@@ -125,7 +125,7 @@ class VGG(nn.Module):
 
 @MODEL_REGISTRY.register
 class InceptionV3(nn.Module):
-    input_size = 100, 200
+    input_size = 299, 299
     pretrained = True
 
     def __init__(self):
