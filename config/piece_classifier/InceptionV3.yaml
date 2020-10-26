@@ -1,0 +1,11 @@
+DATASET:
+  TRANSFORMS:
+    CENTER_CROP: null
+    RESIZE:
+    - 100
+    - 200
+TRAINING:
+  MODEL:
+    NAME: InceptionV3
+    REGISTRY: PIECE_CLASSIFIER
+_BASE_: config://piece_classifier/_base_pretrained.yaml

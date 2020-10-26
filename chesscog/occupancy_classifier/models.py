@@ -225,25 +225,3 @@ class VGG(nn.Module):
 
     def forward(self, x):
         return self.model(x)
-
-
-# @_register_model
-# class InceptionV3(nn.Module):
-#     input_size = 256
-#     pretrained = True
-
-#     def __init__(self):
-#         super().__init__()
-#         self.model = models.inception_v3(pretrained=True)
-#         # Auxiliary network
-#         n = self.model.AuxLogits.fc.in_features
-#         self.model.AuxLogits.fc = nn.Linear(n, NUM_CLASSES)
-#         # Primary network
-#         n = self.model.fc.in_features
-#         self.model.fc = nn.Linear(n, NUM_CLASSES)
-#         self.params = {
-#             "head": list(self.model.AuxLogits.fc.parameters()) + list(self.model.fc.parameters())
-#         }
-
-#     def forward(self, x):
-#         return self.model(x)

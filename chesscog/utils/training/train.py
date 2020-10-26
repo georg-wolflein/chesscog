@@ -37,6 +37,7 @@ def train(cfg: CN, run_dir: Path) -> nn.Module:
 
     model = build_model(cfg)
     device(model)
+    is_inception = "inception" in cfg.TRAINING.MODEL.NAME.lower()
 
     best_weights, best_accuracy, best_step = copy.deepcopy(
         model.state_dict()), 0., 0
@@ -74,8 +75,15 @@ def train(cfg: CN, run_dir: Path) -> nn.Module:
             optimizer.zero_grad()
 
             # Forward pass and compute loss
-            outputs = model(inputs)
-            loss = criterion(outputs, labels)
+            if is_inception and mode == Datasets.TRAIN:
+                # Special case for inception models
+                outputs, auxiliary_outputs = model(inputs)
+                loss1 = criterion(outputs, labels)
+                loss2 = criterion(auxiliary_outputs, labels)
+                loss = loss1 + 0.4*loss2
+            else:
+                outputs = model(inputs)
+                loss = criterion(outputs, labels)
 
             if mode == Datasets.TRAIN:
                 loss.backward()
