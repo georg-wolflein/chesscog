@@ -57,37 +57,37 @@ def evaluate(model_path: Path, datasets: typing.List[Datasets], output_folder: P
                 for mode in datasets}
     classes = next(iter(datasets.values())).classes
 
-    def _eval():
-        if include_heading:
-            yield _csv_heading(classes)
-        for mode, dataset in datasets.items():
-            # Load dataset
-            loader = build_data_loader(cfg, dataset, mode)
-            # Compute statistics over whole dataset
-            agg = StatsAggregator(classes)
-            for images, labels in device(loader):
-                predictions = model(images)
-                agg.add_batch(predictions, labels, **(dict(inputs=images)
-                                                      if find_mistakes else dict()))
+    csv = []
+    if include_heading:
+        csv.append(_csv_heading(classes))
+    for mode, dataset in datasets.items():
+        # Load dataset
+        loader = build_data_loader(cfg, dataset, mode)
+        # Compute statistics over whole dataset
+        agg = StatsAggregator(classes)
+        for images, labels in device(loader):
+            predictions = model(images)
+            agg.add_batch(predictions, labels, **(dict(inputs=images)
+                                                  if find_mistakes else dict()))
 
-            yield _csv(model, agg, model_name, mode)
-            if find_mistakes:
-                groundtruth, mistakes = zip(*sorted(agg.mistakes,
-                                                    key=lambda x: x[0]))
-                imgs = torch.tensor(mistakes).permute((0, 2, 3, 1))
-                imgs = unnormalize(imgs).permute((0, 3, 1, 2))
-                img = torchvision.utils.make_grid(imgs, pad_value=1, nrow=4)
-                img = img.numpy().transpose((1, 2, 0)) * 255
-                img = Image.fromarray(img.astype(np.uint8))
-                mistakes_file = output_folder / \
-                    f"{model_name}_{mode.value}_mistakes.png"
-                logger.info(f"Writing mistakes to {mistakes_file}")
-                img.save(mistakes_file)
-                groundtruth_file = output_folder / \
-                    f"{model_name}_{mode.value}_groundtruth.csv"
-                with groundtruth_file.open("w") as f:
-                    f.write(",".join(map(str, groundtruth)))
-    return "\n".join(_eval())
+        csv.append(_csv(model, agg, model_name, mode))
+        if find_mistakes:
+            groundtruth, mistakes = zip(*sorted(agg.mistakes,
+                                                key=lambda x: x[0]))
+            imgs = torch.tensor(mistakes).permute((0, 2, 3, 1))
+            imgs = unnormalize(imgs).permute((0, 3, 1, 2))
+            img = torchvision.utils.make_grid(imgs, pad_value=1, nrow=4)
+            img = img.numpy().transpose((1, 2, 0)) * 255
+            img = Image.fromarray(img.astype(np.uint8))
+            mistakes_file = output_folder / \
+                f"{model_name}_{mode.value}_mistakes.png"
+            logger.info(f"Writing mistakes to {mistakes_file}")
+            img.save(mistakes_file)
+            groundtruth_file = output_folder / \
+                f"{model_name}_{mode.value}_groundtruth.csv"
+            with groundtruth_file.open("w") as f:
+                f.write(",".join(map(str, groundtruth)))
+    return "\n".join(csv)
 
 
 def perform_evaluation(classifier: str):
