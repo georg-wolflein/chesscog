@@ -2,7 +2,7 @@ _BASE_: config://_classifier_base.yaml
 
 DATASET:
   PATH: data://pieces
-  BATCH_SIZE: 64
+  BATCH_SIZE: 32
   TRANSFORMS:
     CENTER_CROP: null
     RESIZE: [100, 200]

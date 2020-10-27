@@ -39,7 +39,7 @@ def build_transforms(cfg: CN, mode: Datasets) -> typing.Callable:
     if mode == Datasets.TRAIN and transforms.RANDOM_HORIZONTAL_FLIP:
         t.append(T.RandomHorizontalFlip(transforms.RANDOM_HORIZONTAL_FLIP))
     if transforms.RESIZE:
-        t.append(T.Resize(transforms.RESIZE))
+        t.append(T.Resize(tuple(reversed(transforms.RESIZE))))
     t.extend([T.ToTensor(),
               T.Normalize(mean=_MEAN, std=_STD)])
     return T.Compose(t)
