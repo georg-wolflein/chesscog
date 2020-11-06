@@ -118,19 +118,16 @@ def eliminate_similar_lines(lines: np.ndarray) -> np.ndarray:
     return np.stack(filtered_lines)
 
 
-def _get_intersection_point(m1, c1, m2, c2):
-    # y = m1*x + c1 = m2*x + c2
-    # (m1 - m2)*x = c2 - c1
-    # x = (c2 - c1) / (m1 - m2)
-    x = (c2 - c1) / (m1 - m2)
-    y = m1 * x + c1
+def get_intersection_point(rho1, theta1, rho2, theta2):
+    # rho1 = x cos(theta1) + y sin(theta1)
+    # rho2 = x cos(theta2) + y sin(theta2)
+    cos_t1 = np.cos(theta1)
+    cos_t2 = np.cos(theta2)
+    sin_t1 = np.sin(theta1)
+    sin_t2 = np.sin(theta2)
+    x = (sin_t1 * rho2 - sin_t2 * rho1) / (cos_t2 * sin_t1 - cos_t1 * sin_t2)
+    y = (cos_t1 * rho2 - cos_t2 * rho1) / (sin_t2 * cos_t1 - sin_t1 * cos_t2)
     return x, y
-
-
-def _polar_to_slope_intercept_form(rho, theta):
-    m = -np.cos(theta) / np.sin(theta)
-    c = rho / np.sin(theta)
-    return m, c
 
 
 def _choose_from_range(upper_bound: int, n: int = 2):
@@ -138,14 +135,14 @@ def _choose_from_range(upper_bound: int, n: int = 2):
 
 
 def get_intersection_points(horizontal_lines: np.ndarray, vertical_lines: np.ndarray) -> np.ndarray:
-    horizontal_lines = np.moveaxis(horizontal_lines, -1, 0)
-    vertical_lines = np.moveaxis(vertical_lines, -1, 0)
+    rho1, theta1 = np.moveaxis(horizontal_lines, -1, 0)
+    rho2, theta2 = np.moveaxis(vertical_lines, -1, 0)
 
-    m1, c1 = _polar_to_slope_intercept_form(*horizontal_lines)
-    m2, c2 = _polar_to_slope_intercept_form(*vertical_lines)
-    m1, m2 = np.meshgrid(m1, m2, indexing="ij")
-    c1, c2 = np.meshgrid(c1, c2, indexing="ij")
-    intersection_points = _get_intersection_point(m1, c1, m2, c2)
+    # m1, c1 = _polar_to_slope_intercept_form(*horizontal_lines)
+    # m2, c2 = _polar_to_slope_intercept_form(*vertical_lines)
+    rho1, rho2 = np.meshgrid(rho1, rho2, indexing="ij")
+    theta1, theta2 = np.meshgrid(theta1, theta2, indexing="ij")
+    intersection_points = get_intersection_point(rho1, theta1, rho2, theta2)
     intersection_points = np.stack(intersection_points, axis=-1)
     return intersection_points
 

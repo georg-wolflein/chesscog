@@ -29,12 +29,12 @@ def evaluate(datasets: typing.List[Datasets], output_folder: Path, find_mistakes
             if np.linalg.norm(actual - predicted, axis=-1).max() > 10.:
                 print(img_file)
                 mistakes += 1
-                # import matplotlib.pyplot as plt
-                # plt.figure()
-                # plt.imshow(img)
-                # plt.scatter(*actual.T, c="g")
-                # plt.scatter(*predicted.T, c="r")
-                # plt.show()
+                import matplotlib.pyplot as plt
+                plt.figure()
+                plt.imshow(img)
+                plt.scatter(*actual.T, c="g")
+                plt.scatter(*predicted.T, c="r")
+                plt.show()
         print(mistakes)
 
 
