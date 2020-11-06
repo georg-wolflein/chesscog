@@ -91,7 +91,7 @@ def evaluate(model_path: Path, datasets: typing.List[Datasets], output_folder: P
 
 
 def perform_evaluation(classifier: str):
-    parser = argparse.ArgumentParser(description="Evaluate trained models")
+    parser = argparse.ArgumentParser(description="Evaluate trained models.")
     parser.add_argument("--model", help=f"the model to evaluate (if unspecified, all models in 'runs://{classifier}' will be evaluated)",
                         type=str, default=None)
     parser.add_argument("--dataset", help="the dataset to evaluate (if unspecified, train and val will be evaluated)",

@@ -34,6 +34,11 @@ def find_corners(img: np.ndarray) -> np.ndarray:
             best_num_inliers = num_inliers
             best_configuration = configuration
 
+    if best_num_inliers == 0:
+        import matplotlib.pyplot as plt
+        plt.imshow(img)
+        plt.show()
+
     # Retrieve best configuration
     warped_points, intersection_points, horizontal_scale, vertical_scale = best_configuration
 
@@ -138,8 +143,8 @@ def get_intersection_points(horizontal_lines: np.ndarray, vertical_lines: np.nda
 
     m1, c1 = _polar_to_slope_intercept_form(*horizontal_lines)
     m2, c2 = _polar_to_slope_intercept_form(*vertical_lines)
-    m1, m2 = np.meshgrid(m1, m2)
-    c1, c2 = np.meshgrid(c1, c2)
+    m1, m2 = np.meshgrid(m1, m2, indexing="ij")
+    c1, c2 = np.meshgrid(c1, c2, indexing="ij")
     intersection_points = _get_intersection_point(m1, c1, m2, c2)
     intersection_points = np.stack(intersection_points, axis=-1)
     return intersection_points
