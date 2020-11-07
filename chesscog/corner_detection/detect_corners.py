@@ -10,13 +10,18 @@ from chesscog.utils import sort_corner_points
 from .visualise import draw_lines
 
 
-def find_corners(img: np.ndarray) -> np.ndarray:
+def find_corners(img: np.ndarray, debug=False) -> np.ndarray:
     edges = detect_edges(img)
-    lines = detect_lines(edges)
-    horizontal_lines, vertical_lines = cluster_horizontal_and_vertical_lines(
+    lines = detect_lines(edges, 100)
+    all_horizontal_lines, all_vertical_lines = cluster_horizontal_and_vertical_lines(
         lines)
-    horizontal_lines = eliminate_similar_lines(horizontal_lines)
-    vertical_lines = eliminate_similar_lines(vertical_lines)
+
+    draw_lines(img, all_horizontal_lines)
+    draw_lines(img, all_vertical_lines)
+    horizontal_lines = eliminate_similar_lines(
+        all_horizontal_lines, all_vertical_lines)
+    vertical_lines = eliminate_similar_lines(
+        all_vertical_lines, all_horizontal_lines)
     intersection_points = get_intersection_points(horizontal_lines,
                                                   vertical_lines)
 
@@ -37,16 +42,30 @@ def find_corners(img: np.ndarray) -> np.ndarray:
             best_configuration = configuration
         iterations += 1
 
+    if debug or best_configuration is None:
+        import matplotlib.pyplot as plt
+        draw_lines(img, horizontal_lines, (255, 0, 0))
+        draw_lines(img, vertical_lines, (255, 0, 0))
+        plt.imshow(img)
+        plt.figure()
+        plt.imshow(edges)
+        plt.show()
+
     # Retrieve best configuration
     warped_points, intersection_points, horizontal_scale, vertical_scale = best_configuration
 
-    # plt.imshow(edges)
-    # plt.scatter(*intersection_points.T)
-    # draw_lines(img, horizontal_lines)
-    # draw_lines(img, vertical_lines)
-    # plt.figure()
-    # plt.imshow(img)
-    # plt.show()
+    if debug:
+        plt.figure()
+        plt.scatter(*warped_points.T)
+        plt.show()
+
+        # plt.imshow(edges)
+        # plt.scatter(*intersection_points.T)
+        # draw_lines(img, horizontal_lines)
+        # draw_lines(img, vertical_lines)
+        # plt.figure()
+        # plt.imshow(img)
+        # plt.show()
 
     # Recompute transformation matrix based on all inliers
     col_xs, row_ys, quantized_points = quantize_points(
@@ -85,6 +104,16 @@ def detect_lines(edges: np.ndarray, threshold: int = 150) -> np.ndarray:
     return lines
 
 
+def _fix_negative_rho_in_hesse_normal_form(lines: np.ndarray) -> np.ndarray:
+    lines = lines.copy()
+    neg_rho_mask = lines[..., 0] < 0
+    lines[neg_rho_mask, 0] = - \
+        lines[neg_rho_mask, 0]
+    lines[neg_rho_mask, 1] =  \
+        lines[neg_rho_mask, 1] - np.pi
+    return lines
+
+
 def _absolute_angle_difference(x, y):
     diff = np.mod(np.abs(x - y), 2*np.pi)
     return np.min(np.stack([diff, np.pi - diff], axis=-1), axis=-1)
@@ -107,13 +136,20 @@ def cluster_horizontal_and_vertical_lines(lines: np.ndarray):
     horizontal_lines = lines[clusters == hcluster]
     vertical_lines = lines[clusters == vcluster]
 
+    horizontal_lines = _fix_negative_rho_in_hesse_normal_form(horizontal_lines)
+    vertical_lines = _fix_negative_rho_in_hesse_normal_form(vertical_lines)
+
     return horizontal_lines, vertical_lines
 
 
-def eliminate_similar_lines(lines: np.ndarray) -> np.ndarray:
-    # Use absolute value of rho
-    rhos = np.abs(lines[..., 0])
-    clustering = DBSCAN(eps=8, min_samples=1).fit(rhos.reshape(-1, 1))
+def eliminate_similar_lines(lines: np.ndarray, perpendicular_lines: np.ndarray) -> np.ndarray:
+    perp_rho, perp_theta = perpendicular_lines.mean(axis=0)
+    rho, theta = np.moveaxis(lines, -1, 0)
+    intersection_points = get_intersection_point(
+        rho, theta, perp_rho, perp_theta)
+    intersection_points = np.stack(intersection_points, axis=-1)
+
+    clustering = DBSCAN(eps=8, min_samples=1).fit(intersection_points)
 
     filtered_lines = []
     for c in range(clustering.labels_.max() + 1):
@@ -180,14 +216,14 @@ def warp_points(transformation_matrix: np.ndarray, points: np.ndarray) -> np.nda
 
 
 def find_best_scale(values, scales: np.ndarray = np.arange(1, 9)):
-    OFFSET_TOLERANCE = .05
+    OFFSET_TOLERANCE = .1
     BEST_SOLUTION_TOLERANCE = .1
 
     scales = np.sort(scales)
     scaled_values = np.expand_dims(values, axis=-1) * scales
     diff = np.abs(np.rint(scaled_values) - scaled_values)
 
-    inlier_mask = diff < OFFSET_TOLERANCE
+    inlier_mask = diff < OFFSET_TOLERANCE / scales
     num_inliers = np.sum(inlier_mask, axis=tuple(range(inlier_mask.ndim - 1)))
 
     best_num_inliers = np.max(num_inliers)
@@ -309,7 +345,7 @@ if __name__ == "__main__":
 
     filename = URI(args.file)
     img = cv2.imread(str(filename))
-    corners = find_corners(img)
+    corners = find_corners(img, debug=True)
 
     plt.figure()
     plt.imshow(img)

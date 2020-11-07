@@ -23,7 +23,12 @@ def evaluate(datasets: typing.List[Datasets], output_folder: Path, find_mistakes
             with json_file.open("r") as f:
                 label = json.load(f)
             actual = np.array(label["corners"])
-            predicted = find_corners(img)
+            try:
+                predicted = find_corners(img)
+            except Exception as e:
+                print(e)
+                print(img_file)
+                return
 
             actual = sort_corner_points(actual)
             predicted = sort_corner_points(predicted)
@@ -31,6 +36,7 @@ def evaluate(datasets: typing.List[Datasets], output_folder: Path, find_mistakes
             if np.linalg.norm(actual - predicted, axis=-1).max() > 10.:
                 mistakes += 1
                 print(mistakes, total)
+                print(img_file)
                 # import matplotlib.pyplot as plt
                 # plt.figure()
                 # plt.imshow(img)
