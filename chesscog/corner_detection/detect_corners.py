@@ -4,8 +4,10 @@ import cv2
 import numpy as np
 import typing
 
+from chesscog.utils.io import URI
 from chesscog.utils.coordinates import from_homogenous_coordinates, to_homogenous_coordinates
 from chesscog.utils import sort_corner_points
+from .visualise import draw_lines
 
 
 def find_corners(img: np.ndarray) -> np.ndarray:
@@ -20,27 +22,31 @@ def find_corners(img: np.ndarray) -> np.ndarray:
 
     best_num_inliers = 0
     best_configuration = None
-
-    for _ in range(30):
+    iterations = 0
+    while (iterations < 30 or best_num_inliers == 0) and iterations < 100:
         row1, row2 = _choose_from_range(len(horizontal_lines))
         col1, col2 = _choose_from_range(len(vertical_lines))
         transformation_matrix = compute_homography(intersection_points,
                                                    row1, row2, col1, col2)
         warped_points = warp_points(transformation_matrix, intersection_points)
-        inlier_warped_points, *_ = configuration =\
+        warped_points, *_ = configuration =\
             discard_outliers(warped_points, intersection_points)
-        num_inliers = np.prod(inlier_warped_points.shape[:-1])
+        num_inliers = np.prod(warped_points.shape[:-1])
         if num_inliers > best_num_inliers:
             best_num_inliers = num_inliers
             best_configuration = configuration
-
-    if best_num_inliers == 0:
-        import matplotlib.pyplot as plt
-        plt.imshow(img)
-        plt.show()
+        iterations += 1
 
     # Retrieve best configuration
     warped_points, intersection_points, horizontal_scale, vertical_scale = best_configuration
+
+    # plt.imshow(edges)
+    # plt.scatter(*intersection_points.T)
+    # draw_lines(img, horizontal_lines)
+    # draw_lines(img, vertical_lines)
+    # plt.figure()
+    # plt.imshow(img)
+    # plt.show()
 
     # Recompute transformation matrix based on all inliers
     col_xs, row_ys, quantized_points = quantize_points(
@@ -66,21 +72,21 @@ def find_corners(img: np.ndarray) -> np.ndarray:
     return sort_corner_points(img_corners)
 
 
-def detect_edges(img: np.ndarray) -> np.ndarray:
+def detect_edges(img: np.ndarray, threshold1: int = 150, threshold2: int = 300, aperture: int = 3) -> np.ndarray:
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    edges = cv2.Canny(gray, 150, 300, 3)
+    edges = cv2.Canny(gray, threshold1, threshold2, aperture)
     return edges
 
 
 def detect_lines(edges: np.ndarray, threshold: int = 150) -> np.ndarray:
     # array of [rho, theta]
-    lines = cv2.HoughLines(edges, 2, np.pi/360, threshold)
+    lines = cv2.HoughLines(edges, 1, np.pi/360, threshold)
     lines = lines.squeeze(axis=-2)
     return lines
 
 
 def _absolute_angle_difference(x, y):
-    diff = np.abs(x - y)
+    diff = np.mod(np.abs(x - y), 2*np.pi)
     return np.min(np.stack([diff, np.pi - diff], axis=-1), axis=-1)
 
 
@@ -92,14 +98,14 @@ def cluster_horizontal_and_vertical_lines(lines: np.ndarray):
                                   linkage='average')
     clusters = agg.fit_predict(distance_matrix)
 
-    c0 = lines[clusters == 0]
-    c1 = lines[clusters == 1]
-
-    angle_with_x_axis = _absolute_angle_difference(thetas, 0.)
-    if angle_with_x_axis[clusters == 0].mean() > angle_with_x_axis[clusters == 1].mean():
-        vertical_lines, horizontal_lines = c0, c1
+    angle_with_y_axis = _absolute_angle_difference(thetas, 0.)
+    if angle_with_y_axis[clusters == 0].mean() > angle_with_y_axis[clusters == 1].mean():
+        hcluster, vcluster = 0, 1
     else:
-        horizontal_lines, vertical_lines = c0, c1
+        hcluster, vcluster = 1, 0
+
+    horizontal_lines = lines[clusters == hcluster]
+    vertical_lines = lines[clusters == vcluster]
 
     return horizontal_lines, vertical_lines
 
@@ -241,6 +247,7 @@ def get_edge_count_on_line(edges: np.ndarray, scaled_p1: np.ndarray, scaled_p2: 
 
     mask = _distance_from_point_to_line(
         *img_line_points, points) <= LINE_THRESHOLD
+
     return (edges & mask).sum()
 
 
@@ -295,7 +302,6 @@ def compute_horizontal_borders(col_xs: np.ndarray, row_ys: np.ndarray, edges: np
 if __name__ == "__main__":
     import matplotlib.pyplot as plt
     import argparse
-    from chesscog.utils.io import URI
 
     parser = argparse.ArgumentParser(description="Chessboard corner detector.")
     parser.add_argument("file", type=str, help="URI of the input image file")
@@ -305,6 +311,7 @@ if __name__ == "__main__":
     img = cv2.imread(str(filename))
     corners = find_corners(img)
 
+    plt.figure()
     plt.imshow(img)
     plt.scatter(*corners.T, c="r")
     plt.show()
