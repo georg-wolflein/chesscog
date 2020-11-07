@@ -10,9 +10,9 @@ from chesscog.utils import sort_corner_points
 from .visualise import draw_lines
 
 
-def find_corners(img: np.ndarray, debug=False) -> np.ndarray:
+def find_corners(img: np.ndarray) -> np.ndarray:
     edges = detect_edges(img)
-    lines = detect_lines(edges, 100)
+    lines = detect_lines(edges)
     all_horizontal_lines, all_vertical_lines = cluster_horizontal_and_vertical_lines(
         lines)
 
@@ -42,30 +42,8 @@ def find_corners(img: np.ndarray, debug=False) -> np.ndarray:
             best_configuration = configuration
         iterations += 1
 
-    if debug or best_configuration is None:
-        import matplotlib.pyplot as plt
-        draw_lines(img, horizontal_lines, (255, 0, 0))
-        draw_lines(img, vertical_lines, (255, 0, 0))
-        plt.imshow(img)
-        plt.figure()
-        plt.imshow(edges)
-        plt.show()
-
     # Retrieve best configuration
     warped_points, intersection_points, horizontal_scale, vertical_scale = best_configuration
-
-    if debug:
-        plt.figure()
-        plt.scatter(*warped_points.T)
-        plt.show()
-
-        # plt.imshow(edges)
-        # plt.scatter(*intersection_points.T)
-        # draw_lines(img, horizontal_lines)
-        # draw_lines(img, vertical_lines)
-        # plt.figure()
-        # plt.imshow(img)
-        # plt.show()
 
     # Recompute transformation matrix based on all inliers
     col_xs, row_ys, quantized_points = quantize_points(
@@ -91,13 +69,13 @@ def find_corners(img: np.ndarray, debug=False) -> np.ndarray:
     return sort_corner_points(img_corners)
 
 
-def detect_edges(img: np.ndarray, threshold1: int = 150, threshold2: int = 300, aperture: int = 3) -> np.ndarray:
+def detect_edges(img: np.ndarray, threshold1: int = 120, threshold2: int = 300, aperture: int = 3) -> np.ndarray:
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     edges = cv2.Canny(gray, threshold1, threshold2, aperture)
     return edges
 
 
-def detect_lines(edges: np.ndarray, threshold: int = 150) -> np.ndarray:
+def detect_lines(edges: np.ndarray, threshold: int = 100) -> np.ndarray:
     # array of [rho, theta]
     lines = cv2.HoughLines(edges, 1, np.pi/360, threshold)
     lines = lines.squeeze(axis=-2)
@@ -272,7 +250,7 @@ def _distance_from_point_to_line(p1: np.ndarray, p2: np.ndarray, point: np.ndarr
 
 
 def get_edge_count_on_line(edges: np.ndarray, scaled_p1: np.ndarray, scaled_p2: np.ndarray, horizontal_scale: float, vertical_scale: float, inverse_transformation_matrix: np.ndarray):
-    LINE_THRESHOLD = 5.  # pixels
+    LINE_THRESHOLD = 3.  # pixels
 
     line_points = np.stack([scaled_p1, scaled_p2], axis=0)
     line_points[..., 0] = line_points[..., 0] / horizontal_scale
@@ -283,7 +261,6 @@ def get_edge_count_on_line(edges: np.ndarray, scaled_p1: np.ndarray, scaled_p2: 
 
     mask = _distance_from_point_to_line(
         *img_line_points, points) <= LINE_THRESHOLD
-
     return (edges & mask).sum()
 
 
@@ -345,7 +322,7 @@ if __name__ == "__main__":
 
     filename = URI(args.file)
     img = cv2.imread(str(filename))
-    corners = find_corners(img, debug=True)
+    corners = find_corners(img)
 
     plt.figure()
     plt.imshow(img)
