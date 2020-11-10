@@ -7,7 +7,7 @@ from chesscog.utils.io import URI
 from chesscog.utils import listify
 
 parameters = {
-    "EDGE_DETECTION.LOW_THRESHOLD": np.arange(70, 151, 10),
+    "EDGE_DETECTION.LOW_THRESHOLD": np.arange(80, 151, 10),
     "EDGE_DETECTION.HIGH_THRESHOLD": np.arange(100, 501, 50),
     # "EDGE_DETECTION.APERTURE": [3, 5],
     "LINE_DETECTION.THRESHOLD": np.arange(50, 251, 50),
