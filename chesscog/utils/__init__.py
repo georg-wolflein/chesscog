@@ -44,3 +44,10 @@ def sort_corner_points(points: np.ndarray) -> np.ndarray:
     points[2:] = points[2:][points[2:, 0].argsort()[::-1]]
 
     return points
+
+
+def listify(func):
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        return list(func(*args, **kwargs))
+    return wrapper

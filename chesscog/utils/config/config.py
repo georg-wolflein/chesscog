@@ -57,3 +57,13 @@ class CfgNode(_CfgNode):
             else:
                 return cfg_node
         return yaml.safe_dump(convert_node(self), **kwargs)
+
+    def params_dict(self):
+        params = dict()
+        for k, v in self.items():
+            if isinstance(v, CfgNode):
+                for child_k, child_v in v.params_dict().items():
+                    params[k + "." + child_k] = child_v
+            else:
+                params[k] = v
+        return params
