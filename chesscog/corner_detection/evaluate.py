@@ -26,7 +26,11 @@ def evaluate(cfg: CN, dataset: Datasets, output_folder: Path, find_mistakes: boo
         with json_file.open("r") as f:
             label = json.load(f)
         actual = np.array(label["corners"])
-        predicted = find_corners(cfg, img)
+
+        try:
+            predicted = find_corners(cfg, img)
+        except Exception:
+            predicted = None
 
         if predicted is not None:
             actual = sort_corner_points(actual)
@@ -46,7 +50,7 @@ if __name__ == "__main__":
     parser.add_argument("--dataset", help="the dataset to evaluate (if unspecified, train and val will be evaluated)",
                         type=str, default=None, choices=[x.value for x in Datasets])
     parser.add_argument("--out", help="output folder", type=str,
-                        default=f"results://corner_detector")
+                        default=f"results://corner_detection")
     parser.add_argument("--find-mistakes", help="whether to output all incorrectly detected images",
                         dest="find_mistakes", action="store_true")
     parser.set_defaults(find_mistakes=False)
@@ -56,6 +60,7 @@ if __name__ == "__main__":
         if args.dataset is None else [d for d in Datasets if d.value == args.dataset]
     cfgs = URI(args.config).glob("*.yaml")
     cfgs = filter(lambda x: not x.name.startswith("_"), cfgs)
+    cfgs = sorted(cfgs)
     cfgs = map(CN.load_yaml_with_base, cfgs)
     cfgs = list(cfgs)
 

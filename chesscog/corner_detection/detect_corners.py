@@ -14,6 +14,8 @@ from .visualise import draw_lines
 def find_corners(cfg: CN, img: np.ndarray) -> np.ndarray:
     edges = detect_edges(cfg, img)
     lines = detect_lines(cfg, edges)
+    if lines.shape[0] > 200:
+        return None
     all_horizontal_lines, all_vertical_lines = cluster_horizontal_and_vertical_lines(
         lines)
 
