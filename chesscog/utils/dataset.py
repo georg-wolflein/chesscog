@@ -25,6 +25,13 @@ def piece_name(piece: chess.Piece) -> str:
     return f"{color_name(piece.color)}_{chess.piece_name(piece.piece_type)}"
 
 
+def name_to_piece(name: str) -> chess.Piece:
+    color, piece_type = name.split("_")
+    color = color == "white"
+    piece_type = chess.PIECE_NAMES.index(piece_type)
+    return chess.Piece(piece_type, color)
+
+
 class Datasets(Enum):
     TRAIN = "train"
     VAL = "val"

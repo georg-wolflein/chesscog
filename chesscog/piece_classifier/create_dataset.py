@@ -51,13 +51,8 @@ def crop_square(img: np.ndarray, square: chess.Square, turn: chess.Color) -> np.
     return result
 
 
-def extract_squares_from_sample(id: str, subset: str = ""):
-    img = Image.open(RENDERS_DIR / subset / (id + ".png"))
-    with (RENDERS_DIR / subset / (id + ".json")).open("r") as f:
-        label = json.load(f)
-
-    src_points = np.array(label["corners"], dtype=np.float)
-    src_points = sort_corner_points(src_points)
+def warp_chessboard_image(img: np.ndarray, corners: np.ndarray) -> np.ndarray:
+    src_points = sort_corner_points(corners)
     dst_points = np.array([[MARGIN, MARGIN],  # top left
                            [BOARD_SIZE + MARGIN, MARGIN],  # top right
                            [BOARD_SIZE + MARGIN, \
@@ -65,8 +60,16 @@ def extract_squares_from_sample(id: str, subset: str = ""):
                            [MARGIN, BOARD_SIZE + MARGIN]  # bottom left
                            ], dtype=np.float)
     transformation_matrix, mask = cv2.findHomography(src_points, dst_points)
-    unwarped = cv2.warpPerspective(
-        np.array(img), transformation_matrix, (IMG_SIZE, IMG_SIZE))
+    return cv2.warpPerspective(img, transformation_matrix, (IMG_SIZE, IMG_SIZE))
+
+
+def extract_squares_from_sample(id: str, subset: str = ""):
+    img = cv2.imread(str(RENDERS_DIR / subset / (id + ".png")))
+    with (RENDERS_DIR / subset / (id + ".json")).open("r") as f:
+        label = json.load(f)
+
+    corners = np.array(label["corners"], dtype=np.float)
+    unwarped = warp_chessboard_image(img, corners)
 
     board = chess.Board(label["fen"])
 
