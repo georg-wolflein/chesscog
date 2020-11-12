@@ -1,6 +1,8 @@
 import sys
 import logging
 
+from .__version__ import __version__
+
 
 def _setup_logger(level: int = logging.INFO):
     root = logging.getLogger()
