@@ -3,6 +3,10 @@ name = "chess-recognition"
 version = "0.1.0"
 description = ""
 authors = ["Georg Wölflein <georgw7777@gmail.com>"]
+packages = [
+    { include = "chesscog" }
+]
+include = ["config/*.yaml", "config/**/_*.yaml"]
 
 [tool.poetry.dependencies]
 python = "^3.7"
