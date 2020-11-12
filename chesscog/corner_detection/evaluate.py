@@ -45,24 +45,26 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Evaluate the chessboard corner detector.")
     parser.add_argument("--config",
-                        help="path to a folder with YAML config files",
-                        type=str, default="config://corner_detection")
+                        help="path to a folder with YAML config files (or path to a YAML config file)",
+                        type=str, default="config://corner_detection.yaml")
     parser.add_argument("--dataset", help="the dataset to evaluate (if unspecified, train and val will be evaluated)",
                         type=str, default=None, choices=[x.value for x in Datasets])
     parser.add_argument("--out", help="output folder", type=str,
                         default=f"results://corner_detection")
-    parser.add_argument("--find-mistakes", help="whether to output all incorrectly detected images",
-                        dest="find_mistakes", action="store_true")
     parser.set_defaults(find_mistakes=False)
     args = parser.parse_args()
 
     datasets = [Datasets.TRAIN, Datasets.VAL] \
         if args.dataset is None else [d for d in Datasets if d.value == args.dataset]
-    cfgs = URI(args.config).glob("*.yaml")
-    cfgs = filter(lambda x: not x.name.startswith("_"), cfgs)
-    cfgs = sorted(cfgs)
-    cfgs = map(CN.load_yaml_with_base, cfgs)
-    cfgs = list(cfgs)
+    config_path = URI(args.config)
+    if config_path.is_dir():
+        cfgs = URI(args.config).glob("*.yaml")
+        cfgs = filter(lambda x: not x.name.startswith("_"), cfgs)
+        cfgs = sorted(cfgs)
+        cfgs = map(CN.load_yaml_with_base, cfgs)
+        cfgs = list(cfgs)
+    else:
+        cfgs = [CN.load_yaml_with_base(config_path)]
 
     output_folder = URI(args.out)
     output_folder.mkdir(parents=True, exist_ok=True)
