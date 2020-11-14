@@ -6,6 +6,7 @@ from PIL import Image
 import functools
 import cv2
 import argparse
+import typing
 
 from chesscog.utils.io import URI
 from chesscog.utils.config import CfgNode as CN
@@ -78,7 +79,7 @@ class ChessRecognizer:
         all_pieces[occupancy] = pieces
         return all_pieces
 
-    def predict(self, img: np.ndarray, turn: chess.Color = chess.WHITE):
+    def predict(self, img: np.ndarray, turn: chess.Color = chess.WHITE) -> typing.Tuple[chess.Board, np.ndarray]:
         with torch.no_grad():
             corners = find_corners(self._corner_detection_cfg, img)
             occupancy = self._classify_occupancy(img, turn, corners)
@@ -89,7 +90,7 @@ class ChessRecognizer:
             for square, piece in zip(self._squares, pieces):
                 if piece:
                     board.set_piece_at(square, piece)
-            return board
+            return board, corners
 
 
 if __name__ == "__main__":
@@ -113,7 +114,7 @@ if __name__ == "__main__":
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
     recognizer = ChessRecognizer()
-    board = recognizer.predict(img, args.color)
+    board, *_ = recognizer.predict(img, args.color)
 
     print(board)
     print()
