@@ -5,7 +5,7 @@ from chesscog.utils.io import download_zip_folder
 
 
 ensure_model = functools.partial(download_zip_folder,
-                                 "https://github.com/georgw777/chess-recognition/releases/download/v0.1.0/piece_classifier.zip",
+                                 "https://github.com/georgw777/chesscog/releases/download/v0.1.0/piece_classifier.zip",
                                  "models://piece_classifier")
 
 
