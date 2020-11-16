@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "chess-recognition"
+name = "chesscog"
 version = "0.1.1"
 description = ""
 authors = ["Georg Wölflein <georgw7777@gmail.com>"]
