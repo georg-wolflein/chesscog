@@ -1,3 +1,4 @@
+from google_drive_downloader import GoogleDriveDownloader as gdd
 import zipfile
 import shutil
 from pathlib import Path
@@ -62,3 +63,23 @@ def download_zip_folder(url: str, destination: os.PathLike, show_size: bool = Fa
         with zipfile.ZipFile(zip_file, "r") as f:
             f.extractall(destination, _get_members(f))
         logger.info(f"Finished downloading {url} to {destination}")
+
+
+def download_zip_folder_from_google_drive(file_id: str, destination: os.PathLike, show_size: bool = False, skip_if_exists: bool = True):
+    destination = URI(destination)
+    if skip_if_exists and destination.exists():
+        logger.info(
+            f"Not downloading {file_id} to {destination} again because it already exists")
+        return
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        zip_file = Path(tmp_dir) / f"{destination.name}.zip"
+        logger.info(f"Downloading {file_id} to {zip_file}")
+        gdd.download_file_from_google_drive(file_id=file_id,
+                                            dest_path=zip_file,
+                                            overwrite=True,
+                                            showsize=show_size)
+        logger.info(f"Unzipping {zip_file} to {destination}")
+        shutil.rmtree(destination, ignore_errors=True)
+        with zipfile.ZipFile(zip_file, "r") as f:
+            f.extractall(destination, _get_members(f))
+        logger.info(f"Finished downloading {file_id} to {destination}")
