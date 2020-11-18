@@ -20,8 +20,9 @@ The goal of this project is to develop a system that is able to map a photo of a
 ## Overview
 
 The chess recognition system is trained using a dataset of ~5,000 synthetically generated images of chess positions (3D renderings of different chess positions at various camera angles and lighting conditions).
-The recognition system itself consists of a pipeline of three parts:
+At a high level, the recognition system itself consists of the following pipeline:
 
 1. square and corner detection
 2. occupancy detection
 3. piece classification
+4. probabilistic refinement of predictions based on legal and likely positions
