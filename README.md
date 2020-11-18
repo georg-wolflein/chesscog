@@ -25,3 +25,4 @@ The recognition system itself consists of a pipeline of three parts:
 1. square and corner detection
 2. occupancy detection
 3. piece classification
+4. probabilistic refinement of predictions based on legal and likely positions
