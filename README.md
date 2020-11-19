@@ -1,6 +1,6 @@
 # chesscog
 
-![Python build](https://github.com/georgw777/chesscog/workflows/Python%20build/badge.svg)
+![build](https://github.com/georgw777/chesscog/workflows/build/badge.svg)
 
 _chesscog_ combines traditional computer vision techniques with deep learning to recognise chess positions from photos.
 
