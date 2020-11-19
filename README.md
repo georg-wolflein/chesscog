@@ -1,6 +1,6 @@
 # chesscog
 
-[![georgw777](https://circleci.com/gh/georgw777/chesscog.svg?style=svg)](https://app.circleci.com/pipelines/github/georgw777/chesscog)
+![Python build](https://github.com/georgw777/chesscog/workflows/Python%20build/badge.svg)
 
 _chesscog_ combines traditional computer vision techniques with deep learning to recognise chess positions from photos.
 
