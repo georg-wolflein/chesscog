@@ -6,6 +6,10 @@ _chesscog_ combines traditional computer vision techniques with deep learning to
 
 I am developing this project as part of my master thesis at the University of St Andrews.
 
+## Related repositories
+- [chesscog-report](https://github.com/georgw777/chesscog-report): the master thesis, currently a work in progress
+- [chesscog-app](https://github.com/georgw777/chesscog-app): the proof-of-concept web app
+
 ## Demo
 
 See it in action at [**chesscog.com**](https://www.chesscog.com)!
