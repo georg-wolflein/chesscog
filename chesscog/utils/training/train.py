@@ -9,9 +9,9 @@ import typing
 import copy
 import functools
 import shutil
+from recap import CfgNode as CN
 
 from chesscog.utils import device
-from chesscog.utils.config import CfgNode as CN
 from chesscog.utils.training import build_optimizer_from_config
 from chesscog.utils.statistics import StatsAggregator
 from chesscog.utils.dataset import build_dataset, build_data_loader, Datasets

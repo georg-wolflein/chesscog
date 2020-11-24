@@ -7,9 +7,9 @@ import numpy as np
 import chess
 import os
 import shutil
+from recap import URI
 
 from chesscog.utils import sort_corner_points
-from chesscog.utils.io import URI
 
 RENDERS_DIR = URI("data://render")
 OUT_DIR = URI("data://occupancy")

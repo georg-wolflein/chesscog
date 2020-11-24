@@ -3,11 +3,10 @@ from sklearn.cluster import AgglomerativeClustering, DBSCAN
 import cv2
 import numpy as np
 import typing
+from recap import URI, CfgNode as CN
 
-from chesscog.utils.io import URI
 from chesscog.utils.coordinates import from_homogenous_coordinates, to_homogenous_coordinates
 from chesscog.utils import sort_corner_points
-from chesscog.utils.config import CfgNode as CN
 
 
 def find_corners(cfg: CN, img: np.ndarray) -> np.ndarray:

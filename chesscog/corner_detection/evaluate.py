@@ -5,10 +5,9 @@ import cv2
 import json
 import numpy as np
 import logging
+from recap import URI, CfgNode as CN
 
 from chesscog.utils.dataset import Datasets
-from chesscog.utils.io import URI
-from chesscog.utils.config import CfgNode as CN
 from chesscog.utils import sort_corner_points
 from chesscog.corner_detection import find_corners
 

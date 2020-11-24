@@ -7,9 +7,8 @@ import functools
 import cv2
 import argparse
 import typing
+from recap import URI, CfgNode as CN
 
-from chesscog.utils.io import URI
-from chesscog.utils.config import CfgNode as CN
 from chesscog.corner_detection import find_corners
 from chesscog.occupancy_classifier import create_dataset as create_occupancy_dataset
 from chesscog.piece_classifier import create_dataset as create_piece_dataset

@@ -2,8 +2,7 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 import typing
 import json
-
-from chesscog.utils.io import URI
+from recap import URI
 
 
 def draw_board_edges(img: Image, corners: typing.List[typing.List[int]]):

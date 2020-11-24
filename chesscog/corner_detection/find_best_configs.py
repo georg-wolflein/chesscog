@@ -2,9 +2,7 @@ import pandas as pd
 import numpy as np
 from pathlib import Path
 import argparse
-
-from chesscog.utils.io import URI
-from chesscog.utils.config import CfgNode as CN
+from recap import URI, CfgNode as CN
 
 
 def find_best_configs(n: int, results_file: Path, output_folder: Path):

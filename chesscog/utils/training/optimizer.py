@@ -1,6 +1,5 @@
 import torch
-
-from chesscog.utils.config import CfgNode as CN
+from recap import CfgNode as CN
 
 
 def build_optimizer_from_config(optimizer_cfg: CN, params) -> torch.optim.Optimizer:

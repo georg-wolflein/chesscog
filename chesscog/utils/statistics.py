@@ -2,7 +2,7 @@ import torch
 import typing
 import numpy as np
 
-from chesscog.utils.config import CfgNode as CN
+from recap import CfgNode as CN
 
 
 def _fraction(a: float, b: float) -> float:
