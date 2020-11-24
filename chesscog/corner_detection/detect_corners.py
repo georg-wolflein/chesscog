@@ -236,7 +236,7 @@ def discard_outliers(cfg: CN, warped_points: np.ndarray, intersection_points: np
     return warped_points, intersection_points, horizontal_scale, vertical_scale
 
 
-def quantize_points(warped_scaled_points: np.ndarray) -> typing.Tuple[tuple, np.ndarray, np.ndarray, np.ndarray]:
+def quantize_points(cfg: CN, warped_scaled_points: np.ndarray) -> typing.Tuple[tuple, np.ndarray, np.ndarray, np.ndarray]:
     mean_col_xs = warped_scaled_points[..., 0].mean(axis=0)
     mean_row_ys = warped_scaled_points[..., 1].mean(axis=1)
 
