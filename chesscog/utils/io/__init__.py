@@ -1,6 +1,6 @@
 from pathlib import Path
 import os
-from recap import register_translator
+from recap.path_manager import register_translator
 
 from .download import download_file, download_zip_folder
 
