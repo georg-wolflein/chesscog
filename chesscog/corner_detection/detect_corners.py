@@ -52,7 +52,7 @@ def find_corners(cfg: CN, img: np.ndarray) -> np.ndarray:
 
     # Quantize
     (xmin, xmax, ymin, ymax), scale, quantized_points, warped_img_size = quantize_points(
-        warped_points)
+        cfg, warped_points)
 
     # Recompute transformation matrix based on all inliers
     transformation_matrix = compute_transformation_matrix(
