@@ -10,6 +10,7 @@ from chesscog.utils import sort_corner_points
 
 
 def find_corners(cfg: CN, img: np.ndarray) -> np.ndarray:
+    img = resize(cfg, img)
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     edges = detect_edges(cfg, gray)
     lines = detect_lines(cfg, edges)
@@ -74,6 +75,17 @@ def find_corners(cfg: CN, img: np.ndarray) -> np.ndarray:
     corners = corners * scale
     img_corners = warp_points(inverse_transformation_matrix, corners)
     return sort_corner_points(img_corners)
+
+
+def resize(cfg: CN, img: np.ndarray) -> np.ndarray:
+    h, w, _ = img.shape
+    scale_factor = cfg.RESIZE_IMAGE.WIDTH / w
+
+    dims = np.array((w, h)) * scale_factor
+    dims = dims.astype(np.int)
+
+    img = cv2.resize(img, tuple(dims))
+    return img
 
 
 def detect_edges(cfg: CN, gray: np.ndarray) -> np.ndarray:
