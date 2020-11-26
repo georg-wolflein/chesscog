@@ -88,6 +88,15 @@ def detect_lines(cfg: CN, edges: np.ndarray) -> np.ndarray:
     # array of [rho, theta]
     lines = cv2.HoughLines(edges, 1, np.pi/360, cfg.LINE_DETECTION.THRESHOLD)
     lines = lines.squeeze(axis=-2)
+    lines = _fix_negative_rho_in_hesse_normal_form(lines)
+
+    if cfg.LINE_DETECTION.DIAGONAL_LINE_ELIMINATION:
+        threshold = np.deg2rad(
+            cfg.LINE_DETECTION.DIAGONAL_LINE_ELIMINATION_THRESHOLD_DEGREES)
+        vmask = np.abs(lines[:, 1]) < threshold
+        hmask = np.abs(lines[:, 1] - np.pi / 2) < threshold
+        mask = vmask | hmask
+        lines = lines[mask]
     return lines
 
 
@@ -122,9 +131,6 @@ def cluster_horizontal_and_vertical_lines(lines: np.ndarray):
 
     horizontal_lines = lines[clusters == hcluster]
     vertical_lines = lines[clusters == vcluster]
-
-    horizontal_lines = _fix_negative_rho_in_hesse_normal_form(horizontal_lines)
-    vertical_lines = _fix_negative_rho_in_hesse_normal_form(vertical_lines)
 
     return horizontal_lines, vertical_lines
 
