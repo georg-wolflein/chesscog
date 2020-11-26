@@ -1,8 +1,8 @@
 import chess.pgn
 from pathlib import Path
 import numpy as np
+from recap import URI
 
-from chesscog.utils.io import URI
 
 dataset_path = URI("data://games.pgn")
 fens_path = URI("data://fens.txt")

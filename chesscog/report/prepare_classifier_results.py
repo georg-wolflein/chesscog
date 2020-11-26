@@ -1,8 +1,8 @@
 import pandas as pd
 import re
 import argparse
+from recap import URI
 
-from chesscog.utils.io import URI
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Prepare results for LaTeX")

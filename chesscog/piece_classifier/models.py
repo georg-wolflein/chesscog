@@ -2,8 +2,8 @@ from torch import nn
 from torchvision import models
 import torch.nn.functional as F
 import functools
+from recap import CfgNode as CN
 
-from chesscog.utils.config import CfgNode as CN
 from chesscog.utils.registry import Registry
 from chesscog.utils.models import MODELS_REGISTRY
 

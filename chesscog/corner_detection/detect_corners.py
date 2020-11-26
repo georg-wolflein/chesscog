@@ -3,16 +3,16 @@ from sklearn.cluster import AgglomerativeClustering, DBSCAN
 import cv2
 import numpy as np
 import typing
+from recap import URI, CfgNode as CN
 
-from chesscog.utils.io import URI
 from chesscog.utils.coordinates import from_homogenous_coordinates, to_homogenous_coordinates
 from chesscog.utils import sort_corner_points
-from chesscog.utils.config import CfgNode as CN
-from .visualise import draw_lines
 
 
 def find_corners(cfg: CN, img: np.ndarray) -> np.ndarray:
-    edges = detect_edges(cfg, img)
+    img = resize(cfg, img)
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    edges = detect_edges(cfg, gray)
     lines = detect_lines(cfg, edges)
     if lines.shape[0] > 200:
         return None
@@ -48,33 +48,47 @@ def find_corners(cfg: CN, img: np.ndarray) -> np.ndarray:
 
     # Retrieve best configuration
     warped_points, intersection_points, horizontal_scale, vertical_scale = best_configuration
+    warped_points *= np.array((horizontal_scale, vertical_scale))
+
+    # Quantize
+    (xmin, xmax, ymin, ymax), scale, quantized_points, warped_img_size = quantize_points(
+        cfg, warped_points)
 
     # Recompute transformation matrix based on all inliers
-    col_xs, row_ys, quantized_points = quantize_points(
-        warped_points, horizontal_scale, vertical_scale)
-    transformation_matrix = compute_transformation_matrix(intersection_points,
-                                                          quantized_points)
-
-    # Get board boundaries
+    transformation_matrix = compute_transformation_matrix(
+        intersection_points, quantized_points)
     inverse_transformation_matrix = np.linalg.inv(transformation_matrix)
-    xmin, xmax = compute_vertical_borders(cfg,                                          col_xs, row_ys, edges,
-                                          horizontal_scale, vertical_scale, inverse_transformation_matrix)
-    ymin, ymax = compute_horizontal_borders(cfg,                                            col_xs, row_ys, edges,
-                                            horizontal_scale, vertical_scale, inverse_transformation_matrix)
+
+    # Warp grayscale image
+    warped = cv2.warpPerspective(
+        gray, transformation_matrix, tuple(warped_img_size.astype(np.int)))
+
+    # Refine board boundaries
+    xmin, xmax = compute_vertical_borders(cfg, warped, scale, xmin, xmax)
+    ymin, ymax = compute_horizontal_borders(cfg, warped, scale, ymin, ymax)
 
     # Transform boundaries to image space
     corners = np.array([[xmin, ymin],
                         [xmax, ymin],
                         [xmax, ymax],
                         [xmin, ymax]]).astype(np.float)
-    scale = np.array([horizontal_scale, vertical_scale])
-    corners = corners / scale
+    corners = corners * scale
     img_corners = warp_points(inverse_transformation_matrix, corners)
     return sort_corner_points(img_corners)
 
 
-def detect_edges(cfg: CN, img: np.ndarray) -> np.ndarray:
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+def resize(cfg: CN, img: np.ndarray) -> np.ndarray:
+    h, w, _ = img.shape
+    scale_factor = cfg.RESIZE_IMAGE.WIDTH / w
+
+    dims = np.array((w, h)) * scale_factor
+    dims = dims.astype(np.int)
+
+    img = cv2.resize(img, tuple(dims))
+    return img
+
+
+def detect_edges(cfg: CN, gray: np.ndarray) -> np.ndarray:
     edges = cv2.Canny(gray,
                       cfg.EDGE_DETECTION.LOW_THRESHOLD,
                       cfg.EDGE_DETECTION.HIGH_THRESHOLD,
@@ -86,6 +100,15 @@ def detect_lines(cfg: CN, edges: np.ndarray) -> np.ndarray:
     # array of [rho, theta]
     lines = cv2.HoughLines(edges, 1, np.pi/360, cfg.LINE_DETECTION.THRESHOLD)
     lines = lines.squeeze(axis=-2)
+    lines = _fix_negative_rho_in_hesse_normal_form(lines)
+
+    if cfg.LINE_DETECTION.DIAGONAL_LINE_ELIMINATION:
+        threshold = np.deg2rad(
+            cfg.LINE_DETECTION.DIAGONAL_LINE_ELIMINATION_THRESHOLD_DEGREES)
+        vmask = np.abs(lines[:, 1]) < threshold
+        hmask = np.abs(lines[:, 1] - np.pi / 2) < threshold
+        mask = vmask | hmask
+        lines = lines[mask]
     return lines
 
 
@@ -120,9 +143,6 @@ def cluster_horizontal_and_vertical_lines(lines: np.ndarray):
 
     horizontal_lines = lines[clusters == hcluster]
     vertical_lines = lines[clusters == vcluster]
-
-    horizontal_lines = _fix_negative_rho_in_hesse_normal_form(horizontal_lines)
-    vertical_lines = _fix_negative_rho_in_hesse_normal_form(vertical_lines)
 
     return horizontal_lines, vertical_lines
 
@@ -185,10 +205,10 @@ def compute_homography(intersection_points: np.ndarray, row1: int, row2: int, co
     p4 = intersection_points[row2, col1]  # bottom left
 
     src_points = np.stack([p1, p2, p3, p4])
-    dst_points = np.array([[0, 0],  # top left
-                           [1, 0],  # top right
-                           [1, 1],  # bottom right
-                           [0, 1]])  # bottom left
+    dst_points = np.array([[0, 1],  # top left
+                           [1, 1],  # top right
+                           [1, 0],  # bottom right
+                           [0, 0]])  # bottom left
     return compute_transformation_matrix(src_points, dst_points)
 
 
@@ -233,87 +253,72 @@ def discard_outliers(cfg: CN, warped_points: np.ndarray, intersection_points: np
     return warped_points, intersection_points, horizontal_scale, vertical_scale
 
 
-def quantize_points(warped_points: np.ndarray, horizontal_scale: float, vertical_scale: float) -> typing.Tuple[np.ndarray, np.ndarray, np.ndarray]:
-    mean_col_xs = warped_points[..., 0].mean(axis=0)
-    mean_row_ys = warped_points[..., 1].mean(axis=1)
+def quantize_points(cfg: CN, warped_scaled_points: np.ndarray) -> typing.Tuple[tuple, np.ndarray, np.ndarray, np.ndarray]:
+    mean_col_xs = warped_scaled_points[..., 0].mean(axis=0)
+    mean_row_ys = warped_scaled_points[..., 1].mean(axis=1)
 
-    col_xs = np.rint(mean_col_xs * horizontal_scale)
-    row_ys = np.rint(mean_row_ys * vertical_scale)
+    col_xs = np.rint(mean_col_xs)
+    row_ys = np.rint(mean_row_ys)
 
     quantized_points = np.stack(np.meshgrid(col_xs, row_ys), axis=-1)
-    quantized_points[..., 0] = quantized_points[..., 0] / horizontal_scale
-    quantized_points[..., 1] = quantized_points[..., 1] / vertical_scale
 
-    return col_xs, row_ys, quantized_points
-
-
-def _distance_from_point_to_line(p1: np.ndarray, p2: np.ndarray, point: np.ndarray):
-    x0, y0 = np.moveaxis(point, -1, 0)
-    x1, y1 = np.moveaxis(p1, -1, 0)
-    x2, y2 = np.moveaxis(p2, -1, 0)
-    numerator = np.abs((y2-y1)*x0 - (x2-x1)*y0 + x2*y1 - y2*x1)
-    denominator = np.sqrt((y2-y1)**2 + (x2-x1)**2)
-    return numerator / denominator
-
-
-def get_edge_count_on_line(cfg: CN, edges: np.ndarray, scaled_p1: np.ndarray, scaled_p2: np.ndarray, horizontal_scale: float, vertical_scale: float, inverse_transformation_matrix: np.ndarray):
-    line_points = np.stack([scaled_p1, scaled_p2], axis=0)
-    line_points[..., 0] = line_points[..., 0] / horizontal_scale
-    line_points[..., 1] = line_points[..., 1] / vertical_scale
-    img_line_points = warp_points(inverse_transformation_matrix, line_points)
-    x, y = np.meshgrid(np.arange(edges.shape[1]), np.arange(edges.shape[0]))
-    points = np.stack([x, y], axis=-1)
-
-    mask = _distance_from_point_to_line(
-        *img_line_points, points) <= cfg.LINE_REFINEMENT.LINE_THRESHOLD
-    return (edges & mask).sum()
-
-
-def compute_vertical_borders(cfg: CN, col_xs: np.ndarray, row_ys: np.ndarray, edges: np.ndarray, horizontal_scale: float, vertical_scale: float, inverse_transformation_matrix: np.ndarray):
+    # Compute mins and maxs in warped space
     xmin = col_xs.min()
     xmax = col_xs.max()
     ymin = row_ys.min()
     ymax = row_ys.max()
 
-    def get_edge_count_on_vertical_line(x):
-        points = np.array([[x, ymin],
-                           [x, ymax]])
-        return get_edge_count_on_line(cfg, edges, *points,
-                                      horizontal_scale=horizontal_scale,
-                                      vertical_scale=vertical_scale,
-                                      inverse_transformation_matrix=inverse_transformation_matrix)
+    # Transform in warped space
+    translation = -np.array([xmin, ymin]) + \
+        cfg.BORDER_REFINEMENT.NUM_SURROUNDING_SQUARES_IN_WARPED_IMG
+    scale = np.array(cfg.BORDER_REFINEMENT.WARPED_SQUARE_SIZE)
+
+    scaled_quantized_points = (quantized_points + translation) * scale
+    xmin, ymin = np.array((xmin, ymin)) + translation
+    xmax, ymax = np.array((xmax, ymax)) + translation
+    warped_img_size = (np.array((xmax, ymax)) +
+                       cfg.BORDER_REFINEMENT.NUM_SURROUNDING_SQUARES_IN_WARPED_IMG) * scale
+
+    return (xmin, xmax, ymin, ymax), scale, scaled_quantized_points, warped_img_size
+
+
+def compute_vertical_borders(cfg: CN, warped: np.ndarray, scale: np.ndarray, xmin: int, xmax: int) -> typing.Tuple[int, int]:
+    G_y = np.abs(cv2.Sobel(warped, cv2.CV_64F, 1, 0,
+                           ksize=cfg.BORDER_REFINEMENT.SOBEL_KERNEL_SIZE))
+
+    def get_vertical_line_score(x):
+        x = (x * scale[0]).astype(np.int)
+        thresh = cfg.BORDER_REFINEMENT.LINE_WIDTH // 2
+        return G_y[:, x-thresh:x+thresh+1].sum()
 
     while xmax - xmin < 8:
-        left_points = get_edge_count_on_vertical_line(xmin - 1)
-        right_points = get_edge_count_on_vertical_line(xmax + 1)
-        if left_points > right_points:
-            xmin -= 1
-        else:
+        top_score = get_vertical_line_score(xmax + 1)
+        bottom_score = get_vertical_line_score(xmin - 1)
+        if top_score > bottom_score:
             xmax += 1
+        else:
+            xmin -= 1
+
     return xmin, xmax
 
 
-def compute_horizontal_borders(cfg: CN, col_xs: np.ndarray, row_ys: np.ndarray, edges: np.ndarray, horizontal_scale: float, vertical_scale: float, inverse_transformation_matrix: np.ndarray):
-    xmin = col_xs.min()
-    xmax = col_xs.max()
-    ymin = row_ys.min()
-    ymax = row_ys.max()
+def compute_horizontal_borders(cfg: CN, warped: np.ndarray, scale: np.ndarray, ymin: int, ymax: int) -> typing.Tuple[int, int]:
+    G_y = np.abs(cv2.Sobel(warped, cv2.CV_64F, 0, 1,
+                           ksize=cfg.BORDER_REFINEMENT.SOBEL_KERNEL_SIZE))
 
-    def get_edge_count_on_horizontal_line(y):
-        points = np.array([[xmin, y],
-                           [xmax, y]])
-        return get_edge_count_on_line(cfg, edges, *points,
-                                      horizontal_scale=horizontal_scale,
-                                      vertical_scale=vertical_scale,
-                                      inverse_transformation_matrix=inverse_transformation_matrix)
+    def get_horizontal_line_score(y):
+        y = (y * scale[1]).astype(np.int)
+        thresh = cfg.BORDER_REFINEMENT.LINE_WIDTH // 2
+        return G_y[y-thresh:y+thresh+1].sum()
 
     while ymax - ymin < 8:
-        top_points = get_edge_count_on_horizontal_line(ymin - 1)
-        bottom_points = get_edge_count_on_horizontal_line(ymax + 1)
-        if top_points > bottom_points:
-            ymin -= 1
-        else:
+        top_score = get_horizontal_line_score(ymax + 1)
+        bottom_score = get_horizontal_line_score(ymin - 1)
+        if top_score > bottom_score:
             ymax += 1
+        else:
+            ymin -= 1
+
     return ymin, ymax
 
 
@@ -323,11 +328,14 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="Chessboard corner detector.")
     parser.add_argument("file", type=str, help="URI of the input image file")
+    parser.add_argument("--config", type=str, help="path to the config file",
+                        default="config://corner_detection.yaml")
     args = parser.parse_args()
 
+    cfg = CN.load_yaml_with_base(args.config)
     filename = URI(args.file)
     img = cv2.imread(str(filename))
-    corners = find_corners(img)
+    corners = find_corners(cfg, img)
 
     plt.figure()
     plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))

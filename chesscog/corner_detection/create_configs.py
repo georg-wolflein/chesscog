@@ -1,9 +1,8 @@
 import numpy as np
 import typing
 import functools
+from recap import URI, CfgNode as CN
 
-from chesscog.utils.config import CfgNode as CN
-from chesscog.utils.io import URI
 from chesscog.utils import listify
 
 parameters = {

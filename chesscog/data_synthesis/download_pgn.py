@@ -1,7 +1,7 @@
 import urllib.request
 import zipfile
+from recap import URI
 
-from chesscog.utils.io import URI
 
 zip_file = URI("data://games.zip")
 urllib.request.urlretrieve("https://www.pgnmentor.com/players/Carlsen.zip",

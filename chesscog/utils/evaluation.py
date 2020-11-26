@@ -6,10 +6,9 @@ from pathlib import Path
 import typing
 import logging
 from PIL import Image
+from recap import URI, CfgNode as CN
 
 from chesscog.utils.dataset import build_dataset, build_data_loader, Datasets, unnormalize
-from chesscog.utils.config import CfgNode as CN
-from chesscog.utils.io import URI
 from chesscog.utils.statistics import StatsAggregator
 from chesscog.utils import device, DEVICE
 

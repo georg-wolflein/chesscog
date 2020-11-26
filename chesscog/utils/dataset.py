@@ -6,9 +6,8 @@ import logging
 from enum import Enum
 import numpy as np
 import chess
+from recap import URI, CfgNode as CN
 
-from chesscog.utils.config import CfgNode as CN
-from chesscog.utils.io import URI
 
 logger = logging.getLogger(__name__)
 

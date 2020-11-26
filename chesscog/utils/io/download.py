@@ -8,8 +8,7 @@ import tempfile
 import os
 import requests
 from tqdm import tqdm
-
-from .path_manager import URI
+from recap import URI
 
 logger = logging.getLogger(__name__)
 

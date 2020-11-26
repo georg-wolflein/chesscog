@@ -1,6 +1,6 @@
 from torch import nn
+from recap import CfgNode as CN
 
-from chesscog.utils.config import CfgNode as CN
 from chesscog.utils.registry import Registry
 
 MODELS_REGISTRY = Registry()

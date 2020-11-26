@@ -1,7 +1,7 @@
 import numpy as np
 from logging import getLogger
+from recap import URI
 
-from chesscog.utils.io import URI
 
 logger = getLogger(__name__)
 

@@ -1,7 +1,7 @@
 from pathlib import Path
 import os
+from recap.path_manager import register_translator
 
-from .path_manager import PathManager, URI, PathTranslator
 from .download import download_file, download_zip_folder
 
 
@@ -19,16 +19,9 @@ _REPORT_DIR = Path(os.getenv("REPORT_DIR",
                              Path(__file__).parent.parent.parent.parent.parent / "chess-recognition-report"))
 
 
-def _register_translator(scheme: str, path: Path):
-    class Translator(PathTranslator):
-        def __init__(self):
-            super().__init__(path)
-    PathManager.register_handler(scheme)(Translator())
-
-
-_register_translator("data", _DATA_DIR)
-_register_translator("config", _CONFIG_DIR)
-_register_translator("runs", _RUNS_DIR)
-_register_translator("results", _RESULTS_DIR)
-_register_translator("models", _MODELS_DIR)
-_register_translator("report", _REPORT_DIR)
+register_translator("data", _DATA_DIR)
+register_translator("config", _CONFIG_DIR)
+register_translator("runs", _RUNS_DIR)
+register_translator("results", _RESULTS_DIR)
+register_translator("models", _MODELS_DIR)
+register_translator("report", _REPORT_DIR)

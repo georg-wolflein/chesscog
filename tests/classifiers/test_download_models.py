@@ -1,9 +1,9 @@
 import pytest
 import typing
+from recap import URI
 
 from chesscog.occupancy_classifier.download_model import ensure_model as ensure_occupancy_classifier
 from chesscog.piece_classifier.download_model import ensure_model as ensure_piece_classifier
-from chesscog.utils.io import URI
 
 
 @pytest.mark.parametrize("ensure_model,name", [
