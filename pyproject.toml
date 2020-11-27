@@ -1,12 +1,15 @@
+[build-system]
+requires = [ "poetry>=0.12",]
+build-backend = "poetry.masonry.api"
+
 [tool.poetry]
 name = "chesscog"
-version = "0.2.2"
+version = "0.2.3"
 description = ""
-authors = ["Georg Wölflein <georgw7777@gmail.com>"]
-packages = [
-    { include = "chesscog" }
-]
-include = ["config/*.yaml", "config/**/_*.yaml"]
+authors = [ "Georg Wölflein <georgw7777@gmail.com>",]
+include = [ "config/*.yaml", "config/**/_*.yaml",]
+[[tool.poetry.packages]]
+include = "chesscog"
 
 [tool.poetry.dependencies]
 python = "^3.7"
@@ -30,7 +33,3 @@ autopep8 = "^1.5.4"
 pylint = "^2.6.0"
 pytest = "^6.1.1"
 toml = "^0.10.2"
-
-[build-system]
-requires = ["poetry>=0.12"]
-build-backend = "poetry.masonry.api"
