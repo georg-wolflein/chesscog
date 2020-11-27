@@ -4,7 +4,7 @@ build-backend = "poetry.masonry.api"
 
 [tool.poetry]
 name = "chesscog"
-version = "0.2.3"
+version = "0.2.4"
 description = ""
 authors = [ "Georg Wölflein <georgw7777@gmail.com>",]
 include = [ "config/*.yaml", "config/**/_*.yaml",]
