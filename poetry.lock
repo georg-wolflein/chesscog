@@ -152,6 +152,14 @@ python-versions = "*"
 version = "3.0.4"
 
 [[package]]
+category = "main"
+description = "A pure Python chess library with move generation and validation, Polyglot opening book probing, PGN reading and writing, Gaviota tablebase probing, Syzygy tablebase probing and XBoard/UCI engine communication."
+name = "chess"
+optional = false
+python-versions = ">=3.7"
+version = "1.3.0"
+
+[[package]]
 category = "dev"
 description = "Cross-platform colored terminal text."
 marker = "sys_platform == \"win32\""
@@ -960,14 +968,6 @@ testing = ["argcomplete", "hypothesis (>=3.56)", "mock", "nose", "requests", "xm
 
 [[package]]
 category = "main"
-description = "A pure Python chess library with move generation and validation, Polyglot opening book probing, PGN reading and writing, Gaviota tablebase probing, Syzygy tablebase probing and XBoard/UCI engine communication."
-name = "python-chess"
-optional = false
-python-versions = ">=3.7"
-version = "1.1.0"
-
-[[package]]
-category = "main"
 description = "Extensions to the standard Python datetime module"
 name = "python-dateutil"
 optional = false
@@ -1350,7 +1350,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["pytest (>=3.5,<3.7.3 || >3.7.3)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pytest-cov", "jaraco.test (>=3.2.0)", "jaraco.itertools", "func-timeout", "pytest-black (>=0.3.7)", "pytest-mypy"]
 
 [metadata]
-content-hash = "75aa1e8665e38b69a0de3868d672be981e55090090e748d8f0a45bdd8f00e34a"
+content-hash = "0737b03e3337a8f7d28994d9672499561b54acb5f19b4bce764c727bc4757c5a"
 lock-version = "1.0"
 python-versions = "^3.7"
 
@@ -1457,6 +1457,10 @@ cffi = [
 chardet = [
     {file = "chardet-3.0.4-py2.py3-none-any.whl", hash = "sha256:fc323ffcaeaed0e0a02bf4d117757b98aed530d9ed4531e3e15460124c106691"},
     {file = "chardet-3.0.4.tar.gz", hash = "sha256:84ab92ed1c4d4f16916e05906b6b75a6c0fb5db821cc65e70cbd64a3e2a5eaae"},
+]
+chess = [
+    {file = "chess-1.3.0-py3-none-any.whl", hash = "sha256:23185e5a16f2b26ef7817d1776c7093d0e331774e9dace7e7ce468f9591ac1c7"},
+    {file = "chess-1.3.0.tar.gz", hash = "sha256:fd33a6c904e64aea327225ffa779b66f8c50887f769105168b1d22df4934ad2b"},
 ]
 colorama = [
     {file = "colorama-0.4.3-py2.py3-none-any.whl", hash = "sha256:7d73d2a99753107a36ac6b455ee49046802e59d9d076ef8e47b61499fa29afff"},
@@ -1947,10 +1951,6 @@ pyrsistent = [
 pytest = [
     {file = "pytest-6.1.1-py3-none-any.whl", hash = "sha256:7a8190790c17d79a11f847fba0b004ee9a8122582ebff4729a082c109e81a4c9"},
     {file = "pytest-6.1.1.tar.gz", hash = "sha256:8f593023c1a0f916110285b6efd7f99db07d59546e3d8c36fc60e2ab05d3be92"},
-]
-python-chess = [
-    {file = "python-chess-1.1.0.tar.gz", hash = "sha256:241f230dac0e810f240af23a68d1ef391db5848dc2fa3a9b735d520ec9792169"},
-    {file = "python_chess-1.1.0-py3-none-any.whl", hash = "sha256:0b9814a296a5fa9ead0d3e19ace95c6a47a5a5337f8305b9fff2296512de4809"},
 ]
 python-dateutil = [
     {file = "python-dateutil-2.8.1.tar.gz", hash = "sha256:73ebfe9dbf22e832286dafa60473e4cd239f8592f699aa5adaf10050e6e1823c"},
