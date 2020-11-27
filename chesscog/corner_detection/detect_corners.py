@@ -25,8 +25,8 @@ def find_corners(cfg: CN, img: np.ndarray) -> np.ndarray:
     vertical_lines = eliminate_similar_lines(
         all_vertical_lines, all_horizontal_lines)
 
-    intersection_points = get_intersection_points(horizontal_lines,
-                                                  vertical_lines)
+    all_intersection_points = get_intersection_points(horizontal_lines,
+                                                      vertical_lines)
 
     best_num_inliers = 0
     best_configuration = None
@@ -34,26 +34,32 @@ def find_corners(cfg: CN, img: np.ndarray) -> np.ndarray:
     while iterations < 30 or best_num_inliers < 30:
         row1, row2 = _choose_from_range(len(horizontal_lines))
         col1, col2 = _choose_from_range(len(vertical_lines))
-        transformation_matrix = compute_homography(intersection_points,
+        transformation_matrix = compute_homography(all_intersection_points,
                                                    row1, row2, col1, col2)
-        warped_points = warp_points(transformation_matrix, intersection_points)
-        warped_points, *_ = configuration =\
-            discard_outliers(cfg, warped_points, intersection_points)
+        warped_points = warp_points(
+            transformation_matrix, all_intersection_points)
+        warped_points, intersection_points, horizontal_scale, vertical_scale = discard_outliers(
+            cfg, warped_points, all_intersection_points)
         num_inliers = np.prod(warped_points.shape[:-1])
         if num_inliers > best_num_inliers:
-            best_num_inliers = num_inliers
-            best_configuration = configuration
+            warped_points *= np.array((horizontal_scale, vertical_scale))
+
+            # Quantize and reject deuplicates
+            (xmin, xmax, ymin, ymax), scale, quantized_points, intersection_points, warped_img_size = configuration = quantize_points(
+                cfg, warped_points, intersection_points)
+
+            # Calculate remaining number of inliers
+            num_inliers = np.prod(quantized_points.shape[:-1])
+
+            if num_inliers > best_num_inliers:
+                best_num_inliers = num_inliers
+                best_configuration = configuration
         iterations += 1
         if iterations > 100:
             return None
 
     # Retrieve best configuration
-    warped_points, intersection_points, horizontal_scale, vertical_scale = best_configuration
-    warped_points *= np.array((horizontal_scale, vertical_scale))
-
-    # Quantize
-    (xmin, xmax, ymin, ymax), scale, quantized_points, warped_img_size = quantize_points(
-        cfg, warped_points)
+    (xmin, xmax, ymin, ymax), scale, quantized_points, intersection_points, warped_img_size = best_configuration
 
     # Recompute transformation matrix based on all inliers
     transformation_matrix = compute_transformation_matrix(
@@ -156,7 +162,7 @@ def eliminate_similar_lines(lines: np.ndarray, perpendicular_lines: np.ndarray) 
         rho, theta, perp_rho, perp_theta)
     intersection_points = np.stack(intersection_points, axis=-1)
 
-    clustering = DBSCAN(eps=8, min_samples=1).fit(intersection_points)
+    clustering = DBSCAN(eps=12, min_samples=1).fit(intersection_points)
 
     filtered_lines = []
     for c in range(clustering.labels_.max() + 1):
@@ -255,20 +261,41 @@ def discard_outliers(cfg: CN, warped_points: np.ndarray, intersection_points: np
     return warped_points, intersection_points, horizontal_scale, vertical_scale
 
 
-def quantize_points(cfg: CN, warped_scaled_points: np.ndarray) -> typing.Tuple[tuple, np.ndarray, np.ndarray, np.ndarray]:
+def quantize_points(cfg: CN, warped_scaled_points: np.ndarray, intersection_points: np.ndarray) -> typing.Tuple[tuple, np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     mean_col_xs = warped_scaled_points[..., 0].mean(axis=0)
     mean_row_ys = warped_scaled_points[..., 1].mean(axis=1)
 
-    col_xs = np.rint(mean_col_xs)
-    row_ys = np.rint(mean_row_ys)
+    col_xs = np.rint(mean_col_xs).astype(np.int)
+    row_ys = np.rint(mean_row_ys).astype(np.int)
 
-    quantized_points = np.stack(np.meshgrid(col_xs, row_ys), axis=-1)
+    # Remove duplicates
+    col_xs, col_indices = np.unique(col_xs, return_index=True)
+    row_ys, row_indices = np.unique(row_ys, return_index=True)
+    intersection_points = intersection_points[row_indices][:, col_indices]
 
     # Compute mins and maxs in warped space
     xmin = col_xs.min()
     xmax = col_xs.max()
     ymin = row_ys.min()
     ymax = row_ys.max()
+
+    # Ensure we a have a maximum of 9 rows/cols
+    while xmax - xmin > 9:
+        xmax -= 1
+        xmin += 1
+    while ymax - ymin > 9:
+        ymax -= 1
+        ymin += 1
+    col_mask = (col_xs >= xmin) & (col_xs <= xmax)
+    row_mask = (row_ys >= xmin) & (row_ys <= xmax)
+
+    # Discard
+    col_xs = col_xs[col_mask]
+    row_ys = row_ys[row_mask]
+    intersection_points = intersection_points[row_mask][:, col_mask]
+
+    # Create quantized points array
+    quantized_points = np.stack(np.meshgrid(col_xs, row_ys), axis=-1)
 
     # Transform in warped space
     translation = -np.array([xmin, ymin]) + \
@@ -281,7 +308,7 @@ def quantize_points(cfg: CN, warped_scaled_points: np.ndarray) -> typing.Tuple[t
     warped_img_size = (np.array((xmax, ymax)) +
                        cfg.BORDER_REFINEMENT.NUM_SURROUNDING_SQUARES_IN_WARPED_IMG) * scale
 
-    return (xmin, xmax, ymin, ymax), scale, scaled_quantized_points, warped_img_size
+    return (xmin, xmax, ymin, ymax), scale, scaled_quantized_points, intersection_points, warped_img_size
 
 
 def compute_vertical_borders(cfg: CN, warped: np.ndarray, scale: np.ndarray, xmin: int, xmax: int) -> typing.Tuple[int, int]:
