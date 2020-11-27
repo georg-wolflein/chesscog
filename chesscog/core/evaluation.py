@@ -8,9 +8,9 @@ import logging
 from PIL import Image
 from recap import URI, CfgNode as CN
 
-from chesscog.utils.dataset import build_dataset, build_data_loader, Datasets, unnormalize
-from chesscog.utils.statistics import StatsAggregator
-from chesscog.utils import device, DEVICE
+from chesscog.core.dataset import build_dataset, build_data_loader, Datasets, unnormalize
+from chesscog.core.statistics import StatsAggregator
+from chesscog.core import device, DEVICE
 
 logger = logging.getLogger(__name__)
 

@@ -5,8 +5,9 @@ import numpy as np
 import typing
 from recap import URI, CfgNode as CN
 
-from chesscog.utils import sort_corner_points
-from chesscog.utils.coordinates import from_homogenous_coordinates, to_homogenous_coordinates
+from chesscog.core import sort_corner_points
+from chesscog.core.coordinates import from_homogenous_coordinates, to_homogenous_coordinates
+from chesscog.core.exceptions import ChessboardNotLocatedException
 
 
 def find_corners(cfg: CN, img: np.ndarray) -> np.ndarray:
@@ -15,8 +16,8 @@ def find_corners(cfg: CN, img: np.ndarray) -> np.ndarray:
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     edges = detect_edges(cfg, gray)
     lines = detect_lines(cfg, edges)
-    if lines.shape[0] > 200:
-        return None
+    if lines.shape[0] > 400:
+        raise ChessboardNotLocatedException("too many lines in the image")
     all_horizontal_lines, all_vertical_lines = cluster_horizontal_and_vertical_lines(
         lines)
 
@@ -55,8 +56,9 @@ def find_corners(cfg: CN, img: np.ndarray) -> np.ndarray:
                 best_num_inliers = num_inliers
                 best_configuration = configuration
         iterations += 1
-        if iterations > 100:
-            return None
+        if iterations > 1000:
+            raise ChessboardNotLocatedException(
+                "RANSAC produced no viable results")
 
     # Retrieve best configuration
     (xmin, xmax, ymin, ymax), scale, quantized_points, intersection_points, warped_img_size = best_configuration

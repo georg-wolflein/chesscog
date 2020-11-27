@@ -12,9 +12,9 @@ from recap import URI, CfgNode as CN
 from chesscog.corner_detection import find_corners, resize_image
 from chesscog.occupancy_classifier import create_dataset as create_occupancy_dataset
 from chesscog.piece_classifier import create_dataset as create_piece_dataset
-from chesscog.utils import device, DEVICE
-from chesscog.utils.dataset import build_transforms, Datasets
-from chesscog.utils.dataset import name_to_piece
+from chesscog.core import device, DEVICE
+from chesscog.core.dataset import build_transforms, Datasets
+from chesscog.core.dataset import name_to_piece
 
 
 class ChessRecognizer:
@@ -55,6 +55,7 @@ class ChessRecognizer:
         square_imgs = map(self._occupancy_transforms, square_imgs)
         square_imgs = list(square_imgs)
         square_imgs = torch.stack(square_imgs)
+        square_imgs = device(square_imgs)
         occupancy = self._occupancy_model(square_imgs)
         occupancy = occupancy.argmax(
             axis=-1) == self._occupancy_cfg.DATASET.CLASSES.index("occupied")
@@ -71,6 +72,7 @@ class ChessRecognizer:
         piece_imgs = map(self._pieces_transforms, piece_imgs)
         piece_imgs = list(piece_imgs)
         piece_imgs = torch.stack(piece_imgs)
+        piece_imgs = device(piece_imgs)
         pieces = self._pieces_model(piece_imgs)
         pieces = pieces.argmax(axis=-1).cpu().numpy()
         pieces = self._piece_classes[pieces]
@@ -92,6 +94,37 @@ class ChessRecognizer:
                     board.set_piece_at(square, piece)
             corners = corners / img_scale
             return board, corners
+
+
+class TimedChessRecognizer(ChessRecognizer):
+    def predict(self, img: np.ndarray, turn: chess.Color = chess.WHITE) -> typing.Tuple[chess.Board, np.ndarray, dict]:
+        from timeit import default_timer as timer
+        with torch.no_grad():
+            t1 = timer()
+            img, img_scale = resize_image(self._corner_detection_cfg, img)
+            corners = find_corners(self._corner_detection_cfg, img)
+            t2 = timer()
+            occupancy = self._classify_occupancy(img, turn, corners)
+            t3 = timer()
+            pieces = self._classify_pieces(img, turn, corners, occupancy)
+            t4 = timer()
+
+            board = chess.Board()
+            board.clear_board()
+            for square, piece in zip(self._squares, pieces):
+                if piece:
+                    board.set_piece_at(square, piece)
+            corners = corners / img_scale
+            t5 = timer()
+
+            times = {
+                "corner_detection": t2-t1,
+                "occupancy_classification": t3-t2,
+                "piece_classification": t4-t3,
+                "prepare_results": t5-t4
+            }
+
+            return board, corners, times
 
 
 if __name__ == "__main__":

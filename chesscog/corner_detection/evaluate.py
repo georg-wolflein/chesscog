@@ -7,8 +7,8 @@ import numpy as np
 import logging
 from recap import URI, CfgNode as CN
 
-from chesscog.utils.dataset import Datasets
-from chesscog.utils import sort_corner_points
+from chesscog.core.dataset import Datasets
+from chesscog.core import sort_corner_points
 from chesscog.corner_detection import find_corners
 
 logger = logging.getLogger(__name__)
