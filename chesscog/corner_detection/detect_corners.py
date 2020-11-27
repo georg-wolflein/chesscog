@@ -5,12 +5,13 @@ import numpy as np
 import typing
 from recap import URI, CfgNode as CN
 
-from chesscog.utils.coordinates import from_homogenous_coordinates, to_homogenous_coordinates
 from chesscog.utils import sort_corner_points
+from chesscog.utils.coordinates import from_homogenous_coordinates, to_homogenous_coordinates
 
 
 def find_corners(cfg: CN, img: np.ndarray) -> np.ndarray:
-    img = resize(cfg, img)
+    img, img_scale = resize_image(cfg, img)
+
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     edges = detect_edges(cfg, gray)
     lines = detect_lines(cfg, edges)
@@ -74,18 +75,19 @@ def find_corners(cfg: CN, img: np.ndarray) -> np.ndarray:
                         [xmin, ymax]]).astype(np.float)
     corners = corners * scale
     img_corners = warp_points(inverse_transformation_matrix, corners)
+    img_corners = img_corners / img_scale
     return sort_corner_points(img_corners)
 
 
-def resize(cfg: CN, img: np.ndarray) -> np.ndarray:
+def resize_image(cfg: CN, img: np.ndarray) -> typing.Tuple[np.ndarray, float]:
     h, w, _ = img.shape
-    scale_factor = cfg.RESIZE_IMAGE.WIDTH / w
+    if w == cfg.RESIZE_IMAGE.WIDTH:
+        return img, 1
+    scale = cfg.RESIZE_IMAGE.WIDTH / w
+    dims = (cfg.RESIZE_IMAGE.WIDTH, int(h * scale))
 
-    dims = np.array((w, h)) * scale_factor
-    dims = dims.astype(np.int)
-
-    img = cv2.resize(img, tuple(dims))
-    return img
+    img = cv2.resize(img, dims)
+    return img, scale
 
 
 def detect_edges(cfg: CN, gray: np.ndarray) -> np.ndarray:

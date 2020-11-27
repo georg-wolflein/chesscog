@@ -1,1 +1,1 @@
-from .detect_corners import find_corners
+from .detect_corners import find_corners, resize_image

@@ -9,7 +9,7 @@ import argparse
 import typing
 from recap import URI, CfgNode as CN
 
-from chesscog.corner_detection import find_corners
+from chesscog.corner_detection import find_corners, resize_image
 from chesscog.occupancy_classifier import create_dataset as create_occupancy_dataset
 from chesscog.piece_classifier import create_dataset as create_piece_dataset
 from chesscog.utils import device, DEVICE
@@ -80,6 +80,7 @@ class ChessRecognizer:
 
     def predict(self, img: np.ndarray, turn: chess.Color = chess.WHITE) -> typing.Tuple[chess.Board, np.ndarray]:
         with torch.no_grad():
+            img, img_scale = resize_image(self._corner_detection_cfg, img)
             corners = find_corners(self._corner_detection_cfg, img)
             occupancy = self._classify_occupancy(img, turn, corners)
             pieces = self._classify_pieces(img, turn, corners, occupancy)
@@ -89,6 +90,7 @@ class ChessRecognizer:
             for square, piece in zip(self._squares, pieces):
                 if piece:
                     board.set_piece_at(square, piece)
+            corners = corners / img_scale
             return board, corners
 
 
