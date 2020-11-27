@@ -15,7 +15,7 @@ def find_corners(cfg: CN, img: np.ndarray) -> np.ndarray:
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     edges = detect_edges(cfg, gray)
     lines = detect_lines(cfg, edges)
-    if lines.shape[0] > 200:
+    if lines.shape[0] > 400:
         return None
     all_horizontal_lines, all_vertical_lines = cluster_horizontal_and_vertical_lines(
         lines)
@@ -55,7 +55,7 @@ def find_corners(cfg: CN, img: np.ndarray) -> np.ndarray:
                 best_num_inliers = num_inliers
                 best_configuration = configuration
         iterations += 1
-        if iterations > 100:
+        if iterations > 1000:
             return None
 
     # Retrieve best configuration
