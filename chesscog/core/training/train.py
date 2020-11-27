@@ -11,11 +11,11 @@ import functools
 import shutil
 from recap import CfgNode as CN
 
-from chesscog.utils import device
-from chesscog.utils.training import build_optimizer_from_config
-from chesscog.utils.statistics import StatsAggregator
-from chesscog.utils.dataset import build_dataset, build_data_loader, Datasets
-from chesscog.utils.models import build_model
+from chesscog.core import device
+from chesscog.core.training import build_optimizer_from_config
+from chesscog.core.statistics import StatsAggregator
+from chesscog.core.dataset import build_dataset, build_data_loader, Datasets
+from chesscog.core.models import build_model
 
 logger = logging.getLogger(__name__)
 

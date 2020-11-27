@@ -1,7 +1,7 @@
 from torch import nn
 from recap import CfgNode as CN
 
-from chesscog.utils.registry import Registry
+from chesscog.core.registry import Registry
 
 MODELS_REGISTRY = Registry()
 

@@ -3,7 +3,7 @@ import typing
 import functools
 from recap import URI, CfgNode as CN
 
-from chesscog.utils import listify
+from chesscog.core import listify
 
 parameters = {
     "EDGE_DETECTION.LOW_THRESHOLD": np.arange(80, 151, 10),

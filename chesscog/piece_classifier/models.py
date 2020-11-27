@@ -4,8 +4,8 @@ import torch.nn.functional as F
 import functools
 from recap import CfgNode as CN
 
-from chesscog.utils.registry import Registry
-from chesscog.utils.models import MODELS_REGISTRY
+from chesscog.core.registry import Registry
+from chesscog.core.models import MODELS_REGISTRY
 
 NUM_CLASSES = len({"pawn", "knight", "bishop", "rook", "queen", "king"}) * 2
 

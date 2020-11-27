@@ -1,7 +1,7 @@
 import logging
 from recap import URI, CfgNode as CN
 
-from chesscog.utils.models import MODELS_REGISTRY
+from chesscog.core.models import MODELS_REGISTRY
 
 logger = logging.getLogger(__name__)
 

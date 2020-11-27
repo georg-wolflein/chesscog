@@ -1,7 +1,7 @@
 import sys
 import logging
 
-from .utils import io as _
+from .core import io as _
 from .__version__ import __version__
 
 

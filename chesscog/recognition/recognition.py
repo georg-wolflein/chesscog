@@ -12,9 +12,9 @@ from recap import URI, CfgNode as CN
 from chesscog.corner_detection import find_corners, resize_image
 from chesscog.occupancy_classifier import create_dataset as create_occupancy_dataset
 from chesscog.piece_classifier import create_dataset as create_piece_dataset
-from chesscog.utils import device, DEVICE
-from chesscog.utils.dataset import build_transforms, Datasets
-from chesscog.utils.dataset import name_to_piece
+from chesscog.core import device, DEVICE
+from chesscog.core.dataset import build_transforms, Datasets
+from chesscog.core.dataset import name_to_piece
 
 
 class ChessRecognizer:
