@@ -31,7 +31,7 @@ def find_corners(cfg: CN, img: np.ndarray) -> np.ndarray:
     best_num_inliers = 0
     best_configuration = None
     iterations = 0
-    while iterations < 30 or best_num_inliers < 30:
+    while iterations < 50 or best_num_inliers < 40:
         row1, row2 = _choose_from_range(len(horizontal_lines))
         col1, col2 = _choose_from_range(len(vertical_lines))
         transformation_matrix = compute_homography(all_intersection_points,
