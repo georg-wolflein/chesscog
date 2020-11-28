@@ -1,7 +1,7 @@
 """Script to download the best occupancy classifier."""
 
 import functools
-from chesscog.utils.io import download_zip_folder
+from chesscog.core.io import download_zip_folder
 
 
 ensure_model = functools.partial(download_zip_folder,

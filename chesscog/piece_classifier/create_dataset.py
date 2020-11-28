@@ -9,8 +9,8 @@ import os
 import shutil
 from recap import URI
 
-from chesscog.utils import sort_corner_points
-from chesscog.utils.dataset import piece_name
+from chesscog.core import sort_corner_points
+from chesscog.core.dataset import piece_name
 
 RENDERS_DIR = URI("data://render")
 OUT_DIR = URI("data://pieces")

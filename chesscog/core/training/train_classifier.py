@@ -2,7 +2,7 @@ import argparse
 import logging
 from recap import URI, CfgNode as CN
 
-from chesscog.utils.training import train
+from chesscog.core.training import train
 
 logger = logging.getLogger(__name__)
 

@@ -2,7 +2,7 @@ from pathlib import Path
 import os
 from recap.path_manager import register_translator
 
-from .download import download_file, download_zip_folder
+from .download import download_file, download_zip_folder, download_zip_folder_from_google_drive
 
 
 _DATA_DIR = Path(os.getenv("DATA_DIR",
