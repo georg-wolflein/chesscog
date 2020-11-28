@@ -69,12 +69,18 @@ def find_corners(cfg: CN, img: np.ndarray) -> np.ndarray:
     inverse_transformation_matrix = np.linalg.inv(transformation_matrix)
 
     # Warp grayscale image
-    warped = cv2.warpPerspective(
-        gray, transformation_matrix, tuple(warped_img_size.astype(np.int)))
+    dims = tuple(warped_img_size.astype(np.int))
+    warped = cv2.warpPerspective(gray, transformation_matrix, dims)
+    borders = np.zeros_like(gray)
+    borders[2:-2, 2:-2] = 1
+    warped_borders = cv2.warpPerspective(borders, transformation_matrix, dims)
+    warped_mask = warped_borders == 1
 
     # Refine board boundaries
-    xmin, xmax = compute_vertical_borders(cfg, warped, scale, xmin, xmax)
-    ymin, ymax = compute_horizontal_borders(cfg, warped, scale, ymin, ymax)
+    xmin, xmax = compute_vertical_borders(
+        cfg, warped, warped_mask, scale, xmin, xmax)
+    ymin, ymax = compute_horizontal_borders(
+        cfg, warped, warped_mask, scale, ymin, ymax)
 
     # Transform boundaries to image space
     corners = np.array([[xmin, ymin],
@@ -215,10 +221,10 @@ def compute_homography(intersection_points: np.ndarray, row1: int, row2: int, co
     p4 = intersection_points[row2, col1]  # bottom left
 
     src_points = np.stack([p1, p2, p3, p4])
-    dst_points = np.array([[0, 1],  # top left
-                           [1, 1],  # top right
-                           [1, 0],  # bottom right
-                           [0, 0]])  # bottom left
+    dst_points = np.array([[0, 0],  # top left
+                           [1, 0],  # top right
+                           [1, 1],  # bottom right
+                           [0, 1]])  # bottom left
     return compute_transformation_matrix(src_points, dst_points)
 
 
@@ -313,9 +319,10 @@ def quantize_points(cfg: CN, warped_scaled_points: np.ndarray, intersection_poin
     return (xmin, xmax, ymin, ymax), scale, scaled_quantized_points, intersection_points, warped_img_size
 
 
-def compute_vertical_borders(cfg: CN, warped: np.ndarray, scale: np.ndarray, xmin: int, xmax: int) -> typing.Tuple[int, int]:
+def compute_vertical_borders(cfg: CN, warped: np.ndarray, mask: np.ndarray, scale: np.ndarray, xmin: int, xmax: int) -> typing.Tuple[int, int]:
     G_y = np.abs(cv2.Sobel(warped, cv2.CV_64F, 1, 0,
                            ksize=cfg.BORDER_REFINEMENT.SOBEL_KERNEL_SIZE))
+    G_y[~mask] = 0
 
     def get_vertical_line_score(x):
         x = (x * scale[0]).astype(np.int)
@@ -333,9 +340,10 @@ def compute_vertical_borders(cfg: CN, warped: np.ndarray, scale: np.ndarray, xmi
     return xmin, xmax
 
 
-def compute_horizontal_borders(cfg: CN, warped: np.ndarray, scale: np.ndarray, ymin: int, ymax: int) -> typing.Tuple[int, int]:
+def compute_horizontal_borders(cfg: CN, warped: np.ndarray, mask: np.ndarray, scale: np.ndarray, ymin: int, ymax: int) -> typing.Tuple[int, int]:
     G_y = np.abs(cv2.Sobel(warped, cv2.CV_64F, 0, 1,
                            ksize=cfg.BORDER_REFINEMENT.SOBEL_KERNEL_SIZE))
+    G_y[~mask] = 0
 
     def get_horizontal_line_score(y):
         y = (y * scale[1]).astype(np.int)
