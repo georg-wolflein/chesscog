@@ -72,7 +72,7 @@ def find_corners(cfg: CN, img: np.ndarray) -> np.ndarray:
     dims = tuple(warped_img_size.astype(np.int))
     warped = cv2.warpPerspective(gray, transformation_matrix, dims)
     borders = np.zeros_like(gray)
-    borders[2:-2, 2:-2] = 1
+    borders[3:-3, 3:-3] = 1
     warped_borders = cv2.warpPerspective(borders, transformation_matrix, dims)
     warped_mask = warped_borders == 1
 
