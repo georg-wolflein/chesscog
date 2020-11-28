@@ -56,7 +56,7 @@ def find_corners(cfg: CN, img: np.ndarray) -> np.ndarray:
                 best_num_inliers = num_inliers
                 best_configuration = configuration
         iterations += 1
-        if iterations > 1000:
+        if iterations > 10000:
             raise ChessboardNotLocatedException(
                 "RANSAC produced no viable results")
 
