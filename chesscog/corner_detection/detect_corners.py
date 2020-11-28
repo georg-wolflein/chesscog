@@ -14,7 +14,7 @@ def find_corners(cfg: CN, img: np.ndarray) -> np.ndarray:
     img, img_scale = resize_image(cfg, img)
 
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    edges = detect_edges(cfg, gray)
+    edges = detect_edges(cfg.EDGE_DETECTION, gray)
     lines = detect_lines(cfg, edges)
     if lines.shape[0] > 400:
         raise ChessboardNotLocatedException("too many lines in the image")
@@ -32,7 +32,7 @@ def find_corners(cfg: CN, img: np.ndarray) -> np.ndarray:
     best_num_inliers = 0
     best_configuration = None
     iterations = 0
-    while iterations < 50 or best_num_inliers < 40:
+    while iterations < 200 or best_num_inliers < 30:
         row1, row2 = _choose_from_range(len(horizontal_lines))
         col1, col2 = _choose_from_range(len(vertical_lines))
         transformation_matrix = compute_homography(all_intersection_points,
@@ -56,7 +56,7 @@ def find_corners(cfg: CN, img: np.ndarray) -> np.ndarray:
                 best_num_inliers = num_inliers
                 best_configuration = configuration
         iterations += 1
-        if iterations > 1000:
+        if iterations > 10000:
             raise ChessboardNotLocatedException(
                 "RANSAC produced no viable results")
 
@@ -72,7 +72,7 @@ def find_corners(cfg: CN, img: np.ndarray) -> np.ndarray:
     dims = tuple(warped_img_size.astype(np.int))
     warped = cv2.warpPerspective(gray, transformation_matrix, dims)
     borders = np.zeros_like(gray)
-    borders[2:-2, 2:-2] = 1
+    borders[3:-3, 3:-3] = 1
     warped_borders = cv2.warpPerspective(borders, transformation_matrix, dims)
     warped_mask = warped_borders == 1
 
@@ -106,11 +106,14 @@ def resize_image(cfg: CN, img: np.ndarray) -> typing.Tuple[np.ndarray, float]:
     return img, scale
 
 
-def detect_edges(cfg: CN, gray: np.ndarray) -> np.ndarray:
+def detect_edges(edge_detection_cfg: CN, gray: np.ndarray) -> np.ndarray:
+    if gray.dtype != np.uint8:
+        gray = gray / gray.max() * 255
+        gray = gray.astype(np.uint8)
     edges = cv2.Canny(gray,
-                      cfg.EDGE_DETECTION.LOW_THRESHOLD,
-                      cfg.EDGE_DETECTION.HIGH_THRESHOLD,
-                      cfg.EDGE_DETECTION.APERTURE)
+                      edge_detection_cfg.LOW_THRESHOLD,
+                      edge_detection_cfg.HIGH_THRESHOLD,
+                      edge_detection_cfg.APERTURE)
     return edges
 
 
@@ -322,19 +325,22 @@ def quantize_points(cfg: CN, warped_scaled_points: np.ndarray, intersection_poin
 
 
 def compute_vertical_borders(cfg: CN, warped: np.ndarray, mask: np.ndarray, scale: np.ndarray, xmin: int, xmax: int) -> typing.Tuple[int, int]:
-    G_y = np.abs(cv2.Sobel(warped, cv2.CV_64F, 1, 0,
+    G_x = np.abs(cv2.Sobel(warped, cv2.CV_64F, 1, 0,
                            ksize=cfg.BORDER_REFINEMENT.SOBEL_KERNEL_SIZE))
-    G_y[~mask] = 0
+    G_x[~mask] = 0
+    G_x = detect_edges(cfg.BORDER_REFINEMENT.EDGE_DETECTION.VERTICAL, G_x)
+    G_x[~mask] = 0
 
-    def get_vertical_line_score(x):
+    def get_nonmax_supressed(x):
         x = (x * scale[0]).astype(np.int)
         thresh = cfg.BORDER_REFINEMENT.LINE_WIDTH // 2
-        return G_y[:, x-thresh:x+thresh+1].sum()
+        return G_x[:, x-thresh:x+thresh+1].max(axis=1)
 
     while xmax - xmin < 8:
-        top_score = get_vertical_line_score(xmax + 1)
-        bottom_score = get_vertical_line_score(xmin - 1)
-        if top_score > bottom_score:
+        top = get_nonmax_supressed(xmax + 1)
+        bottom = get_nonmax_supressed(xmin - 1)
+
+        if top.sum() > bottom.sum():
             xmax += 1
         else:
             xmin -= 1
@@ -346,20 +352,22 @@ def compute_horizontal_borders(cfg: CN, warped: np.ndarray, mask: np.ndarray, sc
     G_y = np.abs(cv2.Sobel(warped, cv2.CV_64F, 0, 1,
                            ksize=cfg.BORDER_REFINEMENT.SOBEL_KERNEL_SIZE))
     G_y[~mask] = 0
+    G_y = detect_edges(cfg.BORDER_REFINEMENT.EDGE_DETECTION.HORIZONTAL, G_y)
+    G_y[~mask] = 0
 
-    def get_horizontal_line_score(y):
+    def get_nonmax_supressed(y):
         y = (y * scale[1]).astype(np.int)
         thresh = cfg.BORDER_REFINEMENT.LINE_WIDTH // 2
-        return G_y[y-thresh:y+thresh+1].sum()
+        return G_y[y-thresh:y+thresh+1].max(axis=0)
 
     while ymax - ymin < 8:
-        top_score = get_horizontal_line_score(ymax + 1)
-        bottom_score = get_horizontal_line_score(ymin - 1)
-        if top_score > bottom_score:
+        top = get_nonmax_supressed(ymax + 1)
+        bottom = get_nonmax_supressed(ymin - 1)
+
+        if top.sum() > bottom.sum():
             ymax += 1
         else:
             ymin -= 1
-
     return ymin, ymax
 
 

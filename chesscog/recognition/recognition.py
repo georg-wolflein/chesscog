@@ -62,7 +62,7 @@ class ChessRecognizer:
         occupancy = occupancy.cpu().numpy()
         return occupancy
 
-    def _classify_pieces(self, img: np.ndarray, turn: chess.Color, corners: np.ndarray, occupancy: np.ndarray):
+    def _classify_pieces(self, img: np.ndarray, turn: chess.Color, corners: np.ndarray, occupancy: np.ndarray) -> np.ndarray:
         occupied_squares = np.array(self._squares)[occupancy]
         warped = create_piece_dataset.warp_chessboard_image(
             img, corners)
