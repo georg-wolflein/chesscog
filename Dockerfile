@@ -19,18 +19,11 @@ RUN pip install --upgrade pip && \
     poetry config virtualenvs.create false
 
 # Install dependencies
-COPY ./pyproject.toml ./poetry.lock* /app/
-RUN poetry install --no-root --no-dev
-
-# Install dependencies
 RUN mkdir -p /chess
 WORKDIR /chess
-COPY poetry.lock pyproject.toml ./
-RUN poetry install
+COPY ./pyproject.toml ./poetry.lock* ./
+RUN poetry install --no-root
 ENV PYTHONPATH "/chess:${PYTHONPATH}"
-
-# Fix for tensorboard
-RUN poetry run pip install wheel
 
 # Setup data mount
 RUN mkdir -p /data

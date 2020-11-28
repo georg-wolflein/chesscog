@@ -72,7 +72,7 @@ def evaluate(recognizer: TimedChessRecognizer, output_file: typing.IO, dataset_f
                                              len(groundtruth_board.piece_map()),
                                              len(predicted_board.piece_map()),
                                              *(times[k] for k in time_keys)])) + "\n")
-        if (i+1) % 10 == 0:
+        if (i+1) % 5 == 0:
             output_file.flush()
             logging.info(f"Processed {i+1} files from {dataset_folder}")
 

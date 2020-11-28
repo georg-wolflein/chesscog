@@ -79,6 +79,8 @@ def find_corners(cfg: CN, img: np.ndarray) -> np.ndarray:
     # Refine board boundaries
     xmin, xmax = compute_vertical_borders(
         cfg, warped, warped_mask, scale, xmin, xmax)
+    scaled_xmin, scaled_xmax = (int(x * scale[0]) for x in (xmin, xmax))
+    warped_mask[:, :scaled_xmin] = warped_mask[:, scaled_xmax:] = False
     ymin, ymax = compute_horizontal_borders(
         cfg, warped, warped_mask, scale, ymin, ymax)
 
