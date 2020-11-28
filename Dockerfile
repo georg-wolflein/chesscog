@@ -22,7 +22,7 @@ RUN pip install --upgrade pip && \
 RUN mkdir -p /chess
 WORKDIR /chess
 COPY ./pyproject.toml ./poetry.lock* ./
-RUN poetry install
+RUN poetry install --no-root
 ENV PYTHONPATH "/chess:${PYTHONPATH}"
 
 # Setup data mount
