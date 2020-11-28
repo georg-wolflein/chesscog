@@ -26,7 +26,8 @@ RUN poetry install --no-root --no-dev
 ENV PYTHONPATH "/chess:${PYTHONPATH}"
 
 # Fix for tensorboard
-RUN poetry run pip install webencodings wheel
+RUN poetry run pip install webencodings \
+    && poetry run pip install wheel
 
 # Setup data mount
 RUN mkdir -p /data
