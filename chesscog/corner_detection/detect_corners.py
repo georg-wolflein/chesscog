@@ -14,7 +14,7 @@ def find_corners(cfg: CN, img: np.ndarray) -> np.ndarray:
     img, img_scale = resize_image(cfg, img)
 
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    edges = detect_edges(cfg, gray)
+    edges = detect_edges(cfg.EDGE_DETECTION, gray)
     lines = detect_lines(cfg, edges)
     if lines.shape[0] > 400:
         raise ChessboardNotLocatedException("too many lines in the image")
@@ -32,7 +32,7 @@ def find_corners(cfg: CN, img: np.ndarray) -> np.ndarray:
     best_num_inliers = 0
     best_configuration = None
     iterations = 0
-    while iterations < 50 or best_num_inliers < 35:
+    while iterations < 200 or best_num_inliers < 30:
         row1, row2 = _choose_from_range(len(horizontal_lines))
         col1, col2 = _choose_from_range(len(vertical_lines))
         transformation_matrix = compute_homography(all_intersection_points,
@@ -106,11 +106,14 @@ def resize_image(cfg: CN, img: np.ndarray) -> typing.Tuple[np.ndarray, float]:
     return img, scale
 
 
-def detect_edges(cfg: CN, gray: np.ndarray) -> np.ndarray:
+def detect_edges(edge_detection_cfg: CN, gray: np.ndarray) -> np.ndarray:
+    if gray.dtype != np.uint8:
+        gray = gray / gray.max() * 255
+        gray = gray.astype(np.uint8)
     edges = cv2.Canny(gray,
-                      cfg.EDGE_DETECTION.LOW_THRESHOLD,
-                      cfg.EDGE_DETECTION.HIGH_THRESHOLD,
-                      cfg.EDGE_DETECTION.APERTURE)
+                      edge_detection_cfg.LOW_THRESHOLD,
+                      edge_detection_cfg.HIGH_THRESHOLD,
+                      edge_detection_cfg.APERTURE)
     return edges
 
 
@@ -325,6 +328,8 @@ def compute_vertical_borders(cfg: CN, warped: np.ndarray, mask: np.ndarray, scal
     G_x = np.abs(cv2.Sobel(warped, cv2.CV_64F, 1, 0,
                            ksize=cfg.BORDER_REFINEMENT.SOBEL_KERNEL_SIZE))
     G_x[~mask] = 0
+    G_x = detect_edges(cfg.BORDER_REFINEMENT.EDGE_DETECTION, G_x)
+    G_x[~mask] = 0
 
     def get_nonmax_supressed(x):
         x = (x * scale[0]).astype(np.int)
@@ -334,8 +339,6 @@ def compute_vertical_borders(cfg: CN, warped: np.ndarray, mask: np.ndarray, scal
     while xmax - xmin < 8:
         top = get_nonmax_supressed(xmax + 1)
         bottom = get_nonmax_supressed(xmin - 1)
-        threshold = .5 * max(top.max(), bottom.max())
-        top[top < threshold] = bottom[bottom < threshold] = 0
 
         if top.sum() > bottom.sum():
             xmax += 1
@@ -349,6 +352,8 @@ def compute_horizontal_borders(cfg: CN, warped: np.ndarray, mask: np.ndarray, sc
     G_y = np.abs(cv2.Sobel(warped, cv2.CV_64F, 0, 1,
                            ksize=cfg.BORDER_REFINEMENT.SOBEL_KERNEL_SIZE))
     G_y[~mask] = 0
+    G_y = detect_edges(cfg.BORDER_REFINEMENT.EDGE_DETECTION, G_y)
+    G_y[~mask] = 0
 
     def get_nonmax_supressed(y):
         y = (y * scale[1]).astype(np.int)
@@ -358,8 +363,6 @@ def compute_horizontal_borders(cfg: CN, warped: np.ndarray, mask: np.ndarray, sc
     while ymax - ymin < 8:
         top = get_nonmax_supressed(ymax + 1)
         bottom = get_nonmax_supressed(ymin - 1)
-        threshold = .5 * max(top.max(), bottom.max())
-        top[top < threshold] = bottom[bottom < threshold] = 0
 
         if top.sum() > bottom.sum():
             ymax += 1
