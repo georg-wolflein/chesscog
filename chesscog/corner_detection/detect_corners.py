@@ -328,7 +328,7 @@ def compute_vertical_borders(cfg: CN, warped: np.ndarray, mask: np.ndarray, scal
     G_x = np.abs(cv2.Sobel(warped, cv2.CV_64F, 1, 0,
                            ksize=cfg.BORDER_REFINEMENT.SOBEL_KERNEL_SIZE))
     G_x[~mask] = 0
-    G_x = detect_edges(cfg.BORDER_REFINEMENT.EDGE_DETECTION, G_x)
+    G_x = detect_edges(cfg.BORDER_REFINEMENT.EDGE_DETECTION.VERTICAL, G_x)
     G_x[~mask] = 0
 
     def get_nonmax_supressed(x):
@@ -352,7 +352,7 @@ def compute_horizontal_borders(cfg: CN, warped: np.ndarray, mask: np.ndarray, sc
     G_y = np.abs(cv2.Sobel(warped, cv2.CV_64F, 0, 1,
                            ksize=cfg.BORDER_REFINEMENT.SOBEL_KERNEL_SIZE))
     G_y[~mask] = 0
-    G_y = detect_edges(cfg.BORDER_REFINEMENT.EDGE_DETECTION, G_y)
+    G_y = detect_edges(cfg.BORDER_REFINEMENT.EDGE_DETECTION.HORIZONTAL, G_y)
     G_y[~mask] = 0
 
     def get_nonmax_supressed(y):
