@@ -148,7 +148,16 @@ def _absolute_angle_difference(x, y):
     return np.min(np.stack([diff, np.pi - diff], axis=-1), axis=-1)
 
 
+def _sort_lines(lines: np.ndarray) -> np.ndarray:
+    if lines.ndim == 0 or lines.shape[-2] == 0:
+        return lines
+    rhos = lines[..., 0]
+    sorted_indices = np.argsort(rhos)
+    return lines[sorted_indices]
+
+
 def cluster_horizontal_and_vertical_lines(lines: np.ndarray):
+    lines = _sort_lines(lines)
     thetas = lines[..., 1].reshape(-1, 1)
     distance_matrix = pairwise_distances(
         thetas, thetas, metric=_absolute_angle_difference)
