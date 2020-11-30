@@ -25,6 +25,8 @@ def _get_members(f: zipfile.ZipFile) -> typing.Iterator[zipfile.ZipInfo]:
     # Alter file names
     for zipinfo in f.infolist():
         name = zipinfo.filename
+        if "__MACOSX" in name:
+            continue
         if len(name) > offset:
             zipinfo.filename = name[offset:]
             yield zipinfo
