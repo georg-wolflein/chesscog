@@ -16,7 +16,9 @@ logger = logging.getLogger(__name__)
 def _get_members(f: zipfile.ZipFile) -> typing.Iterator[zipfile.ZipInfo]:
     parts = [name.partition("/")[0]
              for name in f.namelist()
-             if not name.endswith("/")]
+             if not name.endswith("/")
+             and not ".DS_Store" in name
+             and not "__MACOSX" in name]
 
     prefix = os.path.commonprefix(parts)
     if prefix:
@@ -25,7 +27,7 @@ def _get_members(f: zipfile.ZipFile) -> typing.Iterator[zipfile.ZipInfo]:
     # Alter file names
     for zipinfo in f.infolist():
         name = zipinfo.filename
-        if "__MACOSX" in name:
+        if ".DS_Store" in name or "__MACOSX" in name:
             continue
         if len(name) > offset:
             zipinfo.filename = name[offset:]
