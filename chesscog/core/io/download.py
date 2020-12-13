@@ -21,8 +21,10 @@ def _get_members(f: zipfile.ZipFile) -> typing.Iterator[zipfile.ZipInfo]:
              and not "__MACOSX" in name]
 
     prefix = os.path.commonprefix(parts)
-    if prefix:
-        prefix += "/"
+    if "/" in prefix:
+        prefix = prefix[:prefix.rfind("/") + 1]
+    else:
+        prefix = ""
     offset = len(prefix)
     # Alter file names
     for zipinfo in f.infolist():
