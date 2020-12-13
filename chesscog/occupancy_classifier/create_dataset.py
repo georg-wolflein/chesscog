@@ -41,9 +41,10 @@ def warp_chessboard_image(img: np.ndarray, corners: np.ndarray) -> np.ndarray:
     return cv2.warpPerspective(img, transformation_matrix, (IMG_SIZE, IMG_SIZE))
 
 
-def extract_squares_from_sample(id: str, subset: str = ""):
-    img = cv2.imread(str(RENDERS_DIR / subset / (id + ".png")))
-    with (RENDERS_DIR / subset / (id + ".json")).open("r") as f:
+def extract_squares_from_sample(id: str, subset: str = "", input_dir: Path = RENDERS_DIR, output_dir: Path = OUT_DIR):
+    img = cv2.imread(str(input_dir / subset / (id + ".png")))
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    with (input_dir / subset / (id + ".json")).open("r") as f:
         label = json.load(f)
 
     corners = np.array(label["corners"], dtype=np.float)
@@ -56,18 +57,23 @@ def extract_squares_from_sample(id: str, subset: str = ""):
             square) is None else "occupied"
         piece_img = crop_square(unwarped, square, label["white_turn"])
         with Image.fromarray(piece_img, "RGB") as piece_img:
-            piece_img.save(OUT_DIR / subset / target_class /
+            piece_img.save(output_dir / subset / target_class /
                            f"{id}_{chess.square_name(square)}.png")
 
 
-if __name__ == "__main__":
+def create_dataset(input_dir: Path = RENDERS_DIR, output_dir: Path = OUT_DIR):
     for subset in ("train", "val", "test"):
         for c in ("empty", "occupied"):
-            folder = OUT_DIR / subset / c
+            folder = output_dir / subset / c
             shutil.rmtree(folder, ignore_errors=True)
             os.makedirs(folder, exist_ok=True)
-        samples = list((RENDERS_DIR / subset).glob("*.png"))
+        samples = list((input_dir / subset).glob("*.png"))
         for i, img_file in enumerate(samples):
-            if i % int(len(samples) / 100) == 0:
+            if len(samples) > 100 and i % int(len(samples) / 100) == 0:
                 print(f"{i / len(samples)*100:.0f}%")
-            extract_squares_from_sample(img_file.stem, subset)
+            extract_squares_from_sample(img_file.stem, subset,
+                                        input_dir, output_dir)
+
+
+if __name__ == "__main__":
+    create_dataset()
