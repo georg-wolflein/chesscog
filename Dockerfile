@@ -25,6 +25,9 @@ COPY ./pyproject.toml ./poetry.lock* ./
 RUN poetry install --no-root
 ENV PYTHONPATH "/chess:${PYTHONPATH}"
 
+# Tensorboard fix
+RUN poetry run python -m pip install wheel
+
 # Setup data mount
 RUN mkdir -p /data
 ENV DATA_DIR /data
