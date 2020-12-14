@@ -52,7 +52,6 @@ def train_model(cfg: CN, run_dir: Path, model: torch.nn.Module, is_inception: bo
 
     modes = {Datasets.TRAIN, Datasets.VAL}
     if eval_on_train:
-        modes = {Datasets.TRAIN}
         dataset = build_dataset(cfg, Datasets.TRAIN)
         datasets = {mode: dataset
                     for mode in modes}
