@@ -21,8 +21,15 @@ logger = logging.getLogger(__name__)
 
 
 def train(cfg: CN, run_dir: Path) -> nn.Module:
+    model = build_model(cfg)
+    is_inception = "inception" in cfg.TRAINING.MODEL.NAME.lower()
+    train_model(cfg, run_dir, model, is_inception)
+
+
+def train_model(cfg: CN, run_dir: Path, model: torch.nn.Module, is_inception: bool = False, model_name: str = None, eval_on_train: bool = False):
     logger.info(f"Starting training in {run_dir}")
-    model_name = run_dir.name
+    if not model_name:
+        model_name = run_dir.name
 
     # Create folder
     if run_dir.exists():
@@ -35,9 +42,8 @@ def train(cfg: CN, run_dir: Path) -> nn.Module:
     with (run_dir / f"{model_name}.yaml").open("w") as f:
         cfg.dump(stream=f)
 
-    model = build_model(cfg)
+    # Move model to device
     device(model)
-    is_inception = "inception" in cfg.TRAINING.MODEL.NAME.lower()
 
     best_weights, best_accuracy, best_step = copy.deepcopy(
         model.state_dict()), 0., 0

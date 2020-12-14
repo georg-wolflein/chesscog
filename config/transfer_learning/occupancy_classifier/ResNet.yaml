@@ -1,0 +1,18 @@
+_BASE_: models://occupancy_classifier/ResNet.yaml
+
+DATASET:
+  BATCH_SIZE: 32
+  PATH: data://transfer_learning/occupancy
+  # WORKERS: 0
+TRAINING:
+  PHASES:
+    - EPOCHS: 100
+      OPTIMIZER:
+        LEARNING_RATE: 0.001
+        NAME: Adam
+      PARAMS: head
+    - EPOCHS: 100
+      OPTIMIZER:
+        LEARNING_RATE: 0.0001
+        NAME: Adam
+      PARAMS: all

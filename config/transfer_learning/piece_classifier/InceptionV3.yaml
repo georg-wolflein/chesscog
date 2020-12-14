@@ -1,0 +1,18 @@
+_BASE_: models://piece_classifier/InceptionV3.yaml
+
+DATASET:
+  BATCH_SIZE: 16
+  PATH: data://transfer_learning/pieces
+  # WORKERS: 0
+TRAINING:
+  PHASES:
+    - EPOCHS: 100
+      OPTIMIZER:
+        LEARNING_RATE: 0.001
+        NAME: Adam
+      PARAMS: head
+    - EPOCHS: 100
+      OPTIMIZER:
+        LEARNING_RATE: 0.0001
+        NAME: Adam
+      PARAMS: all

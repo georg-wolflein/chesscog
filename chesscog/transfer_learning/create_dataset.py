@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 from chesscog.corner_detection import find_corners, resize_image
 from chesscog.occupancy_classifier import create_dataset as create_occupancy_dataset
 from chesscog.piece_classifier import create_dataset as create_pieces_dataset
+from chesscog.core.dataset import Datasets
 
 DATASET_DIR = URI("data://transfer_learning")
 
@@ -16,7 +17,7 @@ DATASET_DIR = URI("data://transfer_learning")
 def add_corners_to_labels(input_dir: Path):
     corner_detection_cfg = CN.load_yaml_with_base(
         "config://corner_detection.yaml")
-    for subset in ("train", "test"):
+    for subset in (x.name for x in Datasets):
         for img_file in (input_dir / subset).glob("*.png"):
             img = cv2.imread(str(img_file))
             img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
