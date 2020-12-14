@@ -21,22 +21,22 @@ class ChessRecognizer:
 
     _squares = list(chess.SQUARES)
 
-    def __init__(self):
+    def __init__(self, classifiers_folder: Path = URI("models://")):
         self._corner_detection_cfg = CN.load_yaml_with_base(
             "config://corner_detection.yaml")
 
         self._occupancy_cfg, self._occupancy_model = self._load_classifier(
-            URI("models://occupancy_classifier"))
+            classifiers_folder / "occupancy_classifier")
         self._occupancy_transforms = build_transforms(
             self._occupancy_cfg, mode=Datasets.TEST)
         self._pieces_cfg, self._pieces_model = self._load_classifier(
-            URI("models://piece_classifier"))
+            classifiers_folder / "piece_classifier")
         self._pieces_transforms = build_transforms(
             self._pieces_cfg, mode=Datasets.TEST)
         self._piece_classes = np.array(list(map(name_to_piece,
                                                 self._pieces_cfg.DATASET.CLASSES)))
 
-    @classmethod
+    @ classmethod
     def _load_classifier(cls, path: Path):
         model_file = next(iter(path.glob("*.pt")))
         yaml_file = next(iter(path.glob("*.yaml")))
