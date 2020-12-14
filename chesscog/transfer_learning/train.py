@@ -18,7 +18,8 @@ def _train_model(model_type: str) -> typing.Tuple[torch.nn.Module, CN]:
     model = torch.load(model_file, map_location=DEVICE)
     model = device(model)
     is_inception = "inception" in model_file.stem.lower()
-    train_model(cfg, run_dir, model, is_inception, model_file.stem)
+    train_model(cfg, run_dir, model, is_inception,
+                model_file.stem, eval_on_train=True)
 
 
 for model_type in ("occupancy_classifier", "piece_classifier"):

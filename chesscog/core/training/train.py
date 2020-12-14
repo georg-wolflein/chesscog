@@ -51,10 +51,17 @@ def train_model(cfg: CN, run_dir: Path, model: torch.nn.Module, is_inception: bo
     criterion = nn.CrossEntropyLoss()
 
     modes = {Datasets.TRAIN, Datasets.VAL}
-    datasets = {mode: build_dataset(cfg, mode)
-                for mode in modes}
+    if eval_on_train:
+        modes = {Datasets.TRAIN}
+        dataset = build_dataset(cfg, Datasets.TRAIN)
+        datasets = {mode: dataset
+                    for mode in modes}
+    else:
+        datasets = {mode: build_dataset(cfg, mode)
+                    for mode in modes}
     classes = datasets[Datasets.TRAIN].classes
-    loader = {mode: build_data_loader(cfg, datasets[mode], mode)
+    loader = {mode: build_data_loader(cfg, datasets[mode],
+                                      Datasets.TRAIN if eval_on_train else mode)
               for mode in modes}
     writer = {mode: SummaryWriter(run_dir / mode.value)
               for mode in modes}
