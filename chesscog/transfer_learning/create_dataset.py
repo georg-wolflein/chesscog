@@ -17,7 +17,7 @@ DATASET_DIR = URI("data://transfer_learning")
 def add_corners_to_labels(input_dir: Path):
     corner_detection_cfg = CN.load_yaml_with_base(
         "config://corner_detection.yaml")
-    for subset in (x.name for x in Datasets):
+    for subset in (x.value for x in Datasets):
         for img_file in (input_dir / subset).glob("*.png"):
             img = cv2.imread(str(img_file))
             img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
