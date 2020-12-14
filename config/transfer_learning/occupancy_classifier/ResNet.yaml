@@ -3,7 +3,6 @@ _BASE_: models://occupancy_classifier/ResNet.yaml
 DATASET:
   BATCH_SIZE: 32
   PATH: data://transfer_learning/occupancy
-  # WORKERS: 0
 TRAINING:
   PHASES:
     - EPOCHS: 100

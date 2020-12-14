@@ -14,12 +14,6 @@ def _train_model(model_type: str) -> typing.Tuple[torch.nn.Module, CN]:
     yaml_file = URI("config://transfer_learning") / \
         model_type / f"{model_file.stem}.yaml"
     cfg = CN.load_yaml_with_base(yaml_file)
-    dataset_name = {
-        "occupancy_classifier": "occupancy",
-        "piece_classifier": "pieces"
-    }[model_type]
-    cfg.DATASET.PATH = f"data://transfer_learning/{dataset_name}"
-    cfg.DATASET.WORKERS = 0
     run_dir = URI("runs://transfer_learning") / model_type
     model = torch.load(model_file, map_location=DEVICE)
     model = device(model)
