@@ -162,7 +162,7 @@ def train_model(cfg: CN, run_dir: Path, model: torch.nn.Module, is_inception: bo
 
                 # Save weights if we get a better performance
                 accuracy = aggregator[Datasets.VAL].accuracy()
-                if accuracy > best_accuracy:
+                if accuracy >= best_accuracy:
                     best_accuracy = accuracy
                     best_weights = copy.deepcopy(model.state_dict())
                     best_step = step
