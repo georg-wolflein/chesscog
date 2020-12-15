@@ -63,7 +63,7 @@ def evaluate(recognizer: TimedChessRecognizer, output_file: typing.IO, dataset_f
 
         mistakes = get_num_mistakes(groundtruth_board, predicted_board)
         incorrect_corners = np.sum(np.linalg.norm(
-            groundtruth_corners - predicted_corners, axis=-1) > 10)
+            groundtruth_corners - predicted_corners, axis=-1) > (10/1200*img.shape[1]))
 
         output_file.write(",".join(map(str, [img_file.name,
                                              error,

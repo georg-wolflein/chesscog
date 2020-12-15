@@ -14,7 +14,7 @@ logger = logging.getLogger()
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Evaluate the chessboard recognition system end-to-end.")
-    parser.add_argument("--dataset", help="the dataset to evaluate (if unspecified, train and val will be evaluated)",
+    parser.add_argument("--dataset", help="the dataset to evaluate (if unspecified, train and test will be evaluated)",
                         type=str, default=None, choices=[x.value for x in Datasets])
     parser.add_argument("--out", help="output folder", type=str,
                         default=f"results://transfer_learning/recognition")
@@ -23,7 +23,7 @@ if __name__ == "__main__":
     output_folder = URI(args.out)
     output_folder.mkdir(parents=True, exist_ok=True)
 
-    datasets = [Datasets.TRAIN, Datasets.VAL] \
+    datasets = [Datasets.TRAIN, Datasets.TEST] \
         if args.dataset is None else [d for d in Datasets if d.value == args.dataset]
 
     recognizer = TimedChessRecognizer(URI("models://transfer_learning"))

@@ -8,11 +8,13 @@ from chesscog.core.dataset import Datasets
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Prepare results for LaTeX")
+    parser.add_argument("--results", help="parent results folder",
+                        type=str, default="results://recognition")
     parser.add_argument("--dataset", help="the dataset to evaluate",
                         type=str, default="train", choices=[x.value for x in Datasets])
     args = parser.parse_args()
 
-    df = pd.read_csv(URI(f"results://recognition/{args.dataset}.csv"))
+    df = pd.read_csv(URI(args.results) / f"{args.dataset}.csv")
     total = len(df)
 
     # End-to-end accuracy
@@ -24,6 +26,10 @@ if __name__ == "__main__":
         df["num_incorrect_squares"] <= 1).sum()
     print("End-to-end accuracy, allowing one mistake:",
           num_correct_boards_allowing_one_mistake / total)
+
+    # Mean misclassified
+    mean_misclassified = df["num_incorrect_squares"].mean()
+    print("Mean number of incorrect squares:", mean_misclassified)
 
     # Correctly detected corners
     df = df[(df["num_incorrect_corners"] != 4) | (df["error"] != "None")]
@@ -38,8 +44,10 @@ if __name__ == "__main__":
     num_incorrect_occupancies = len(df_incorrect_occupancies)
     print("Occupancy classification accuracy:",
           num_correct_occupancies / num_correct_corners)
-    print("  fraction of false positives within occupancy classification errors:", (df_incorrect_occupancies["actual_num_pieces"]
-                                                                                    > df_incorrect_occupancies["predicted_num_pieces"]).sum() / num_incorrect_occupancies)
+    fp = (df_incorrect_occupancies["actual_num_pieces"] >
+          df_incorrect_occupancies["predicted_num_pieces"]).sum() / num_incorrect_occupancies \
+        if num_incorrect_occupancies > 0 else None
+    print("  fraction of false positives within occupancy classification errors:", fp)
 
     # Correctly classified pieces
     df = df[df["num_incorrect_squares"] == 0]
