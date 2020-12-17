@@ -17,7 +17,7 @@ TRAINING:
         LEARNING_RATE: 0.001
         NAME: Adam
       PARAMS: head
-    - EPOCHS: 100
+    - EPOCHS: 150
       OPTIMIZER:
         LEARNING_RATE: 0.0001
         NAME: Adam
