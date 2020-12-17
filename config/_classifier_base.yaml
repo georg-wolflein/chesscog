@@ -7,10 +7,10 @@ DATASET:
     RESIZE: [100, 100]
     RANDOM_HORIZONTAL_FLIP: .5
     COLOR_JITTER:
-      BRIGHTNESS: 0
-      CONTRAST: 0
-      SATURATION: 0
-      HUE: 0
+      BRIGHTNESS: 0.
+      CONTRAST: 0.
+      SATURATION: 0.
+      HUE: 0.
     SHEAR: null
   CLASSES: []
 

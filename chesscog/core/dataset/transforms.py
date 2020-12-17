@@ -27,6 +27,7 @@ class Shear:
         img = ImageOps.flip(img)
         img = transform.transform(img.size, img)
         img = ImageOps.flip(img)
+        return img
 
     def __call__(self, img: Image) -> Image:
         if not self.amount:
@@ -51,12 +52,10 @@ def build_transforms(cfg: CN, mode: Datasets) -> typing.Callable:
     if mode == Datasets.TRAIN:
         if transforms.RANDOM_HORIZONTAL_FLIP:
             t.append(T.RandomHorizontalFlip(transforms.RANDOM_HORIZONTAL_FLIP))
-        t.append(T.ColorJitter(brightness=float(transforms.COLOR_JITTER.BRIGHTNESS),
-                               contrast=float(
-                                   transforms.COLOR_JITTER.CONTRAST),
-                               saturation=float(
-                                   transforms.COLOR_JITTER.SATURATION),
-                               hue=float(transforms.COLOR_JITTER.HUE)))
+        t.append(T.ColorJitter(brightness=transforms.COLOR_JITTER.BRIGHTNESS,
+                               contrast=transforms.COLOR_JITTER.CONTRAST,
+                               saturation=transforms.COLOR_JITTER.SATURATION,
+                               hue=transforms.COLOR_JITTER.HUE))
         shear = transforms.SHEAR
         if shear:
             if isinstance(shear, list):
