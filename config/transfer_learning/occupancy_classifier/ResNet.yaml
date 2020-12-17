@@ -8,7 +8,7 @@ DATASET:
       CONTRAST: .3
       SATURATION: .2
       HUE: .02
-    SHEAR: [0., .25]
+    SHEAR: null
 TRAINING:
   PHASES:
     - EPOCHS: 100
