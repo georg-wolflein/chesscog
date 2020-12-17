@@ -8,7 +8,7 @@ import chess
 from recap import URI, CfgNode as CN
 
 from .transforms import build_transforms
-from . import Datasets
+from .datasets import Datasets
 
 logger = logging.getLogger(__name__)
 

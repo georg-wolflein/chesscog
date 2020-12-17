@@ -5,7 +5,7 @@ import numpy as np
 import torch
 from PIL import Image, ImageTransform, ImageOps
 
-from . import Datasets
+from .datasets import Datasets
 
 _MEAN = np.array([0.485, 0.456, 0.406])
 _STD = np.array([0.229, 0.224, 0.225])
