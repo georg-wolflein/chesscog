@@ -3,6 +3,13 @@ _BASE_: models://piece_classifier/InceptionV3.yaml
 DATASET:
   BATCH_SIZE: 16
   PATH: data://transfer_learning/pieces
+  TRANSFORMS:
+    COLOR_JITTER:
+      BRIGHTNESS: .2
+      CONTRAST: .3
+      SATURATION: .2
+      HUE: .02
+    SHEAR: [0., .25]
 TRAINING:
   PHASES:
     - EPOCHS: 100
