@@ -59,8 +59,7 @@ def train_model(cfg: CN, run_dir: Path, model: torch.nn.Module, is_inception: bo
         datasets = {mode: build_dataset(cfg, mode)
                     for mode in modes}
     classes = datasets[Datasets.TRAIN].classes
-    loader = {mode: build_data_loader(cfg, datasets[mode],
-                                      Datasets.TRAIN if eval_on_train else mode)
+    loader = {mode: build_data_loader(cfg, datasets[mode], mode)
               for mode in modes}
     writer = {mode: SummaryWriter(run_dir / mode.value)
               for mode in modes}
