@@ -17,6 +17,9 @@ def unnormalize(x: typing.Union[torch.Tensor, np.ndarray]) -> typing.Union[torch
 
 
 class Shear:
+    """Custom shear transform that keeps the bottom of the image invariant because for piece classification, we only want to "tilt" the top of the image.
+    """
+
     def __init__(self, amount: typing.Union[tuple, float, int, None]):
         self.amount = amount
 
