@@ -40,13 +40,13 @@ if __name__ == "__main__":
     num_squares = 64 * len(df)
     num_occupancy_mistakes = df["occupancy_classification_mistakes"].sum()
     print("Per-square occupancy classification accuracy:",
-          num_occupancy_mistakes / num_squares)
+          1 - num_occupancy_mistakes / num_squares)
 
     # Piece classification
     num_occupancy_correct = num_squares - num_occupancy_mistakes
     num_piece_mistakes = df["piece_classification_mistakes"].sum()
     print("Per-square piece classification accuracy:",
-          num_piece_mistakes / num_occupancy_correct)
+          1 - num_piece_mistakes / num_occupancy_correct)
 
     # Performance profiling
     time_cols = [x for x in df.columns if x.startswith("time_")]
