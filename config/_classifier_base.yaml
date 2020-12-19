@@ -12,6 +12,12 @@ DATASET:
       SATURATION: 0.
       HUE: 0.
     SHEAR: null
+    SCALE:
+      VERTICAL: null
+      HORIZONTAL: null
+    TRANSLATE:
+      VERTICAL: null
+      HORIZONTAL: null
   CLASSES: []
 
 TRAINING:

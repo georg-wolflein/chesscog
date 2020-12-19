@@ -3,7 +3,8 @@ import typing
 from torchvision import transforms as T
 import numpy as np
 import torch
-from PIL import Image, ImageTransform, ImageOps
+from PIL import Image, ImageOps
+from abc import ABC
 
 from .datasets import Datasets
 
@@ -25,10 +26,9 @@ class Shear:
 
     @classmethod
     def _shear(cls, img: Image, amount: float) -> Image:
-        transform = ImageTransform.AffineTransform((1, -amount, 0,
-                                                    0, 1, 0))
         img = ImageOps.flip(img)
-        img = transform.transform(img.size, img)
+        img = img.transform(img.size, Image.AFFINE,
+                            (1, -amount, 0, 0, 1, 0))
         img = ImageOps.flip(img)
         return img
 
@@ -47,6 +47,62 @@ class Shear:
         return f"{self.__class__.__name__}({self.amount})"
 
 
+class _HVTransform(ABC):
+    """Base class for transforms parameterized by horizontal and vertical values.
+    """
+
+    def __init__(self, horizontal: typing.Union[float, tuple, None], vertical: typing.Union[float, tuple, None]):
+        self.horizontal = self._get_tuple(horizontal)
+        self.vertical = self._get_tuple(vertical)
+
+    _default_value = None
+
+    @classmethod
+    def _get_tuple(cls, value: typing.Union[float, tuple, None]) -> tuple:
+        if value is None:
+            return cls._default_value, cls._default_value
+        elif isinstance(value, (tuple, list)):
+            return tuple(map(float, value))
+        elif isinstance(value, (float, int)):
+            return tuple(map(float, (value, value)))
+
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}({self.horizontal}, {self.vertical})"
+
+
+class Scale(_HVTransform):
+    """Custom scaling transform where the horizontal and vertical scales can independently be specified.
+
+    The center of scaling is the bottom left of the image (this makes particular sense for the piece classifier).
+    """
+
+    _default_value = 1.
+
+    def __call__(self, img: Image) -> Image:
+        w, h = img.size
+        w_scale = np.random.uniform(*self.horizontal)
+        h_scale = np.random.uniform(*self.vertical)
+        w_, h_ = map(int, (w*w_scale, h*h_scale))
+        img = img.resize((w_, h_))
+        img = img.transform((w, h), Image.AFFINE, (1, 0, 0, 0, 1, h_-h))
+        return img
+
+
+class Translate(_HVTransform):
+    """Custom translation transform for convenience.
+    """
+
+    _default_value = 0.
+
+    def __call__(self, img: Image) -> Image:
+        w, h = img.size
+        w_translate = np.random.uniform(*self.horizontal)
+        h_translate = np.random.uniform(*self.vertical)
+        w_, h_ = map(int, (w*w_translate, h*h_translate))
+        img = img.transform((w, h), Image.AFFINE, (1, 0, -w_, 0, 1, h_))
+        return img
+
+
 def build_transforms(cfg: CN, mode: Datasets) -> typing.Callable:
     transforms = cfg.DATASET.TRANSFORMS
     t = []
@@ -59,13 +115,17 @@ def build_transforms(cfg: CN, mode: Datasets) -> typing.Callable:
                                contrast=transforms.COLOR_JITTER.CONTRAST,
                                saturation=transforms.COLOR_JITTER.SATURATION,
                                hue=transforms.COLOR_JITTER.HUE))
+        t.append(Scale(transforms.SCALE.HORIZONTAL,
+                       transforms.SCALE.VERTICAL))
         shear = transforms.SHEAR
         if shear:
             if isinstance(shear, list):
                 shear = tuple(shear)
             t.append(Shear(shear))
-    if transforms.RESIZE:
-        t.append(T.Resize(tuple(reversed(transforms.RESIZE))))
-    t.extend([T.ToTensor(),
-              T.Normalize(mean=_MEAN, std=_STD)])
+        t.append(Translate(transforms.TRANSLATE.HORIZONTAL,
+                           transforms.TRANSLATE.VERTICAL))
+    # if transforms.RESIZE:
+    #     t.append(T.Resize(tuple(reversed(transforms.RESIZE))))
+    # t.extend([T.ToTensor(),
+    #           T.Normalize(mean=_MEAN, std=_STD)])
     return T.Compose(t)
