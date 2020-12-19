@@ -124,8 +124,8 @@ def build_transforms(cfg: CN, mode: Datasets) -> typing.Callable:
             t.append(Shear(shear))
         t.append(Translate(transforms.TRANSLATE.HORIZONTAL,
                            transforms.TRANSLATE.VERTICAL))
-    # if transforms.RESIZE:
-    #     t.append(T.Resize(tuple(reversed(transforms.RESIZE))))
-    # t.extend([T.ToTensor(),
-    #           T.Normalize(mean=_MEAN, std=_STD)])
+    if transforms.RESIZE:
+        t.append(T.Resize(tuple(reversed(transforms.RESIZE))))
+    t.extend([T.ToTensor(),
+              T.Normalize(mean=_MEAN, std=_STD)])
     return T.Compose(t)
