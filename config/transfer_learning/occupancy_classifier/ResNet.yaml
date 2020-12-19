@@ -8,13 +8,13 @@ DATASET:
       CONTRAST: .3
       SATURATION: .2
       HUE: .02
-    SHEAR: [-0.05, 0.05]
+    SHEAR: null
     SCALE:
-      VERTICAL: [.9, 1.1]
-      HORIZONTAL: [.9, 1.1]
+      VERTICAL: [.99, 1.02]
+      HORIZONTAL: [.99, 1.02]
     TRANSLATE:
-      VERTICAL: [-0.1, 0.1]
-      HORIZONTAL: [-0.1, 0.1]
+      VERTICAL: [-0.01, 0.01]
+      HORIZONTAL: [-0.01, 0.01]
 TRAINING:
   PHASES:
     - EPOCHS: 100

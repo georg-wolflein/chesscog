@@ -36,24 +36,17 @@ if __name__ == "__main__":
     num_correct_corners = len(df)
     print("Corner detection accuracy:", num_correct_corners / total)
 
-    # Correctly classified occupancies
-    df_incorrect_occupancies = df[df["actual_num_pieces"]
-                                  != df["predicted_num_pieces"]]
-    df = df[df["actual_num_pieces"] == df["predicted_num_pieces"]]
-    num_correct_occupancies = len(df)
-    num_incorrect_occupancies = len(df_incorrect_occupancies)
-    print("Occupancy classification accuracy:",
-          num_correct_occupancies / num_correct_corners)
-    fp = (df_incorrect_occupancies["actual_num_pieces"] >
-          df_incorrect_occupancies["predicted_num_pieces"]).sum() / num_incorrect_occupancies \
-        if num_incorrect_occupancies > 0 else None
-    print("  fraction of false positives within occupancy classification errors:", fp)
+    # Occupancy classification
+    num_squares = 64 * len(df)
+    num_occupancy_mistakes = df["occupancy_classification_mistakes"].sum()
+    print("Per-square occupancy classification accuracy:",
+          num_occupancy_mistakes / num_squares)
 
-    # Correctly classified pieces
-    df = df[df["num_incorrect_squares"] == 0]
-    num_correct_pieces = len(df)
-    print("Piece classification accuracy:",
-          num_correct_pieces / num_correct_occupancies)
+    # Piece classification
+    num_occupancy_correct = num_squares - num_occupancy_mistakes
+    num_piece_mistakes = df["piece_classification_mistakes"].sum()
+    print("Per-square piece classification accuracy:",
+          num_piece_mistakes / num_occupancy_correct)
 
     # Performance profiling
     time_cols = [x for x in df.columns if x.startswith("time_")]

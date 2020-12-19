@@ -35,7 +35,7 @@ class Shear:
     def __call__(self, img: Image) -> Image:
         if not self.amount:
             return img
-        if isinstance(self.amount, tuple):
+        if isinstance(self.amount, (tuple, list)):
             min_val, max_val = sorted(self.amount)
         else:
             min_val = max_val = self.amount
@@ -115,13 +115,9 @@ def build_transforms(cfg: CN, mode: Datasets) -> typing.Callable:
                                contrast=transforms.COLOR_JITTER.CONTRAST,
                                saturation=transforms.COLOR_JITTER.SATURATION,
                                hue=transforms.COLOR_JITTER.HUE))
+        t.append(Shear(transforms.SHEAR))
         t.append(Scale(transforms.SCALE.HORIZONTAL,
                        transforms.SCALE.VERTICAL))
-        shear = transforms.SHEAR
-        if shear:
-            if isinstance(shear, list):
-                shear = tuple(shear)
-            t.append(Shear(shear))
         t.append(Translate(transforms.TRANSLATE.HORIZONTAL,
                            transforms.TRANSLATE.VERTICAL))
     if transforms.RESIZE:
