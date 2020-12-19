@@ -18,11 +18,27 @@ from chesscog.core.exceptions import RecognitionException
 logger = logging.getLogger()
 
 
-def get_num_mistakes(groundtruth: chess.Board, predicted: chess.Board):
+def get_num_mistakes(groundtruth: chess.Board, predicted: chess.Board) -> int:
     groundtruth_map = groundtruth.piece_map()
     predicted_map = predicted.piece_map()
     return sum(0 if groundtruth_map.get(i, None) == predicted_map.get(i, None) else 1
                for i in chess.SQUARES)
+
+
+def get_num_occupancy_mistakes(groundtruth: chess.Board, predicted: chess.Board) -> int:
+    groundtruth_map = groundtruth.piece_map()
+    predicted_map = predicted.piece_map()
+    return sum(0 if (i in groundtruth_map) == (i in predicted_map) else 1
+               for i in chess.SQUARES)
+
+
+def get_num_piece_mistakes(groundtruth: chess.Board, predicted: chess.Board) -> int:
+    groundtruth_map = groundtruth.piece_map()
+    predicted_map = predicted.piece_map()
+    squares = filter(
+        lambda i: i in groundtruth_map and i in predicted_map, chess.SQUARES)
+    return sum(0 if (groundtruth_map.get(i) == predicted_map.get(i)) else 1
+               for i in squares)
 
 
 def evaluate(recognizer: TimedChessRecognizer, output_file: typing.IO, dataset_folder: Path):
@@ -34,6 +50,8 @@ def evaluate(recognizer: TimedChessRecognizer, output_file: typing.IO, dataset_f
                                 "error",
                                 "num_incorrect_squares",
                                 "num_incorrect_corners",
+                                "occupancy_classification_mistakes",
+                                "piece_classification_mistakes",
                                 "actual_num_pieces",
                                 "predicted_num_pieces",
                                 "time_corner_detection",
@@ -63,12 +81,18 @@ def evaluate(recognizer: TimedChessRecognizer, output_file: typing.IO, dataset_f
 
         mistakes = get_num_mistakes(groundtruth_board, predicted_board)
         incorrect_corners = np.sum(np.linalg.norm(
-            groundtruth_corners - predicted_corners, axis=-1) > 10)
+            groundtruth_corners - predicted_corners, axis=-1) > (10/1200*img.shape[1]))
+        occupancy_mistakes = get_num_occupancy_mistakes(
+            groundtruth_board, predicted_board)
+        piece_mistakes = get_num_piece_mistakes(
+            groundtruth_board, predicted_board)
 
         output_file.write(",".join(map(str, [img_file.name,
                                              error,
                                              mistakes,
                                              incorrect_corners,
+                                             occupancy_mistakes,
+                                             piece_mistakes,
                                              len(groundtruth_board.piece_map()),
                                              len(predicted_board.piece_map()),
                                              *(times[k] for k in time_keys)])) + "\n")

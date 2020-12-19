@@ -1,0 +1,30 @@
+_BASE_: models://piece_classifier/InceptionV3.yaml
+
+DATASET:
+  BATCH_SIZE: 16
+  PATH: data://transfer_learning/pieces
+  TRANSFORMS:
+    COLOR_JITTER:
+      BRIGHTNESS: .2
+      CONTRAST: .3
+      SATURATION: .2
+      HUE: .02
+    SHEAR: [-0.1, 0.25]
+    SCALE:
+      VERTICAL: [.8, 1.2]
+      HORIZONTAL: [.9, 1.2]
+    TRANSLATE:
+      VERTICAL: [-.03, .1]
+      HORIZONTAL: [-.03, .1]
+TRAINING:
+  PHASES:
+    - EPOCHS: 100
+      OPTIMIZER:
+        LEARNING_RATE: 0.001
+        NAME: Adam
+      PARAMS: head
+    - EPOCHS: 150
+      OPTIMIZER:
+        LEARNING_RATE: 0.0001
+        NAME: Adam
+      PARAMS: all

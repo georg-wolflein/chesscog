@@ -6,6 +6,18 @@ DATASET:
     CENTER_CROP: [100, 100]
     RESIZE: [100, 100]
     RANDOM_HORIZONTAL_FLIP: .5
+    COLOR_JITTER:
+      BRIGHTNESS: 0.
+      CONTRAST: 0.
+      SATURATION: 0.
+      HUE: 0.
+    SHEAR: null
+    SCALE:
+      VERTICAL: null
+      HORIZONTAL: null
+    TRANSLATE:
+      VERTICAL: null
+      HORIZONTAL: null
   CLASSES: []
 
 TRAINING:

@@ -8,11 +8,13 @@ from chesscog.core.dataset import Datasets
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Prepare results for LaTeX")
+    parser.add_argument("--results", help="parent results folder",
+                        type=str, default="results://recognition")
     parser.add_argument("--dataset", help="the dataset to evaluate",
                         type=str, default="train", choices=[x.value for x in Datasets])
     args = parser.parse_args()
 
-    df = pd.read_csv(URI(f"results://recognition/{args.dataset}.csv"))
+    df = pd.read_csv(URI(args.results) / f"{args.dataset}.csv")
     total = len(df)
 
     # End-to-end accuracy
@@ -25,27 +27,26 @@ if __name__ == "__main__":
     print("End-to-end accuracy, allowing one mistake:",
           num_correct_boards_allowing_one_mistake / total)
 
+    # Mean misclassified
+    mean_misclassified = df["num_incorrect_squares"].mean()
+    print("Mean number of incorrect squares:", mean_misclassified)
+
     # Correctly detected corners
     df = df[(df["num_incorrect_corners"] != 4) | (df["error"] != "None")]
     num_correct_corners = len(df)
     print("Corner detection accuracy:", num_correct_corners / total)
 
-    # Correctly classified occupancies
-    df_incorrect_occupancies = df[df["actual_num_pieces"]
-                                  != df["predicted_num_pieces"]]
-    df = df[df["actual_num_pieces"] == df["predicted_num_pieces"]]
-    num_correct_occupancies = len(df)
-    num_incorrect_occupancies = len(df_incorrect_occupancies)
-    print("Occupancy classification accuracy:",
-          num_correct_occupancies / num_correct_corners)
-    print("  fraction of false positives within occupancy classification errors:", (df_incorrect_occupancies["actual_num_pieces"]
-                                                                                    > df_incorrect_occupancies["predicted_num_pieces"]).sum() / num_incorrect_occupancies)
+    # Occupancy classification
+    num_squares = 64 * len(df)
+    num_occupancy_mistakes = df["occupancy_classification_mistakes"].sum()
+    print("Per-square occupancy classification accuracy:",
+          1 - num_occupancy_mistakes / num_squares)
 
-    # Correctly classified pieces
-    df = df[df["num_incorrect_squares"] == 0]
-    num_correct_pieces = len(df)
-    print("Piece classification accuracy:",
-          num_correct_pieces / num_correct_occupancies)
+    # Piece classification
+    num_occupancy_correct = num_squares - num_occupancy_mistakes
+    num_piece_mistakes = df["piece_classification_mistakes"].sum()
+    print("Per-square piece classification accuracy:",
+          1 - num_piece_mistakes / num_occupancy_correct)
 
     # Performance profiling
     time_cols = [x for x in df.columns if x.startswith("time_")]

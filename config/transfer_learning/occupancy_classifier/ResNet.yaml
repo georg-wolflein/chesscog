@@ -1,0 +1,29 @@
+_BASE_: models://occupancy_classifier/ResNet.yaml
+DATASET:
+  BATCH_SIZE: 32
+  PATH: data://transfer_learning/occupancy
+  TRANSFORMS:
+    COLOR_JITTER:
+      BRIGHTNESS: .2
+      CONTRAST: .3
+      SATURATION: .2
+      HUE: .02
+    SHEAR: null
+    SCALE:
+      VERTICAL: [.99, 1.02]
+      HORIZONTAL: [.99, 1.02]
+    TRANSLATE:
+      VERTICAL: [-0.01, 0.01]
+      HORIZONTAL: [-0.01, 0.01]
+TRAINING:
+  PHASES:
+    - EPOCHS: 100
+      OPTIMIZER:
+        LEARNING_RATE: 0.001
+        NAME: Adam
+      PARAMS: head
+    - EPOCHS: 100
+      OPTIMIZER:
+        LEARNING_RATE: 0.0001
+        NAME: Adam
+      PARAMS: all

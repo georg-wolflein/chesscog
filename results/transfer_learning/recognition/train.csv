@@ -1,0 +1,3 @@
+file,error,num_incorrect_squares,num_incorrect_corners,occupancy_classification_mistakes,piece_classification_mistakes,actual_num_pieces,predicted_num_pieces,time_corner_detection,time_occupancy_classification,time_piece_classification,time_prepare_results
+white.png,None,0,0,0,0,32,32,0.23554262146353722,0.05559122376143932,0.27483739238232374,0.00011184252798557281
+black.png,None,0,0,0,0,32,32,0.32147992867976427,0.05157231632620096,0.24863924272358418,0.00010940153151750565
