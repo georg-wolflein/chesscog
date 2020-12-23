@@ -127,10 +127,7 @@ class TimedChessRecognizer(ChessRecognizer):
             return board, corners, times
 
 
-if __name__ == "__main__":
-    from chesscog.occupancy_classifier.download_model import ensure_model as ensure_occupancy_classifier
-    from chesscog.piece_classifier.download_model import ensure_model as ensure_piece_classifier
-
+def main(classifiers_folder: Path = URI("models://"), setup: callable = lambda: None):
     parser = argparse.ArgumentParser(
         description="Run the chess recognition pipeline on an input image")
     parser.add_argument("file", help="path to the input image", type=str)
@@ -141,16 +138,23 @@ if __name__ == "__main__":
     parser.set_defaults(color=True)
     args = parser.parse_args()
 
-    ensure_occupancy_classifier(show_size=True)
-    ensure_piece_classifier(show_size=True)
+    setup()
 
     img = cv2.imread(str(URI(args.file)))
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
-    recognizer = ChessRecognizer()
+    recognizer = ChessRecognizer(classifiers_folder)
     board, *_ = recognizer.predict(img, args.color)
 
     print(board)
     print()
     print(
         f"You can view this position at https://lichess.org/editor/{board.board_fen()}")
+
+
+if __name__ == "__main__":
+    from chesscog.occupancy_classifier.download_model import ensure_model as ensure_occupancy_classifier
+    from chesscog.piece_classifier.download_model import ensure_model as ensure_piece_classifier
+
+    main(setup=lambda: [ensure_model(show_size=True)
+                        for ensure_model in (ensure_occupancy_classifier, ensure_piece_classifier)])
