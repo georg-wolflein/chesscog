@@ -3,6 +3,7 @@ from PIL import Image, ImageDraw, ImageFont
 import typing
 import json
 from recap import URI
+import argparse
 
 
 def draw_board_edges(img: Image, corners: typing.List[typing.List[int]]):
@@ -69,14 +70,18 @@ def visualise_groundtruth(img: Image, label: dict):
 
 
 if __name__ == "__main__":
-    start = 0
-    for i in range(start, start+5):
-        id = f"{i:04d}"
-        dataset_dir = URI("data://render")
+    parser = argparse.ArgumentParser(
+        description="Visualize a sample from the dataset.")
+    parser.add_argument("--file", type=str, help="path to image file",
+                        default="data://render/train/3828.png")
+    args = parser.parse_args()
 
-        img = Image.open(dataset_dir / (id + ".png"))
-        with (dataset_dir / (id + ".json")).open("r") as f:
-            label = json.load(f)
+    img_file = URI(args.file)
+    json_file = img_file.parent / f"{img_file.stem}.json"
 
-        visualise_groundtruth(img, label)
-        img.show()
+    img = Image.open(img_file)
+    with json_file.open("r") as f:
+        label = json.load(f)
+
+    visualise_groundtruth(img, label)
+    img.show()
