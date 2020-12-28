@@ -42,7 +42,7 @@ if __name__ == "__main__":
 
     regex = re.compile(r"CNN(\d+)_(\d+)Conv_(\d+)Pool_(\d+)FC")
     df.index = df.index.str.replace(
-        regex, lambda x: "CNN $(" + ",".join(x.group(i) for i in range(1, 5)) + ")$")
+        regex, lambda x: "\\acs{cnn} $(" + ",".join(x.group(i) for i in range(1, 5)) + ")$")
 
     citekeys = {
         "InceptionV3": "szegedy2016",

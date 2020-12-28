@@ -36,7 +36,7 @@ class ChessRecognizer:
         self._piece_classes = np.array(list(map(name_to_piece,
                                                 self._pieces_cfg.DATASET.CLASSES)))
 
-    @ classmethod
+    @classmethod
     def _load_classifier(cls, path: Path):
         model_file = next(iter(path.glob("*.pt")))
         yaml_file = next(iter(path.glob("*.yaml")))
@@ -81,6 +81,15 @@ class ChessRecognizer:
         return all_pieces
 
     def predict(self, img: np.ndarray, turn: chess.Color = chess.WHITE) -> typing.Tuple[chess.Board, np.ndarray]:
+        """Perform an inference.
+
+        Args:
+            img (np.ndarray): the input image (RGB)
+            turn (chess.Color, optional): the current player. Defaults to chess.WHITE.
+
+        Returns:
+            typing.Tuple[chess.Board, np.ndarray]: the predicted position on the board and the four corner points
+        """
         with torch.no_grad():
             img, img_scale = resize_image(self._corner_detection_cfg, img)
             corners = find_corners(self._corner_detection_cfg, img)

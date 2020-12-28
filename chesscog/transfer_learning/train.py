@@ -22,7 +22,8 @@ def _train_model(model_type: str) -> typing.Tuple[torch.nn.Module, CN]:
                 model_file.stem, eval_on_train=True)
 
 
-for model_type in ("occupancy_classifier", "piece_classifier"):
-    logger.info(f"Starting training for {model_type}")
-    _train_model(model_type)
-    logger.info(f"Finished training for {model_type}")
+if __name__ == "__main__":
+    for model_type in ("occupancy_classifier", "piece_classifier"):
+        logger.info(f"Starting training for {model_type}")
+        _train_model(model_type)
+        logger.info(f"Finished training for {model_type}")
