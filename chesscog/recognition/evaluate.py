@@ -54,6 +54,8 @@ def evaluate(recognizer: TimedChessRecognizer, output_file: typing.IO, dataset_f
                                 "piece_classification_mistakes",
                                 "actual_num_pieces",
                                 "predicted_num_pieces",
+                                "fen_actual",
+                                "fen_predicted",
                                 "time_corner_detection",
                                 "time_occupancy_classification",
                                 "time_piece_classification",
@@ -95,6 +97,8 @@ def evaluate(recognizer: TimedChessRecognizer, output_file: typing.IO, dataset_f
                                              piece_mistakes,
                                              len(groundtruth_board.piece_map()),
                                              len(predicted_board.piece_map()),
+                                             groundtruth_board.board_fen(),
+                                             predicted_board.board_fen(),
                                              *(times[k] for k in time_keys)])) + "\n")
         if (i+1) % 5 == 0:
             output_file.flush()
