@@ -2,8 +2,7 @@ import pandas as pd
 import re
 import argparse
 from recap import URI
-
-from chesscog.core.dataset import Datasets
+import chesscog
 
 
 if __name__ == "__main__":

@@ -41,7 +41,7 @@ def get_num_piece_mistakes(groundtruth: chess.Board, predicted: chess.Board) -> 
                for i in squares)
 
 
-def evaluate(recognizer: TimedChessRecognizer, output_file: typing.IO, dataset_folder: Path):
+def evaluate(recognizer: TimedChessRecognizer, output_file: typing.IO, dataset_folder: Path, save_fens: bool = False):
     time_keys = ["corner_detection",
                  "occupancy_classification",
                  "piece_classification",
@@ -54,8 +54,8 @@ def evaluate(recognizer: TimedChessRecognizer, output_file: typing.IO, dataset_f
                                 "piece_classification_mistakes",
                                 "actual_num_pieces",
                                 "predicted_num_pieces",
-                                "fen_actual",
-                                "fen_predicted",
+                                *(["fen_actual", "fen_predicted"]
+                                  if save_fens else []),
                                 "time_corner_detection",
                                 "time_occupancy_classification",
                                 "time_piece_classification",
@@ -97,8 +97,9 @@ def evaluate(recognizer: TimedChessRecognizer, output_file: typing.IO, dataset_f
                                              piece_mistakes,
                                              len(groundtruth_board.piece_map()),
                                              len(predicted_board.piece_map()),
-                                             groundtruth_board.board_fen(),
-                                             predicted_board.board_fen(),
+                                             *([groundtruth_board.board_fen(),
+                                                predicted_board.board_fen(), ]
+                                               if save_fens else []),
                                              *(times[k] for k in time_keys)])) + "\n")
         if (i+1) % 5 == 0:
             output_file.flush()
@@ -112,7 +113,9 @@ if __name__ == "__main__":
                         type=str, default=None, choices=[x.value for x in Datasets])
     parser.add_argument("--out", help="output folder", type=str,
                         default=f"results://recognition")
-    parser.set_defaults(find_mistakes=False)
+    parser.add_argument("--save-fens", help="store predicted and actual FEN strings",
+                        action="store_true", dest="save_fens")
+    parser.set_defaults(save_fens=False)
     args = parser.parse_args()
     output_folder = URI(args.out)
     output_folder.mkdir(parents=True, exist_ok=True)
@@ -126,4 +129,4 @@ if __name__ == "__main__":
         folder = URI("data://render") / dataset.value
         logger.info(f"Evaluating dataset {folder}")
         with (output_folder / f"{dataset.value}.csv").open("w") as f:
-            evaluate(recognizer, f, folder)
+            evaluate(recognizer, f, folder, save_fens=args.save_fens)
