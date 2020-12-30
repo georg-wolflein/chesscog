@@ -14,8 +14,8 @@ I am developing this project as part of my master thesis at the University of St
 
 ## Demo
 
-See it in action at [**chesscog.com**](https://www.chesscog.com)!
-![Screenshot](docs/demo_screenshot.png)
+See it in action at [chesscog.com](https://www.chesscog.com)!
+![Screenshot](https://github.com/georgw777/chesscog/raw/master/docs/demo_screenshot.png)
 
 ## Background
 

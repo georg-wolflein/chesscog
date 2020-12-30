@@ -11,7 +11,7 @@ if __name__ == "__main__":
     parser.add_argument("--results", help="parent results folder",
                         type=str, default="results://recognition")
     parser.add_argument("--dataset", help="the dataset to evaluate",
-                        type=str, default="train", choices=[x.value for x in Datasets])
+                        type=str, default="train")
     args = parser.parse_args()
 
     df = pd.read_csv(URI(args.results) / f"{args.dataset}.csv")
@@ -51,7 +51,10 @@ if __name__ == "__main__":
     # Performance profiling
     time_cols = [x for x in df.columns if x.startswith("time_")]
     for c in time_cols:
-        print(f"Mean {c}:", df[c].mean())
+        print("Time for", c[len("time_"):])
+        print("   mean:", df[c].mean())
+        print("   std: ", df[c].std())
 
-    mean_total_time = df[time_cols].sum(axis=1).mean()
-    print("Mean total time:", mean_total_time)
+    totals = df[time_cols].sum(axis=1)
+    print("Mean total time:", totals.mean())
+    print("            std:", totals.std())
