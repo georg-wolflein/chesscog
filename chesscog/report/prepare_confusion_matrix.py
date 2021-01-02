@@ -47,7 +47,8 @@ def get_confusion_matrix(predicted: chess.Board, actual: chess.Board) -> np.ndar
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Prepare results for LaTeX")
+    parser = argparse.ArgumentParser(
+        description="Prepare confusion matrix for LaTeX")
     parser.add_argument("--results", help="parent results folder",
                         type=str, default="results://recognition")
     parser.add_argument("--dataset", help="the dataset to evaluate",
