@@ -2,7 +2,7 @@
 set -x
 
 apt-get update
-apt-get -y install git rsync
+apt-get -y install git rsync libgl1-mesa-glx build-essential
 
 pwd ls -lah
 export SOURCE_DATE_EPOCH=$(git log -1 --pretty=%ct)
