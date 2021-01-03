@@ -38,5 +38,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.CHESSCOG_PAT_TOKEN }}
         run: |
-          docs/buildsite.sh
+          cd docs
+          ./buildsite.sh
         shell: bash
