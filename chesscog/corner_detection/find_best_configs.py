@@ -1,3 +1,21 @@
+"""Script to execute the grid search over the generated YAML config files in order to determine which configuration achieves the best performance of the chessboard localization algorithm.
+
+.. code-block:: console
+
+    $ python -m chesscog.corner_detection.find_best_configs --help
+    usage: find_best_configs.py [-h] [--n N] [--in INPUT]
+                                [--out OUT]
+    
+    Get the best n configs of the results obtained via grid search
+    
+    optional arguments:
+      -h, --help  show this help message and exit
+      --n N       the number of configs to retain
+      --in INPUT  the CSV file containing the results of the grid
+                  search
+      --out OUT   the output folder for the YAML files     output folder
+"""
+
 import pandas as pd
 import numpy as np
 from pathlib import Path
@@ -5,7 +23,7 @@ import argparse
 from recap import URI, CfgNode as CN
 
 
-def find_best_configs(n: int, results_file: Path, output_folder: Path):
+def _find_best_configs(n: int, results_file: Path, output_folder: Path):
     df = pd.read_csv(results_file)
     df = df.sort_values("mistakes")
     df = df.drop_duplicates([x for x in df.columns if x != "mistakes"])
@@ -40,4 +58,4 @@ if __name__ == "__main__":
                         help="the output folder for the YAML files",
                         type=str, default="config://corner_detection/refined")
     args = parser.parse_args()
-    find_best_configs(args.n, URI(args.input), URI(args.out))
+    _find_best_configs(args.n, URI(args.input), URI(args.out))

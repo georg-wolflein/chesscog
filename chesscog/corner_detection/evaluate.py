@@ -1,3 +1,23 @@
+"""Script to evaluate the chessboard localisation algorithm.
+
+.. code-block:: console
+
+    $ python -m chesscog.corner_detection.evaluate --help  
+    usage: evaluate.py [-h] [--config CONFIG]
+                       [--dataset {train,val,test}] [--out OUT]
+    
+    Evaluate the chessboard corner detector.
+    
+    optional arguments:
+      -h, --help            show this help message and exit
+      --config CONFIG       path to a folder with YAML config files
+                            (or path to a YAML config file)
+      --dataset {train,val,test}
+                            the dataset to evaluate (if unspecified,
+                            train and val will be evaluated)
+      --out OUT             output folder
+"""
+
 import argparse
 import typing
 from pathlib import Path
@@ -14,7 +34,7 @@ from chesscog.corner_detection import find_corners
 logger = logging.getLogger(__name__)
 
 
-def evaluate(cfg: CN, dataset: Datasets, output_folder: Path, find_mistakes: bool = False, include_heading: bool = False) -> str:
+def _evaluate(cfg: CN, dataset: Datasets, output_folder: Path, find_mistakes: bool = False, include_heading: bool = False) -> str:
     mistakes = 0
     total = 0
     folder = URI("data://render") / dataset.value
@@ -77,7 +97,7 @@ if __name__ == "__main__":
                 values.extend(f"config.{x}" for x in cfg_headers)
                 f.write(",".join(values) + "\n")
             for dataset in datasets:
-                mistakes, total = evaluate(
+                mistakes, total = _evaluate(
                     cfg, dataset, args.out, args.find_mistakes)
                 values = [dataset.name, mistakes, total]
                 values.extend(params[k] for k in cfg_headers)

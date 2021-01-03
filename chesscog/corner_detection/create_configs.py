@@ -1,7 +1,21 @@
+"""Script to create config files for the grid search.
+
+.. code-block:: console
+
+    $ python -m chesscog.corner_detection.create_configs --help
+    usage: create_configs.py [-h]
+    
+    Create YAML config files for grid search.
+    
+    optional arguments:
+      -h, --help  show this help message and exit
+"""
+
 import numpy as np
 import typing
 import functools
 from recap import URI, CfgNode as CN
+import argparse
 
 from chesscog.core import listify
 
@@ -20,7 +34,7 @@ parameters = {k: (v.tolist() if isinstance(v, np.ndarray) else v)
 
 
 @listify
-def add_parameter(key: str, values: typing.Iterable[typing.Any], cfgs: typing.List[CN]) -> list:
+def _add_parameter(key: str, values: typing.Iterable[typing.Any], cfgs: typing.List[CN]) -> list:
     for value in values:
         for cfg in cfgs:
             cfg = cfg.clone()
@@ -32,17 +46,19 @@ def add_parameter(key: str, values: typing.Iterable[typing.Any], cfgs: typing.Li
             yield cfg
 
 
-def is_valid_cfg(cfg: CN) -> bool:
+def _is_valid_cfg(cfg: CN) -> bool:
     return cfg.EDGE_DETECTION.LOW_THRESHOLD <= cfg.EDGE_DETECTION.HIGH_THRESHOLD
 
 
 if __name__ == "__main__":
+    argparse.ArgumentParser(
+        description="Create YAML config files for grid search.").parse_args()
     cfg_folder = URI("config://corner_detection")
     cfg = CN.load_yaml_with_base(cfg_folder / "_base.yaml")
     cfgs = [cfg]
     for k, v in parameters.items():
-        cfgs = add_parameter(k, v, cfgs)
-    cfgs = filter(is_valid_cfg, cfgs)
+        cfgs = _add_parameter(k, v, cfgs)
+    cfgs = filter(_is_valid_cfg, cfgs)
     for i, cfg in enumerate(cfgs, 1):
         with (cfg_folder / f"generated_{i}.yaml").open("w") as f:
             cfg.dump(stream=f)
