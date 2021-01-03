@@ -23,6 +23,7 @@ jobs:
           apt-get update
           apt-get install -y git
           git clone -b develop "https://token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" .
+          ls -la
         shell: bash
 
       - name: Run build script for Sphinx pages
