@@ -1,3 +1,6 @@
+"""Module containing the CNN architecture definitions of the candidate piece classifiers.
+"""
+
 from torch import nn
 from torchvision import models
 import torch.nn.functional as F
@@ -9,12 +12,16 @@ from chesscog.core.models import MODELS_REGISTRY
 
 NUM_CLASSES = 2
 
+#: Registry of occupancy classifiers (registered in the global :attr:`chesscog.core.models.MODELS_REGISTRY` under the key ``OCCUPANCY_CLASSIFIER``)
 MODEL_REGISTRY = Registry()
 MODELS_REGISTRY.register_as("OCCUPANCY_CLASSIFIER")(MODEL_REGISTRY)
 
 
 @MODEL_REGISTRY.register
 class CNN100_3Conv_3Pool_3FC(nn.Module):
+    """CNN (100, 3, 3, 3) model.
+    """
+
     input_size = 100, 100
     pretrained = False
 
@@ -44,6 +51,9 @@ class CNN100_3Conv_3Pool_3FC(nn.Module):
 
 @MODEL_REGISTRY.register
 class CNN100_3Conv_3Pool_2FC(nn.Module):
+    """CNN (100, 3, 3, 2) model.
+    """
+
     input_size = 100, 100
     pretrained = False
 
@@ -71,6 +81,9 @@ class CNN100_3Conv_3Pool_2FC(nn.Module):
 
 @MODEL_REGISTRY.register
 class CNN50_2Conv_2Pool_3FC(nn.Module):
+    """CNN (50, 2, 2, 3) model.
+    """
+
     input_size = 50, 50
     pretrained = False
 
@@ -97,6 +110,9 @@ class CNN50_2Conv_2Pool_3FC(nn.Module):
 
 @MODEL_REGISTRY.register
 class CNN50_2Conv_2Pool_2FC(nn.Module):
+    """CNN (50, 2, 2, 2) model.
+    """
+
     input_size = 50, 50
     pretrained = False
 
@@ -121,6 +137,9 @@ class CNN50_2Conv_2Pool_2FC(nn.Module):
 
 @MODEL_REGISTRY.register
 class CNN50_3Conv_1Pool_2FC(nn.Module):
+    """CNN (50, 3, 1, 2) model.
+    """
+
     input_size = 50, 50
     pretrained = False
 
@@ -147,6 +166,9 @@ class CNN50_3Conv_1Pool_2FC(nn.Module):
 
 @MODEL_REGISTRY.register
 class CNN50_3Conv_1Pool_3FC(nn.Module):
+    """CNN (50, 3, 1, 3) model.
+    """
+
     input_size = 50, 50
     pretrained = False
 
@@ -175,6 +197,9 @@ class CNN50_3Conv_1Pool_3FC(nn.Module):
 
 @MODEL_REGISTRY.register
 class AlexNet(nn.Module):
+    """AlexNet model.
+    """
+
     input_size = 100, 100
     pretrained = True
 
@@ -193,6 +218,9 @@ class AlexNet(nn.Module):
 
 @MODEL_REGISTRY.register
 class ResNet(nn.Module):
+    """ResNet model.
+    """
+
     input_size = 100, 100
     pretrained = True
 
@@ -211,6 +239,9 @@ class ResNet(nn.Module):
 
 @MODEL_REGISTRY.register
 class VGG(nn.Module):
+    """VGG model.
+    """
+
     input_size = 100, 100
     pretrained = True
 
