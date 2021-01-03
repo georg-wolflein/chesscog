@@ -2,7 +2,7 @@
 set -x
 
 apt-get update
-apt-get -y install git rsync python3-sphinx
+apt-get -y install git rsync
 
 pwd ls -lah
 export SOURCE_DATE_EPOCH=$(git log -1 --pretty=%ct)
