@@ -21,7 +21,7 @@ jobs:
         run: |
           set -x
           apt-get update
-          apt-get install -y git curl
+          apt-get install -y git curl build-essential
           git clone -b develop "https://token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" .
         shell: bash
       - name: Set up Python 3.8
