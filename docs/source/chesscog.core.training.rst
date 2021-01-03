@@ -1,6 +1,11 @@
 chesscog.core.training package
 ==============================
 
+.. automodule:: chesscog.core.training
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Submodules
 ----------
 
@@ -32,14 +37,6 @@ chesscog.core.training.train\_classifier module
 -----------------------------------------------
 
 .. automodule:: chesscog.core.training.train_classifier
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-Module contents
----------------
-
-.. automodule:: chesscog.core.training
    :members:
    :undoc-members:
    :show-inheritance:

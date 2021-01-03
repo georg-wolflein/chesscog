@@ -1,6 +1,11 @@
 chesscog.piece\_classifier package
 ==================================
 
+.. automodule:: chesscog.piece_classifier
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Submodules
 ----------
 
@@ -48,14 +53,6 @@ chesscog.piece\_classifier.train module
 ---------------------------------------
 
 .. automodule:: chesscog.piece_classifier.train
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-Module contents
----------------
-
-.. automodule:: chesscog.piece_classifier
    :members:
    :undoc-members:
    :show-inheritance:

@@ -1,6 +1,11 @@
 chesscog.transfer\_learning package
 ===================================
 
+.. automodule:: chesscog.transfer_learning
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Submodules
 ----------
 
@@ -48,14 +53,6 @@ chesscog.transfer\_learning.train module
 ----------------------------------------
 
 .. automodule:: chesscog.transfer_learning.train
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-Module contents
----------------
-
-.. automodule:: chesscog.transfer_learning
    :members:
    :undoc-members:
    :show-inheritance:

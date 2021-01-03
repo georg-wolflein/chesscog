@@ -1,6 +1,11 @@
 chesscog.core package
 =====================
 
+.. automodule:: chesscog.core
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Subpackages
 -----------
 
@@ -58,14 +63,6 @@ chesscog.core.statistics module
 -------------------------------
 
 .. automodule:: chesscog.core.statistics
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-Module contents
----------------
-
-.. automodule:: chesscog.core
    :members:
    :undoc-members:
    :show-inheritance:

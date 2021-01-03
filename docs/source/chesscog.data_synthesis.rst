@@ -1,6 +1,11 @@
 chesscog.data\_synthesis package
 ================================
 
+.. automodule:: chesscog.data_synthesis
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Submodules
 ----------
 
@@ -40,14 +45,6 @@ chesscog.data\_synthesis.visualize module
 -----------------------------------------
 
 .. automodule:: chesscog.data_synthesis.visualize
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-Module contents
----------------
-
-.. automodule:: chesscog.data_synthesis
    :members:
    :undoc-members:
    :show-inheritance:

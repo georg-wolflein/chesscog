@@ -1,6 +1,11 @@
 chesscog.occupancy\_classifier package
 ======================================
 
+.. automodule:: chesscog.occupancy_classifier
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Submodules
 ----------
 
@@ -48,14 +53,6 @@ chesscog.occupancy\_classifier.train module
 -------------------------------------------
 
 .. automodule:: chesscog.occupancy_classifier.train
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-Module contents
----------------
-
-.. automodule:: chesscog.occupancy_classifier
    :members:
    :undoc-members:
    :show-inheritance:

@@ -1,6 +1,11 @@
 chesscog.recognition package
 ============================
 
+.. automodule:: chesscog.recognition
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Submodules
 ----------
 
@@ -16,14 +21,6 @@ chesscog.recognition.recognition module
 ---------------------------------------
 
 .. automodule:: chesscog.recognition.recognition
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-Module contents
----------------
-
-.. automodule:: chesscog.recognition
    :members:
    :undoc-members:
    :show-inheritance:

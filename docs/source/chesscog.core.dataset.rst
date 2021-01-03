@@ -1,6 +1,11 @@
 chesscog.core.dataset package
 =============================
 
+.. automodule:: chesscog.core.dataset
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Submodules
 ----------
 
@@ -24,14 +29,6 @@ chesscog.core.dataset.transforms module
 ---------------------------------------
 
 .. automodule:: chesscog.core.dataset.transforms
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-Module contents
----------------
-
-.. automodule:: chesscog.core.dataset
    :members:
    :undoc-members:
    :show-inheritance:

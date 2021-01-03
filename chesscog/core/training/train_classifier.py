@@ -8,6 +8,11 @@ logger = logging.getLogger(__name__)
 
 
 def train_classifier(name: str):
+    """Set up CLI interface for training a classifier.
+
+    Args:
+        name (str): the name of the classifier (`"occupancy_classifier"` or `"piece_classifier"`)
+    """
     configs_dir = URI("config://") / name
 
     def _train(config: str):

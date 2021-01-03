@@ -1,6 +1,11 @@
 chesscog package
 ================
 
+.. automodule:: chesscog
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Subpackages
 -----------
 
@@ -15,11 +20,3 @@ Subpackages
    chesscog.recognition
    chesscog.report
    chesscog.transfer_learning
-
-Module contents
----------------
-
-.. automodule:: chesscog
-   :members:
-   :undoc-members:
-   :show-inheritance:

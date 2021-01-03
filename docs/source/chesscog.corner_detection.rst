@@ -1,6 +1,11 @@
 chesscog.corner\_detection package
 ==================================
 
+.. automodule:: chesscog.corner_detection
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Submodules
 ----------
 
@@ -40,14 +45,6 @@ chesscog.corner\_detection.visualize module
 -------------------------------------------
 
 .. automodule:: chesscog.corner_detection.visualize
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-Module contents
----------------
-
-.. automodule:: chesscog.corner_detection
    :members:
    :undoc-members:
    :show-inheritance:

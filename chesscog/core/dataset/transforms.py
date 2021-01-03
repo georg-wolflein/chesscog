@@ -13,7 +13,16 @@ _STD = np.array([0.229, 0.224, 0.225])
 
 
 def unnormalize(x: typing.Union[torch.Tensor, np.ndarray]) -> typing.Union[torch.Tensor, np.ndarray]:
-    # x must be of the form ([..., W, H, 3])
+    """Unnormalize an input image. 
+
+    It must be of the form ([..., W, H, 3]).
+
+    Args:
+        x (typing.Union[torch.Tensor, np.ndarray]): the input tensor/array representing the image
+
+    Returns:
+        typing.Union[torch.Tensor, np.ndarray]: the unnormalized image
+    """
     return x * _STD + _MEAN
 
 
@@ -104,6 +113,15 @@ class Translate(_HVTransform):
 
 
 def build_transforms(cfg: CN, mode: Datasets) -> typing.Callable:
+    """Build the transforms for a dataset.
+
+    Args:
+        cfg (CN): the config object
+        mode (Datasets): the dataset split
+
+    Returns:
+        typing.Callable: the transform function
+    """
     transforms = cfg.DATASET.TRANSFORMS
     t = []
     if transforms.CENTER_CROP:
