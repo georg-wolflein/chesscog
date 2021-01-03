@@ -1,3 +1,18 @@
+"""Script to prepare the results of a (occupancy or piece) classifier for LaTeX.
+
+.. code-block:: console
+
+    $ python -m chesscog.report.prepare_classifier_results --help
+    usage: prepare_classifier_results.py [-h]
+                                         [--classifier {occupancy_classifier,piece_classifier}]
+    
+    Prepare results for LaTeX
+    
+    optional arguments:
+      -h, --help            show this help message and exit
+      --classifier {occupancy_classifier,piece_classifier}
+"""
+
 import pandas as pd
 import re
 import argparse

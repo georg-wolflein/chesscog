@@ -1,3 +1,19 @@
+"""Script to output some information about the distribution of errors in the recognition.
+
+.. code-block:: console
+
+    $ python -m chesscog.report.prepare_error_distribution --help
+    usage: prepare_error_distribution.py [-h] [--results RESULTS]
+                                         [--dataset DATASET]
+    
+    Prepare distribution of mistakes per board for LaTeX
+    
+    optional arguments:
+      -h, --help         show this help message and exit
+      --results RESULTS  parent results folder
+      --dataset DATASET  the dataset to evaluate
+"""
+
 import chess
 import numpy as np
 import typing

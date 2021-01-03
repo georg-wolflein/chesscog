@@ -1,3 +1,19 @@
+"""Main script to output accuracy statistics and other benchmarks of the inference pipeline.
+
+.. code-block:: console
+
+    $ python -m chesscog.report.prepare_recognition_results --help
+    usage: prepare_recognition_results.py [-h] [--results RESULTS]
+                                          [--dataset DATASET]
+    
+    Prepare results for LaTeX
+    
+    optional arguments:
+      -h, --help         show this help message and exit
+      --results RESULTS  parent results folder
+      --dataset DATASET  the dataset to evaluate
+"""
+
 import pandas as pd
 import re
 import argparse

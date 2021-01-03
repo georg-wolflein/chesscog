@@ -1,3 +1,20 @@
+"""Script to evaluate the performance of the fine-tuned recognition pipeline on the new chess set.
+
+.. code-block:: console
+
+    $ python -m chesscog.transfer_learning.evaluate --help       
+    usage: evaluate.py [-h] [--dataset {train,val,test}] [--out OUT]
+    
+    Evaluate the chess recognition system end-to-end.
+    
+    optional arguments:
+      -h, --help            show this help message and exit
+      --dataset {train,val,test}
+                            the dataset to evaluate (if unspecified, train and
+                            test will be evaluated)
+      --out OUT             output folder
+"""
+
 import argparse
 from recap import URI
 import logging
@@ -13,7 +30,7 @@ logger = logging.getLogger()
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="Evaluate the chessboard recognition system end-to-end.")
+        description="Evaluate the chess recognition system end-to-end.")
     parser.add_argument("--dataset", help="the dataset to evaluate (if unspecified, train and test will be evaluated)",
                         type=str, default=None, choices=[x.value for x in Datasets])
     parser.add_argument("--out", help="output folder", type=str,

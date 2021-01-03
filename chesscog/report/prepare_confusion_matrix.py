@@ -1,3 +1,19 @@
+"""Script to prepare the inference results as a confusion matrix for use in a LaTeX table.
+
+.. code-block:: console
+
+    $ python -m chesscog.report.prepare_confusion_matrix --help  
+    usage: prepare_confusion_matrix.py [-h] [--results RESULTS]
+                                       [--dataset DATASET]
+    
+    Prepare confusion matrix for LaTeX
+    
+    optional arguments:
+      -h, --help         show this help message and exit
+      --results RESULTS  parent results folder
+      --dataset DATASET  the dataset to evaluate
+"""
+
 import chess
 import numpy as np
 import typing
@@ -31,17 +47,17 @@ LATEX_HEADINGS = [("\\raisebox{-.2cm}{" + x + "}")
                   for x in LATEX_HEADINGS]
 
 
-def get_category(piece: typing.Union[chess.Piece, None]) -> str:
+def _get_category(piece: typing.Union[chess.Piece, None]) -> str:
     if piece is None:
         return None
     return piece.symbol()
 
 
-def get_confusion_matrix(predicted: chess.Board, actual: chess.Board) -> np.ndarray:
+def _get_confusion_matrix(predicted: chess.Board, actual: chess.Board) -> np.ndarray:
     matrix = np.zeros((len(CATEGORIES), len(CATEGORIES)), dtype=np.int)
     for square in chess.SQUARES:
-        pred = get_category(predicted.piece_at(square))
-        act = get_category(actual.piece_at(square))
+        pred = _get_category(predicted.piece_at(square))
+        act = _get_category(actual.piece_at(square))
         matrix[CATEGORIES.index(pred), CATEGORIES.index(act)] += 1
     return matrix
 
@@ -69,7 +85,7 @@ if __name__ == "__main__":
     for i, row in df.iterrows():
         actual = chess.Board(row.fen_actual)
         predicted = chess.Board(row.fen_predicted)
-        matrix += get_confusion_matrix(predicted, actual)
+        matrix += _get_confusion_matrix(predicted, actual)
 
     print("& " + " \n& ".join(LATEX_HEADINGS) + " \\\\\n")
     for i, row in enumerate(matrix):

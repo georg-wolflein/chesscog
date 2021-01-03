@@ -1,3 +1,16 @@
+"""Script to create the piece and occupancy classification datasets from the input dataset of images.
+
+.. code-block:: console
+
+    $ python -m chesscog.transfer_learning.create_dataset --help  
+    usage: create_dataset.py [-h]
+    
+    Create the piece and occupancy classification datasets.
+    
+    optional arguments:
+      -h, --help  show this help message and exit
+"""
+
 from recap import URI, CfgNode as CN
 import cv2
 import functools
@@ -5,6 +18,7 @@ import json
 import chess
 from pathlib import Path
 import matplotlib.pyplot as plt
+import argparse
 
 from chesscog.corner_detection import find_corners, resize_image
 from chesscog.occupancy_classifier import create_dataset as create_occupancy_dataset
@@ -14,7 +28,7 @@ from chesscog.core.dataset import Datasets
 DATASET_DIR = URI("data://transfer_learning")
 
 
-def add_corners_to_train_labels(input_dir: Path):
+def _add_corners_to_train_labels(input_dir: Path):
     corner_detection_cfg = CN.load_yaml_with_base(
         "config://corner_detection.yaml")
     for subset in (x.value for x in (Datasets.TRAIN, Datasets.TEST)):
@@ -33,8 +47,8 @@ def add_corners_to_train_labels(input_dir: Path):
                 json.dump(label, f)
 
 
-def create_dataset(input_dir: Path = DATASET_DIR / "images"):
-    add_corners_to_train_labels(input_dir)
+def _create_dataset(input_dir: Path = DATASET_DIR / "images"):
+    _add_corners_to_train_labels(input_dir)
     create_occupancy_dataset.create_dataset(input_dir,
                                             DATASET_DIR / "occupancy")
     create_pieces_dataset.create_dataset(input_dir,
@@ -42,4 +56,6 @@ def create_dataset(input_dir: Path = DATASET_DIR / "images"):
 
 
 if __name__ == "__main__":
-    create_dataset()
+    argparse.ArgumentParser(
+        description="Create the piece and occupancy classification datasets.").parse_args()
+    _create_dataset()
