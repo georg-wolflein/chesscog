@@ -12,7 +12,6 @@ on:
 jobs:
   build_sphinx_job:
     runs-on: ubuntu-latest
-    container: debian:buster-slim
 
     steps:
       - name: Get prerequisites and clone repository
@@ -32,15 +31,8 @@ jobs:
         uses: snok/install-poetry@v1.1.1
         with:
           virtualenvs-create: false
-      - name: Load cached venv
-        id: cached-poetry-dependencies
-        uses: actions/cache@v2
-        with:
-          path: .venv
-          key: venv-${{ runner.os }}-${{ matrix.python-version }}-v2-${{ hashFiles('**/poetry.lock') }}
       - name: Install dependencies
-        run: poetry install
-        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+        run: poetry install -E docs
       - name: Run build script for Sphinx pages
         env:
           GITHUB_TOKEN: ${{ secrets.CHESSCOG_PAT_TOKEN }}
