@@ -88,6 +88,13 @@ if __name__ == "__main__":
         matrix += _get_confusion_matrix(predicted, actual)
 
     print("& " + " \n& ".join(LATEX_HEADINGS) + " \\\\\n")
+
+    def convert_cell(value: int) -> str:
+        result = f"{value:5d}"
+        color = "\\cellcolor{black!20} "
+        if value == 0:
+            color = " " * len(color)
+        return color + result
     for i, row in enumerate(matrix):
         print(f"{LATEX_HEADINGS[i]:50s} & " +
-              " & ".join(f"{col:5d}" for col in row) + " \\\\")
+              " & ".join(map(convert_cell, row)) + " \\\\")
