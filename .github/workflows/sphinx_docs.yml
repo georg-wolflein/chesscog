@@ -7,7 +7,7 @@ env:
 
 on:
   push:
-    branches: [develop]
+    branches: [master]
 
 jobs:
   build_sphinx_job:
@@ -22,7 +22,7 @@ jobs:
           set -x
           apt-get update
           apt-get install -y git curl
-          git clone -b develop "https://token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" .
+          git clone -b master "https://token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" .
         shell: bash
       - name: Set up Python 3.8
         uses: actions/setup-python@v2
