@@ -12,7 +12,7 @@ T = typing.Union[torch.Tensor, torch.nn.Module, typing.List[torch.Tensor],
 
 
 def device(x: T, dev: str = DEVICE) -> T:
-    """Convenience method to move a tensor/module/other structure containing Tensors to the device.
+    """Convenience method to move a tensor/module/other structure containing tensors to the device.
 
     Args:
         x (T): the tensor (or strucure containing tensors)
