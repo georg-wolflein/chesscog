@@ -7,6 +7,12 @@ logger = logging.getLogger(__name__)
 
 
 def create_configs(classifier: str, include_centercrop: bool = False):
+    """Create the YAML configuration files for all registered models for a classifier.
+
+    Args:
+        classifier (str): the classifier (either `"occupancy_classifier"` or `"piece_classifier"`)
+        include_centercrop (bool, optional): whether to create two configs per model, one including center crop and one not. Defaults to False.
+    """
     config_dir = URI("config://") / classifier
 
     logger.info(f"Removing YAML files from {config_dir}.")

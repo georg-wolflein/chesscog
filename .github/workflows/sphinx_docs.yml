@@ -1,0 +1,43 @@
+name: publish-docs
+
+env:
+  GITHUB_ACTOR: georgw777
+  GITHUB_REPOSITORY: georgw777/chesscog
+  GITHUB_TOKEN: ${{ secrets.CHESSCOG_PAT_TOKEN }}
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  build_sphinx_job:
+    runs-on: ubuntu-latest
+    container: debian:buster-slim
+
+    steps:
+      - name: Get prerequisites and clone repository
+        env:
+          GITHUB_TOKEN: ${{ secrets.CHESSCOG_PAT_TOKEN }}
+        run: |
+          set -x
+          apt-get update
+          apt-get install -y git curl
+          git clone -b master "https://token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" .
+        shell: bash
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: Install Poetry
+        uses: snok/install-poetry@v1.1.1
+        with:
+          virtualenvs-create: false
+      - name: Install dependencies
+        run: poetry install -E docs
+      - name: Run build script for Sphinx pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.CHESSCOG_PAT_TOKEN }}
+        run: |
+          cd docs
+          ./buildsite.sh
+        shell: bash

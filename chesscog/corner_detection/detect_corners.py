@@ -1,3 +1,25 @@
+"""Module to perform chessboard localization.
+
+The entire board localization pipeline is implemented end-to-end in this module.
+Use the :meth:`find_corners` to run it.
+
+This module simultaneously acts as a script:
+
+.. code-block:: console
+
+    $ python -m chesscog.corner_detection.detect_corners --help
+    usage: detect_corners.py [-h] [--config CONFIG] file
+    
+    Chessboard corner detector.
+    
+    positional arguments:
+      file             URI of the input image file
+    
+    optional arguments:
+      -h, --help       show this help message and exit
+      --config CONFIG  path to the config file
+"""
+
 from sklearn.metrics.pairwise import pairwise_distances
 from sklearn.cluster import AgglomerativeClustering, DBSCAN
 import cv2
@@ -11,23 +33,35 @@ from chesscog.core.exceptions import ChessboardNotLocatedException
 
 
 def find_corners(cfg: CN, img: np.ndarray) -> np.ndarray:
+    """Determine the four corner points of the chessboard in an image.
+
+    Args:
+        cfg (CN): the configuration object
+        img (np.ndarray): the input image (as a numpy array)
+
+    Raises:
+        ChessboardNotLocatedException: if the chessboard could not be found
+
+    Returns:
+        np.ndarray: the pixel coordinates of the four corners
+    """
     img, img_scale = resize_image(cfg, img)
 
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    edges = detect_edges(cfg.EDGE_DETECTION, gray)
-    lines = detect_lines(cfg, edges)
+    edges = _detect_edges(cfg.EDGE_DETECTION, gray)
+    lines = _detect_lines(cfg, edges)
     if lines.shape[0] > 400:
         raise ChessboardNotLocatedException("too many lines in the image")
-    all_horizontal_lines, all_vertical_lines = cluster_horizontal_and_vertical_lines(
+    all_horizontal_lines, all_vertical_lines = _cluster_horizontal_and_vertical_lines(
         lines)
 
-    horizontal_lines = eliminate_similar_lines(
+    horizontal_lines = _eliminate_similar_lines(
         all_horizontal_lines, all_vertical_lines)
-    vertical_lines = eliminate_similar_lines(
+    vertical_lines = _eliminate_similar_lines(
         all_vertical_lines, all_horizontal_lines)
 
-    all_intersection_points = get_intersection_points(horizontal_lines,
-                                                      vertical_lines)
+    all_intersection_points = _get_intersection_points(horizontal_lines,
+                                                       vertical_lines)
 
     best_num_inliers = 0
     best_configuration = None
@@ -35,18 +69,18 @@ def find_corners(cfg: CN, img: np.ndarray) -> np.ndarray:
     while iterations < 200 or best_num_inliers < 30:
         row1, row2 = _choose_from_range(len(horizontal_lines))
         col1, col2 = _choose_from_range(len(vertical_lines))
-        transformation_matrix = compute_homography(all_intersection_points,
-                                                   row1, row2, col1, col2)
-        warped_points = warp_points(
+        transformation_matrix = _compute_homography(all_intersection_points,
+                                                    row1, row2, col1, col2)
+        warped_points = _warp_points(
             transformation_matrix, all_intersection_points)
-        warped_points, intersection_points, horizontal_scale, vertical_scale = discard_outliers(
+        warped_points, intersection_points, horizontal_scale, vertical_scale = _discard_outliers(
             cfg, warped_points, all_intersection_points)
         num_inliers = np.prod(warped_points.shape[:-1])
         if num_inliers > best_num_inliers:
             warped_points *= np.array((horizontal_scale, vertical_scale))
 
             # Quantize and reject deuplicates
-            (xmin, xmax, ymin, ymax), scale, quantized_points, intersection_points, warped_img_size = configuration = quantize_points(
+            (xmin, xmax, ymin, ymax), scale, quantized_points, intersection_points, warped_img_size = configuration = _quantize_points(
                 cfg, warped_points, intersection_points)
 
             # Calculate remaining number of inliers
@@ -77,11 +111,11 @@ def find_corners(cfg: CN, img: np.ndarray) -> np.ndarray:
     warped_mask = warped_borders == 1
 
     # Refine board boundaries
-    xmin, xmax = compute_vertical_borders(
+    xmin, xmax = _compute_vertical_borders(
         cfg, warped, warped_mask, scale, xmin, xmax)
     scaled_xmin, scaled_xmax = (int(x * scale[0]) for x in (xmin, xmax))
     warped_mask[:, :scaled_xmin] = warped_mask[:, scaled_xmax:] = False
-    ymin, ymax = compute_horizontal_borders(
+    ymin, ymax = _compute_horizontal_borders(
         cfg, warped, warped_mask, scale, ymin, ymax)
 
     # Transform boundaries to image space
@@ -90,12 +124,21 @@ def find_corners(cfg: CN, img: np.ndarray) -> np.ndarray:
                         [xmax, ymax],
                         [xmin, ymax]]).astype(np.float)
     corners = corners * scale
-    img_corners = warp_points(inverse_transformation_matrix, corners)
+    img_corners = _warp_points(inverse_transformation_matrix, corners)
     img_corners = img_corners / img_scale
     return sort_corner_points(img_corners)
 
 
 def resize_image(cfg: CN, img: np.ndarray) -> typing.Tuple[np.ndarray, float]:
+    """Resize an image for use in the corner detection pipeline, maintaining the aspect ratio.
+
+    Args:
+        cfg (CN): the configuration object
+        img (np.ndarray): the input image
+
+    Returns:
+        typing.Tuple[np.ndarray, float]: the resized image along with the scale of this new image
+    """
     h, w, _ = img.shape
     if w == cfg.RESIZE_IMAGE.WIDTH:
         return img, 1
@@ -106,7 +149,7 @@ def resize_image(cfg: CN, img: np.ndarray) -> typing.Tuple[np.ndarray, float]:
     return img, scale
 
 
-def detect_edges(edge_detection_cfg: CN, gray: np.ndarray) -> np.ndarray:
+def _detect_edges(edge_detection_cfg: CN, gray: np.ndarray) -> np.ndarray:
     if gray.dtype != np.uint8:
         gray = gray / gray.max() * 255
         gray = gray.astype(np.uint8)
@@ -117,7 +160,7 @@ def detect_edges(edge_detection_cfg: CN, gray: np.ndarray) -> np.ndarray:
     return edges
 
 
-def detect_lines(cfg: CN, edges: np.ndarray) -> np.ndarray:
+def _detect_lines(cfg: CN, edges: np.ndarray) -> np.ndarray:
     # array of [rho, theta]
     lines = cv2.HoughLines(edges, 1, np.pi/360, cfg.LINE_DETECTION.THRESHOLD)
     lines = lines.squeeze(axis=-2)
@@ -156,7 +199,7 @@ def _sort_lines(lines: np.ndarray) -> np.ndarray:
     return lines[sorted_indices]
 
 
-def cluster_horizontal_and_vertical_lines(lines: np.ndarray):
+def _cluster_horizontal_and_vertical_lines(lines: np.ndarray):
     lines = _sort_lines(lines)
     thetas = lines[..., 1].reshape(-1, 1)
     distance_matrix = pairwise_distances(
@@ -177,7 +220,7 @@ def cluster_horizontal_and_vertical_lines(lines: np.ndarray):
     return horizontal_lines, vertical_lines
 
 
-def eliminate_similar_lines(lines: np.ndarray, perpendicular_lines: np.ndarray) -> np.ndarray:
+def _eliminate_similar_lines(lines: np.ndarray, perpendicular_lines: np.ndarray) -> np.ndarray:
     perp_rho, perp_theta = perpendicular_lines.mean(axis=0)
     rho, theta = np.moveaxis(lines, -1, 0)
     intersection_points = get_intersection_point(
@@ -195,7 +238,20 @@ def eliminate_similar_lines(lines: np.ndarray, perpendicular_lines: np.ndarray) 
     return np.stack(filtered_lines)
 
 
-def get_intersection_point(rho1, theta1, rho2, theta2):
+def get_intersection_point(rho1: np.ndarray, theta1: np.ndarray, rho2: np.ndarray, theta2: np.ndarray) -> typing.Tuple[np.ndarray, np.ndarray]:
+    """Obtain the intersection point of two lines in Hough space.
+
+    This method can be batched
+
+    Args:
+        rho1 (np.ndarray): first line's rho
+        theta1 (np.ndarray): first line's theta
+        rho2 (np.ndarray): second lines's rho
+        theta2 (np.ndarray): second line's theta
+
+    Returns:
+        typing.Tuple[np.ndarray, np.ndarray]: the x and y coordinates of the intersection point(s)
+    """
     # rho1 = x cos(theta1) + y sin(theta1)
     # rho2 = x cos(theta2) + y sin(theta2)
     cos_t1 = np.cos(theta1)
@@ -211,7 +267,7 @@ def _choose_from_range(upper_bound: int, n: int = 2):
     return np.sort(np.random.choice(np.arange(upper_bound), (n,), replace=False), axis=-1)
 
 
-def get_intersection_points(horizontal_lines: np.ndarray, vertical_lines: np.ndarray) -> np.ndarray:
+def _get_intersection_points(horizontal_lines: np.ndarray, vertical_lines: np.ndarray) -> np.ndarray:
     rho1, theta1 = np.moveaxis(horizontal_lines, -1, 0)
     rho2, theta2 = np.moveaxis(vertical_lines, -1, 0)
 
@@ -223,12 +279,21 @@ def get_intersection_points(horizontal_lines: np.ndarray, vertical_lines: np.nda
 
 
 def compute_transformation_matrix(src_points: np.ndarray, dst_points: np.ndarray) -> np.ndarray:
+    """Compute the transformation matrix based on source and destination points.
+
+    Args:
+        src_points (np.ndarray): the source points (shape: [..., 2])
+        dst_points (np.ndarray): the source points (shape: [..., 2])
+
+    Returns:
+        np.ndarray: the transformation matrix
+    """
     transformation_matrix, _ = cv2.findHomography(src_points.reshape(-1, 2),
                                                   dst_points.reshape(-1, 2))
     return transformation_matrix
 
 
-def compute_homography(intersection_points: np.ndarray, row1: int, row2: int, col1: int, col2: int):
+def _compute_homography(intersection_points: np.ndarray, row1: int, row2: int, col1: int, col2: int):
     p1 = intersection_points[row1, col1]  # top left
     p2 = intersection_points[row1, col2]  # top right
     p3 = intersection_points[row2, col2]  # bottom right
@@ -242,13 +307,13 @@ def compute_homography(intersection_points: np.ndarray, row1: int, row2: int, co
     return compute_transformation_matrix(src_points, dst_points)
 
 
-def warp_points(transformation_matrix: np.ndarray, points: np.ndarray) -> np.ndarray:
+def _warp_points(transformation_matrix: np.ndarray, points: np.ndarray) -> np.ndarray:
     points = to_homogenous_coordinates(points)
     warped_points = points @ transformation_matrix.T
     return from_homogenous_coordinates(warped_points)
 
 
-def find_best_scale(cfg: CN, values: np.ndarray, scales: np.ndarray = np.arange(1, 9)):
+def _find_best_scale(cfg: CN, values: np.ndarray, scales: np.ndarray = np.arange(1, 9)):
     scales = np.sort(scales)
     scaled_values = np.expand_dims(values, axis=-1) * scales
     diff = np.abs(np.rint(scaled_values) - scaled_values)
@@ -264,10 +329,11 @@ def find_best_scale(cfg: CN, values: np.ndarray, scales: np.ndarray = np.arange(
     return scales[index], inlier_mask[..., index]
 
 
-def discard_outliers(cfg: CN, warped_points: np.ndarray, intersection_points: np.ndarray) -> typing.Tuple[np.ndarray, np.ndarray, float, float]:
-    horizontal_scale, horizontal_mask = find_best_scale(
+def _discard_outliers(cfg: CN, warped_points: np.ndarray, intersection_points: np.ndarray) -> typing.Tuple[np.ndarray, np.ndarray, float, float]:
+    horizontal_scale, horizontal_mask = _find_best_scale(
         cfg, warped_points[..., 0])
-    vertical_scale, vertical_mask = find_best_scale(cfg, warped_points[..., 1])
+    vertical_scale, vertical_mask = _find_best_scale(
+        cfg, warped_points[..., 1])
     mask = horizontal_mask & vertical_mask
 
     # Keep rows/cols that have more than 50% inliers
@@ -283,7 +349,7 @@ def discard_outliers(cfg: CN, warped_points: np.ndarray, intersection_points: np
     return warped_points, intersection_points, horizontal_scale, vertical_scale
 
 
-def quantize_points(cfg: CN, warped_scaled_points: np.ndarray, intersection_points: np.ndarray) -> typing.Tuple[tuple, np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+def _quantize_points(cfg: CN, warped_scaled_points: np.ndarray, intersection_points: np.ndarray) -> typing.Tuple[tuple, np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     mean_col_xs = warped_scaled_points[..., 0].mean(axis=0)
     mean_row_ys = warped_scaled_points[..., 1].mean(axis=1)
 
@@ -333,11 +399,11 @@ def quantize_points(cfg: CN, warped_scaled_points: np.ndarray, intersection_poin
     return (xmin, xmax, ymin, ymax), scale, scaled_quantized_points, intersection_points, warped_img_size
 
 
-def compute_vertical_borders(cfg: CN, warped: np.ndarray, mask: np.ndarray, scale: np.ndarray, xmin: int, xmax: int) -> typing.Tuple[int, int]:
+def _compute_vertical_borders(cfg: CN, warped: np.ndarray, mask: np.ndarray, scale: np.ndarray, xmin: int, xmax: int) -> typing.Tuple[int, int]:
     G_x = np.abs(cv2.Sobel(warped, cv2.CV_64F, 1, 0,
                            ksize=cfg.BORDER_REFINEMENT.SOBEL_KERNEL_SIZE))
     G_x[~mask] = 0
-    G_x = detect_edges(cfg.BORDER_REFINEMENT.EDGE_DETECTION.VERTICAL, G_x)
+    G_x = _detect_edges(cfg.BORDER_REFINEMENT.EDGE_DETECTION.VERTICAL, G_x)
     G_x[~mask] = 0
 
     def get_nonmax_supressed(x):
@@ -357,11 +423,11 @@ def compute_vertical_borders(cfg: CN, warped: np.ndarray, mask: np.ndarray, scal
     return xmin, xmax
 
 
-def compute_horizontal_borders(cfg: CN, warped: np.ndarray, mask: np.ndarray, scale: np.ndarray, ymin: int, ymax: int) -> typing.Tuple[int, int]:
+def _compute_horizontal_borders(cfg: CN, warped: np.ndarray, mask: np.ndarray, scale: np.ndarray, ymin: int, ymax: int) -> typing.Tuple[int, int]:
     G_y = np.abs(cv2.Sobel(warped, cv2.CV_64F, 0, 1,
                            ksize=cfg.BORDER_REFINEMENT.SOBEL_KERNEL_SIZE))
     G_y[~mask] = 0
-    G_y = detect_edges(cfg.BORDER_REFINEMENT.EDGE_DETECTION.HORIZONTAL, G_y)
+    G_y = _detect_edges(cfg.BORDER_REFINEMENT.EDGE_DETECTION.HORIZONTAL, G_y)
     G_y[~mask] = 0
 
     def get_nonmax_supressed(y):

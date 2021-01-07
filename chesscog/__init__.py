@@ -1,3 +1,6 @@
+"""Chess position inference using computer vision.
+"""
+
 import sys
 import logging
 

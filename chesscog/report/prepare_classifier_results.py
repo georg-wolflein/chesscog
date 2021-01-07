@@ -1,3 +1,18 @@
+"""Script to prepare the results of a (occupancy or piece) classifier for LaTeX.
+
+.. code-block:: console
+
+    $ python -m chesscog.report.prepare_classifier_results --help
+    usage: prepare_classifier_results.py [-h]
+                                         [--classifier {occupancy_classifier,piece_classifier}]
+    
+    Prepare results for LaTeX
+    
+    optional arguments:
+      -h, --help            show this help message and exit
+      --classifier {occupancy_classifier,piece_classifier}
+"""
+
 import pandas as pd
 import re
 import argparse
@@ -42,7 +57,7 @@ if __name__ == "__main__":
 
     regex = re.compile(r"CNN(\d+)_(\d+)Conv_(\d+)Pool_(\d+)FC")
     df.index = df.index.str.replace(
-        regex, lambda x: "CNN $(" + ",".join(x.group(i) for i in range(1, 5)) + ")$")
+        regex, lambda x: "\\acs{cnn} $(" + ",".join(x.group(i) for i in range(1, 5)) + ")$")
 
     citekeys = {
         "InceptionV3": "szegedy2016",

@@ -1,11 +1,28 @@
+"""Script to split the rendered dataset into train (90%), val (3%), and test (7%) sets.
+
+.. code-block:: console
+
+    $ python -m chesscog.data_synthesis.split_dataset --help
+    usage: split_dataset.py [-h]
+    
+    Split the dataset into train/val/test.
+    
+    optional arguments:
+      -h, --help  show this help message and exit
+"""
+
 import numpy as np
 from logging import getLogger
 from recap import URI
+import argparse
 
 
 logger = getLogger(__name__)
 
 if __name__ == "__main__":
+    argparse.ArgumentParser(
+        description="Split the dataset into train/val/test.").parse_args()
+
     val_split = .03
     test_split = .1
     render_dir = URI("data://render")

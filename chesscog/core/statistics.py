@@ -1,3 +1,6 @@
+"""Compute batch statistics
+"""
+
 import torch
 import typing
 import numpy as np
@@ -10,7 +13,7 @@ def _fraction(a: float, b: float) -> float:
 
 
 class StatsAggregator():
-    """Simple class for aggregating accuracy statistics between batches.
+    """Simple class for aggregating statistics between batches.
     """
 
     def __init__(self, classes: list):
@@ -20,6 +23,8 @@ class StatsAggregator():
         self.mistakes = []
 
     def reset(self):
+        """Reset the aggregator.
+        """
         self.confusion_matrix = np.zeros((len(self.classes), len(self.classes)),
                                          dtype=np.uint32)
         self.mistakes = []
@@ -47,23 +52,52 @@ class StatsAggregator():
             self.mistakes.extend(zip(groundtruth, mistakes))
 
     def accuracy(self) -> float:
+        """Obtain the overall accuracy.
+
+        Returns:
+            float: the accuracy
+        """
         correct = np.trace(self.confusion_matrix)  # sum along diagonal
         total = np.sum(self.confusion_matrix)
         return _fraction(correct, total)
 
     def precision(self, cls: str) -> float:
+        """Obtain the precision for a specific class label.
+
+        Args:
+            cls (str): the class
+
+        Returns:
+            float: the precision
+        """
         idx = self.class_to_idx[cls]
         tp = self.confusion_matrix[idx, idx]
         tp_plus_fp = self.confusion_matrix[idx].sum()
         return _fraction(tp, tp_plus_fp)
 
     def recall(self, cls: str) -> float:
+        """Obtain the recall for a specific class label.
+
+        Args:
+            cls (str): the class
+
+        Returns:
+            float: the recall
+        """
         idx = self.class_to_idx[cls]
         tp = self.confusion_matrix[idx, idx]
         p = self.confusion_matrix[:, idx].sum()
         return _fraction(tp, p)
 
     def f1_score(self, cls: str) -> float:
+        """Obtain the F1-score for a specific class label.
+
+        Args:
+            cls (str): the class
+
+        Returns:
+            float: the F1-score
+        """
         precision = self.precision(cls)
         recall = self.recall(cls)
         return _fraction(2 * precision * recall, precision + recall)

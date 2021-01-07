@@ -1,3 +1,6 @@
+"""Main implementation of model training.
+"""
+
 import torch
 from torch import nn
 from torch.utils.tensorboard import SummaryWriter
@@ -21,12 +24,34 @@ logger = logging.getLogger(__name__)
 
 
 def train(cfg: CN, run_dir: Path) -> nn.Module:
+    """Traing a model.
+
+    Args:
+        cfg (CN): the configuration object describing the model, dataset, etc.
+        run_dir (Path): where to write tensorboard files, the active YAML file, and the chosen weights
+
+    Returns:
+        nn.Module: the trained model
+    """
     model = build_model(cfg)
     is_inception = "inception" in cfg.TRAINING.MODEL.NAME.lower()
     train_model(cfg, run_dir, model, is_inception)
 
 
-def train_model(cfg: CN, run_dir: Path, model: torch.nn.Module, is_inception: bool = False, model_name: str = None, eval_on_train: bool = False):
+def train_model(cfg: CN, run_dir: Path, model: torch.nn.Module, is_inception: bool = False, model_name: str = None, eval_on_train: bool = False) -> nn.Module:
+    """Train a model that has already been loaded.
+
+    Args:
+        cfg (CN): the configuration object describing the model, dataset, etc.
+        run_dir (Path): where to write tensorboard files, the active YAML file, and the chosen weights
+        model (torch.nn.Module): the loaded model
+        is_inception (bool, optional): whether the model is InceptionV3. Defaults to False.
+        model_name (str, optional): the name of the model (by default the last component of the run directory). Defaults to None.
+        eval_on_train (bool, optional): whether to evaluate on the training set. Defaults to False.
+
+    Returns:
+        nn.Module: the trained model
+    """
     logger.info(f"Starting training in {run_dir}")
     if not model_name:
         model_name = run_dir.name

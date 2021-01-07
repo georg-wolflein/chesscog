@@ -1,3 +1,25 @@
+"""Module that brings together the whole recognition pipeline into a single class so it can be conveniently executed.
+
+This module simultaneously acts as a script to perform a single inference:
+
+.. code-block:: console
+
+    $ python -m chesscog.recognition.recognition --help
+    usage: recognition.py [-h] [--white] [--black] file
+    
+    Run the chess recognition pipeline on an input image
+    
+    positional arguments:
+      file        path to the input image
+    
+    optional arguments:
+      -h, --help  show this help message and exit
+      --white     indicate that the image is from the white player's
+                  perspective (default)
+      --black     indicate that the image is from the black player's
+                  perspective
+"""
+
 import numpy as np
 import chess
 from pathlib import Path
@@ -18,10 +40,19 @@ from chesscog.core.dataset import name_to_piece
 
 
 class ChessRecognizer:
+    """A class implementing the entire chess inference pipeline.
+
+    Once you create an instance of this class, the CNNs are loaded into memory (possibly the GPU if available), so if you want to perform multiple inferences, they should all use one instance of this class for performance purposes.
+    """
 
     _squares = list(chess.SQUARES)
 
     def __init__(self, classifiers_folder: Path = URI("models://")):
+        """Constructor.
+
+        Args:
+            classifiers_folder (Path, optional): the path to the classifiers (supplying a different path is especially useful because the transfer learning classifiers are located at ``models://transfer_learning``). Defaults to ``models://``.
+        """
         self._corner_detection_cfg = CN.load_yaml_with_base(
             "config://corner_detection.yaml")
 
@@ -36,7 +67,7 @@ class ChessRecognizer:
         self._piece_classes = np.array(list(map(name_to_piece,
                                                 self._pieces_cfg.DATASET.CLASSES)))
 
-    @ classmethod
+    @classmethod
     def _load_classifier(cls, path: Path):
         model_file = next(iter(path.glob("*.pt")))
         yaml_file = next(iter(path.glob("*.yaml")))
@@ -81,6 +112,15 @@ class ChessRecognizer:
         return all_pieces
 
     def predict(self, img: np.ndarray, turn: chess.Color = chess.WHITE) -> typing.Tuple[chess.Board, np.ndarray]:
+        """Perform an inference.
+
+        Args:
+            img (np.ndarray): the input image (RGB)
+            turn (chess.Color, optional): the current player. Defaults to chess.WHITE.
+
+        Returns:
+            typing.Tuple[chess.Board, np.ndarray]: the predicted position on the board and the four corner points
+        """
         with torch.no_grad():
             img, img_scale = resize_image(self._corner_detection_cfg, img)
             corners = find_corners(self._corner_detection_cfg, img)
@@ -97,7 +137,20 @@ class ChessRecognizer:
 
 
 class TimedChessRecognizer(ChessRecognizer):
+    """A subclass of :class:`ChessRecognizer` that additionally records the time taken for each step of the pipeline during inference.
+    """
+
     def predict(self, img: np.ndarray, turn: chess.Color = chess.WHITE) -> typing.Tuple[chess.Board, np.ndarray, dict]:
+        """Perform an inference.
+
+        Args:
+            img (np.ndarray): the input image (RGB)
+            turn (chess.Color, optional): the current player. Defaults to chess.WHITE.
+
+        Returns:
+            typing.Tuple[chess.Board, np.ndarray, dict]: the predicted position on the board, the four corner points, and a dict containing the time taken for each stage of the inference pipeline
+        """
+
         from timeit import default_timer as timer
         with torch.no_grad():
             t1 = timer()
@@ -127,9 +180,13 @@ class TimedChessRecognizer(ChessRecognizer):
             return board, corners, times
 
 
-if __name__ == "__main__":
-    from chesscog.occupancy_classifier.download_model import ensure_model as ensure_occupancy_classifier
-    from chesscog.piece_classifier.download_model import ensure_model as ensure_piece_classifier
+def main(classifiers_folder: Path = URI("models://"), setup: callable = lambda: None):
+    """Main method for running inference from the command line.
+
+    Args:
+        classifiers_folder (Path, optional): the path to the classifiers (supplying a different path is especially useful because the transfer learning classifiers are located at ``models://transfer_learning``). Defaults to ``models://``.
+        setup (callable, optional): An optional setup function to be called after the CLI argument parser has been setup. Defaults to lambda:None.
+    """
 
     parser = argparse.ArgumentParser(
         description="Run the chess recognition pipeline on an input image")
@@ -141,16 +198,23 @@ if __name__ == "__main__":
     parser.set_defaults(color=True)
     args = parser.parse_args()
 
-    ensure_occupancy_classifier(show_size=True)
-    ensure_piece_classifier(show_size=True)
+    setup()
 
     img = cv2.imread(str(URI(args.file)))
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
-    recognizer = ChessRecognizer()
+    recognizer = ChessRecognizer(classifiers_folder)
     board, *_ = recognizer.predict(img, args.color)
 
     print(board)
     print()
     print(
         f"You can view this position at https://lichess.org/editor/{board.board_fen()}")
+
+
+if __name__ == "__main__":
+    from chesscog.occupancy_classifier.download_model import ensure_model as ensure_occupancy_classifier
+    from chesscog.piece_classifier.download_model import ensure_model as ensure_piece_classifier
+
+    main(setup=lambda: [ensure_model(show_size=True)
+                        for ensure_model in (ensure_occupancy_classifier, ensure_piece_classifier)])

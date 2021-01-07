@@ -4,6 +4,7 @@ import typing
 import functools
 from collections.abc import Iterable
 
+#: Device to be used for computation (GPU if available, else CPU).
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 T = typing.Union[torch.Tensor, torch.nn.Module, typing.List[torch.Tensor],
@@ -11,6 +12,19 @@ T = typing.Union[torch.Tensor, torch.nn.Module, typing.List[torch.Tensor],
 
 
 def device(x: T, dev: str = DEVICE) -> T:
+    """Convenience method to move a tensor/module/other structure containing tensors to the device.
+
+    Args:
+        x (T): the tensor (or strucure containing tensors)
+        dev (str, optional): the device to move the tensor to. Defaults to DEVICE.
+
+    Raises:
+        TypeError: if the type was not a compatible tensor
+
+    Returns:
+        T: the input tensor moved to the device
+    """
+
     to = functools.partial(device, dev=dev)
     if isinstance(x, (torch.Tensor, torch.nn.Module)):
         return x.to(dev)
@@ -46,7 +60,16 @@ def sort_corner_points(points: np.ndarray) -> np.ndarray:
     return points
 
 
-def listify(func):
+def listify(func: typing.Callable[..., typing.Iterable]) -> typing.Callable[..., typing.List]:
+    """Decorator to convert the output of a generator function to a list.
+
+    Args:
+        func (typing.Callable[..., typing.Iterable]): the function to be decorated
+
+    Returns:
+        typing.Callable[..., typing.List]: the decorated function
+    """
+
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         return list(func(*args, **kwargs))

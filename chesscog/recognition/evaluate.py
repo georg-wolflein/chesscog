@@ -1,3 +1,22 @@
+"""Script to evaluate the performance of the recognition pipeline.
+
+.. code-block:: console
+
+    $ python -m chesscog.recognition.evaluate --help  
+    usage: evaluate.py [-h] [--dataset {train,val,test}] [--out OUT]
+                       [--save-fens]
+    
+    Evaluate the chess recognition system end-to-end.
+    
+    optional arguments:
+      -h, --help            show this help message and exit
+      --dataset {train,val,test}
+                            the dataset to evaluate (if unspecified, train and
+                            val will be evaluated)
+      --out OUT             output folder
+      --save-fens           store predicted and actual FEN strings
+"""
+
 import argparse
 import typing
 from pathlib import Path
@@ -18,21 +37,21 @@ from chesscog.core.exceptions import RecognitionException
 logger = logging.getLogger()
 
 
-def get_num_mistakes(groundtruth: chess.Board, predicted: chess.Board) -> int:
+def _get_num_mistakes(groundtruth: chess.Board, predicted: chess.Board) -> int:
     groundtruth_map = groundtruth.piece_map()
     predicted_map = predicted.piece_map()
     return sum(0 if groundtruth_map.get(i, None) == predicted_map.get(i, None) else 1
                for i in chess.SQUARES)
 
 
-def get_num_occupancy_mistakes(groundtruth: chess.Board, predicted: chess.Board) -> int:
+def _get_num_occupancy_mistakes(groundtruth: chess.Board, predicted: chess.Board) -> int:
     groundtruth_map = groundtruth.piece_map()
     predicted_map = predicted.piece_map()
     return sum(0 if (i in groundtruth_map) == (i in predicted_map) else 1
                for i in chess.SQUARES)
 
 
-def get_num_piece_mistakes(groundtruth: chess.Board, predicted: chess.Board) -> int:
+def _get_num_piece_mistakes(groundtruth: chess.Board, predicted: chess.Board) -> int:
     groundtruth_map = groundtruth.piece_map()
     predicted_map = predicted.piece_map()
     squares = filter(
@@ -41,7 +60,16 @@ def get_num_piece_mistakes(groundtruth: chess.Board, predicted: chess.Board) -> 
                for i in squares)
 
 
-def evaluate(recognizer: TimedChessRecognizer, output_file: typing.IO, dataset_folder: Path):
+def evaluate(recognizer: TimedChessRecognizer, output_file: typing.IO, dataset_folder: Path, save_fens: bool = False):
+    """Perform the performance evaluation, saving the results to a CSV output file.
+
+    Args:
+        recognizer (TimedChessRecognizer): the instance of the chess recognition pipeline
+        output_file (typing.IO): the output file object
+        dataset_folder (Path): the folder of the dataset to evaluate
+        save_fens (bool, optional): whether to save the FEN outputs for every sample. Defaults to False.
+    """
+
     time_keys = ["corner_detection",
                  "occupancy_classification",
                  "piece_classification",
@@ -54,6 +82,8 @@ def evaluate(recognizer: TimedChessRecognizer, output_file: typing.IO, dataset_f
                                 "piece_classification_mistakes",
                                 "actual_num_pieces",
                                 "predicted_num_pieces",
+                                *(["fen_actual", "fen_predicted"]
+                                  if save_fens else []),
                                 "time_corner_detection",
                                 "time_occupancy_classification",
                                 "time_piece_classification",
@@ -79,12 +109,12 @@ def evaluate(recognizer: TimedChessRecognizer, output_file: typing.IO, dataset_f
             predicted_corners = np.zeros((4, 2))
             times = {k: -1 for k in time_keys}
 
-        mistakes = get_num_mistakes(groundtruth_board, predicted_board)
+        mistakes = _get_num_mistakes(groundtruth_board, predicted_board)
         incorrect_corners = np.sum(np.linalg.norm(
             groundtruth_corners - predicted_corners, axis=-1) > (10/1200*img.shape[1]))
-        occupancy_mistakes = get_num_occupancy_mistakes(
+        occupancy_mistakes = _get_num_occupancy_mistakes(
             groundtruth_board, predicted_board)
-        piece_mistakes = get_num_piece_mistakes(
+        piece_mistakes = _get_num_piece_mistakes(
             groundtruth_board, predicted_board)
 
         output_file.write(",".join(map(str, [img_file.name,
@@ -95,6 +125,9 @@ def evaluate(recognizer: TimedChessRecognizer, output_file: typing.IO, dataset_f
                                              piece_mistakes,
                                              len(groundtruth_board.piece_map()),
                                              len(predicted_board.piece_map()),
+                                             *([groundtruth_board.board_fen(),
+                                                predicted_board.board_fen(), ]
+                                               if save_fens else []),
                                              *(times[k] for k in time_keys)])) + "\n")
         if (i+1) % 5 == 0:
             output_file.flush()
@@ -103,12 +136,14 @@ def evaluate(recognizer: TimedChessRecognizer, output_file: typing.IO, dataset_f
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="Evaluate the chessboard recognition system end-to-end.")
+        description="Evaluate the chess recognition system end-to-end.")
     parser.add_argument("--dataset", help="the dataset to evaluate (if unspecified, train and val will be evaluated)",
                         type=str, default=None, choices=[x.value for x in Datasets])
     parser.add_argument("--out", help="output folder", type=str,
                         default=f"results://recognition")
-    parser.set_defaults(find_mistakes=False)
+    parser.add_argument("--save-fens", help="store predicted and actual FEN strings",
+                        action="store_true", dest="save_fens")
+    parser.set_defaults(save_fens=False)
     args = parser.parse_args()
     output_folder = URI(args.out)
     output_folder.mkdir(parents=True, exist_ok=True)
@@ -122,4 +157,4 @@ if __name__ == "__main__":
         folder = URI("data://render") / dataset.value
         logger.info(f"Evaluating dataset {folder}")
         with (output_folder / f"{dataset.value}.csv").open("w") as f:
-            evaluate(recognizer, f, folder)
+            evaluate(recognizer, f, folder, save_fens=args.save_fens)

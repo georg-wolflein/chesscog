@@ -1,3 +1,6 @@
+"""Module containing the CNN architecture definitions of the candidate piece classifiers.
+"""
+
 from torch import nn
 from torchvision import models
 import torch.nn.functional as F
@@ -9,12 +12,16 @@ from chesscog.core.models import MODELS_REGISTRY
 
 NUM_CLASSES = len({"pawn", "knight", "bishop", "rook", "queen", "king"}) * 2
 
+#: Registry of piece classifiers (registered in the global :attr:`chesscog.core.models.MODELS_REGISTRY` under the key ``PIECE_CLASSIFIER``)
 MODEL_REGISTRY = Registry()
 MODELS_REGISTRY.register_as("PIECE_CLASSIFIER")(MODEL_REGISTRY)
 
 
 @MODEL_REGISTRY.register
 class CNN100_3Conv_3Pool_3FC(nn.Module):
+    """CNN (100, 3, 3, 3) model.
+    """
+
     input_size = 100, 200
     pretrained = False
 
@@ -44,6 +51,9 @@ class CNN100_3Conv_3Pool_3FC(nn.Module):
 
 @MODEL_REGISTRY.register
 class CNN100_3Conv_3Pool_2FC(nn.Module):
+    """CNN (100, 3, 3, 2) model.
+    """
+
     input_size = 100, 200
     pretrained = False
 
@@ -71,6 +81,9 @@ class CNN100_3Conv_3Pool_2FC(nn.Module):
 
 @MODEL_REGISTRY.register
 class AlexNet(nn.Module):
+    """AlexNet model.
+    """
+
     input_size = 100, 200
     pretrained = True
 
@@ -89,6 +102,9 @@ class AlexNet(nn.Module):
 
 @MODEL_REGISTRY.register
 class ResNet(nn.Module):
+    """ResNet model.
+    """
+
     input_size = 100, 200
     pretrained = True
 
@@ -107,6 +123,9 @@ class ResNet(nn.Module):
 
 @MODEL_REGISTRY.register
 class VGG(nn.Module):
+    """VGG model.
+    """
+
     input_size = 100, 200
     pretrained = True
 
@@ -125,6 +144,9 @@ class VGG(nn.Module):
 
 @MODEL_REGISTRY.register
 class InceptionV3(nn.Module):
+    """InceptionV3 model.
+    """
+
     input_size = 299, 299
     pretrained = True
 

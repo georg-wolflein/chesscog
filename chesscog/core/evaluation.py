@@ -1,3 +1,6 @@
+"""Common functions for evaluation CNNs.
+"""
+
 import argparse
 import torch
 import torchvision
@@ -44,6 +47,21 @@ def _csv_heading(classes: typing.List[str]) -> str:
 
 
 def evaluate(model_path: Path, datasets: typing.List[Datasets], output_folder: Path, find_mistakes: bool = False, include_heading: bool = False) -> str:
+    """Evaluate a model, returning the results as CSV.
+
+    Args:
+        model_path (Path): path to the model folder containing the YAML file and the saved weights
+        datasets (typing.List[Datasets]): the datasets to evaluate on
+        output_folder (Path): output folder for the mistake images (if applicable)
+        find_mistakes (bool, optional): whether to output all mistakes as images to the output folder. Defaults to False.
+        include_heading (bool, optional): whether to include a heading in the CSV output. Defaults to False.
+
+    Raises:
+        ValueError: if the YAML config file is missing
+
+    Returns:
+        str: the CSV string
+    """
     model_name = model_path.stem
     config_file = model_path.parent / f"{model_name}.yaml"
     if not config_file.exists():
@@ -90,6 +108,11 @@ def evaluate(model_path: Path, datasets: typing.List[Datasets], output_folder: P
 
 
 def perform_evaluation(classifier: str):
+    """Function to set up the CLI for the evaluation script.
+
+    Args:
+        classifier (str): the classifier
+    """
     parser = argparse.ArgumentParser(description="Evaluate trained models.")
     parser.add_argument("--model", help=f"the model to evaluate (if unspecified, all models in 'runs://{classifier}' will be evaluated)",
                         type=str, default=None)

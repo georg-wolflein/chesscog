@@ -1,3 +1,8 @@
+"""Core file system operations.
+
+This module is included by default to set up the paths for use with :class:`recap.URI`.
+"""
+
 from pathlib import Path
 import os
 from recap.path_manager import register_translator

@@ -1,3 +1,6 @@
+"""Blender script used to generate the synthetic dataset.
+"""
+
 import bpy
 import bpy_extras.object_utils
 import mathutils
@@ -10,7 +13,8 @@ import sys
 
 MIN_BOARD_CORNER_PADDING = 25  # pixels
 SQUARE_LENGTH = 0.036
-CAMERA_DISTANCE = 11  # units
+# units (1 unit is the side length of a chessboard square)
+CAMERA_DISTANCE = 11
 COLLECTION_NAME = "Chess position"
 
 
@@ -248,7 +252,6 @@ def get_bounding_box(scene, obj) -> typing.Tuple[int, int, int, int]:
                 continue
             else:
                 frame = [(v / (v.z / z)) for v in frame]
-                # frame = [(v * (z / v.z)) for v in frame]
 
             min_x, max_x = frame[1].x, frame[2].x
             min_y, max_y = frame[0].y, frame[1].y
@@ -283,15 +286,14 @@ def get_bounding_box(scene, obj) -> typing.Tuple[int, int, int, int]:
     )
 
 
-fens_path = Path("fens.txt")
-
-
-with fens_path.open("r") as f:
-    for i, fen in enumerate(map(str.strip, f)):
-        if i <= 2588:
-            continue
-        print(f"FEN #{i}", file=sys.stderr)
-        turn, *fen = fen
-        filename = Path("render") / f"{i:04d}.png"
-        board = chess.Board("".join(fen))
-        render_board(board, turn == "W", filename)
+if __name__ == "__main__":
+    fens_path = Path("fens.txt")
+    with fens_path.open("r") as f:
+        for i, fen in enumerate(map(str.strip, f)):
+            if i <= 2588:
+                continue
+            print(f"FEN #{i}", file=sys.stderr)
+            turn, *fen = fen
+            filename = Path("render") / f"{i:04d}.png"
+            board = chess.Board("".join(fen))
+            render_board(board, turn == "W", filename)

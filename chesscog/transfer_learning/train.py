@@ -1,7 +1,21 @@
+"""Script to train (i.e. fine-tune) the classifiers on the new dataset.
+
+.. code-block:: console
+
+    $ python -m chesscog.transfer_learning.train --help      
+    usage: train.py [-h]
+    
+    Fine-tune the classifiers on the new dataset.
+    
+    optional arguments:
+      -h, --help  show this help message and exit
+"""
+
 from recap import URI, CfgNode as CN
 import typing
 import torch
 import logging
+import argparse
 
 from chesscog.core.training.train import train_model
 from chesscog.core import device, DEVICE
@@ -22,7 +36,10 @@ def _train_model(model_type: str) -> typing.Tuple[torch.nn.Module, CN]:
                 model_file.stem, eval_on_train=True)
 
 
-for model_type in ("occupancy_classifier", "piece_classifier"):
-    logger.info(f"Starting training for {model_type}")
-    _train_model(model_type)
-    logger.info(f"Finished training for {model_type}")
+if __name__ == "__main__":
+    argparse.ArgumentParser(
+        description="Fine-tune the classifiers on the new dataset.").parse_args()
+    for model_type in ("occupancy_classifier", "piece_classifier"):
+        logger.info(f"Starting training for {model_type}")
+        _train_model(model_type)
+        logger.info(f"Finished training for {model_type}")

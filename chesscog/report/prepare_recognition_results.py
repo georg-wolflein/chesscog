@@ -1,9 +1,24 @@
+"""Main script to output accuracy statistics and other benchmarks of the inference pipeline.
+
+.. code-block:: console
+
+    $ python -m chesscog.report.prepare_recognition_results --help
+    usage: prepare_recognition_results.py [-h] [--results RESULTS]
+                                          [--dataset DATASET]
+    
+    Prepare results for LaTeX
+    
+    optional arguments:
+      -h, --help         show this help message and exit
+      --results RESULTS  parent results folder
+      --dataset DATASET  the dataset to evaluate
+"""
+
 import pandas as pd
 import re
 import argparse
 from recap import URI
-
-from chesscog.core.dataset import Datasets
+import chesscog
 
 
 if __name__ == "__main__":
@@ -11,7 +26,7 @@ if __name__ == "__main__":
     parser.add_argument("--results", help="parent results folder",
                         type=str, default="results://recognition")
     parser.add_argument("--dataset", help="the dataset to evaluate",
-                        type=str, default="train", choices=[x.value for x in Datasets])
+                        type=str, default="train")
     args = parser.parse_args()
 
     df = pd.read_csv(URI(args.results) / f"{args.dataset}.csv")
@@ -51,7 +66,10 @@ if __name__ == "__main__":
     # Performance profiling
     time_cols = [x for x in df.columns if x.startswith("time_")]
     for c in time_cols:
-        print(f"Mean {c}:", df[c].mean())
+        print("Time for", c[len("time_"):])
+        print("   mean:", df[c].mean())
+        print("   std: ", df[c].std())
 
-    mean_total_time = df[time_cols].sum(axis=1).mean()
-    print("Mean total time:", mean_total_time)
+    totals = df[time_cols].sum(axis=1)
+    print("Mean total time:", totals.mean())
+    print("            std:", totals.std())

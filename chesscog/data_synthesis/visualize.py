@@ -1,18 +1,33 @@
+"""Script to visualize the image and labels for a sample from the dataset.
+
+.. code-block:: console
+
+    $ python -m chesscog.data_synthesis.visualize --help    
+    usage: visualize.py [-h] [--file FILE]
+    
+    Visualize a sample from the dataset.
+    
+    optional arguments:
+      -h, --help   show this help message and exit
+      --file FILE  path to image file
+"""
+
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 import typing
 import json
 from recap import URI
+import argparse
 
 
-def draw_board_edges(img: Image, corners: typing.List[typing.List[int]]):
+def _draw_board_edges(img: Image, corners: typing.List[typing.List[int]]):
     draw = ImageDraw.Draw(img)
     corners = list(map(tuple, corners))
     corners.append(corners[0])
     draw.line(corners, "red", width=3)
 
 
-def draw_bounding_boxes(img: Image, pieces: list):
+def _draw_bounding_boxes(img: Image, pieces: list):
     try:
         font = ImageFont.truetype('arial.ttf', 50)
     except IOError:
@@ -63,20 +78,24 @@ def draw_bounding_boxes(img: Image, pieces: list):
             font=font)
 
 
-def visualise_groundtruth(img: Image, label: dict):
-    draw_board_edges(img, label["corners"])
-    draw_bounding_boxes(img, label["pieces"])
+def _visualize_groundtruth(img: Image, label: dict):
+    _draw_board_edges(img, label["corners"])
+    _draw_bounding_boxes(img, label["pieces"])
 
 
 if __name__ == "__main__":
-    start = 0
-    for i in range(start, start+5):
-        id = f"{i:04d}"
-        dataset_dir = URI("data://render")
+    parser = argparse.ArgumentParser(
+        description="Visualize a sample from the dataset.")
+    parser.add_argument("--file", type=str, help="path to image file",
+                        default="data://render/train/3828.png")
+    args = parser.parse_args()
 
-        img = Image.open(dataset_dir / (id + ".png"))
-        with (dataset_dir / (id + ".json")).open("r") as f:
-            label = json.load(f)
+    img_file = URI(args.file)
+    json_file = img_file.parent / f"{img_file.stem}.json"
 
-        visualise_groundtruth(img, label)
-        img.show()
+    img = Image.open(img_file)
+    with json_file.open("r") as f:
+        label = json.load(f)
+
+    _visualize_groundtruth(img, label)
+    img.show()
