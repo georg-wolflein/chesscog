@@ -4,7 +4,7 @@
 
 _chesscog_ combines traditional computer vision techniques with deep learning to recognise chess positions from photos.
 
-I am developed this project as part of my [master thesis](https://docs.google.com/viewer?url=https://github.com/georgw777/chesscog-report/raw/master/report.pdf) at the University of St Andrews. Documentation is available [here](https://georgw777.github.io/chesscog).
+I developed this project as part of my [master thesis](https://docs.google.com/viewer?url=https://github.com/georgw777/chesscog-report/raw/master/report.pdf) at the University of St Andrews. Documentation is available [here](https://georgw777.github.io/chesscog).
 
 ## Related repositories
 
