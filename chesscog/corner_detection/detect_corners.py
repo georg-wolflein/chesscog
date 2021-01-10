@@ -461,7 +461,9 @@ if __name__ == "__main__":
     img = cv2.imread(str(filename))
     corners = find_corners(cfg, img)
 
-    plt.figure()
+    fig = plt.figure()
+    fig.canvas.set_window_title("Corner detection output")
     plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
     plt.scatter(*corners.T, c="r")
+    plt.axis("off")
     plt.show()
