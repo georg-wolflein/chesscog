@@ -8,7 +8,7 @@ I developed this project as part of my [master thesis](https://docs.google.com/v
 
 ## Related repositories
 
-- [chesscog-report](https://github.com/georgw777/chesscog-report): the master thesis, currently a work in progress
+- [chesscog-report](https://github.com/georgw777/chesscog-report): the master thesis
 - [chesscog-app](https://github.com/georgw777/chesscog-app): the proof-of-concept web app
 - [recap](https://github.com/georgw777/recap): configuration management system developed as part of this project
 
