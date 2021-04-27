@@ -12,7 +12,6 @@ on:
 jobs:
   build_sphinx_job:
     runs-on: ubuntu-latest
-    container: debian:buster-slim
 
     steps:
       - name: Get prerequisites and clone repository
