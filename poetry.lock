@@ -793,6 +793,19 @@ version = "4.4.0.46"
 
 [[package]]
 category = "main"
+description = "An OSF command-line library"
+name = "osfclient"
+optional = false
+python-versions = "*"
+version = "0.0.5"
+
+[package.dependencies]
+requests = "*"
+six = "*"
+tqdm = "*"
+
+[[package]]
+category = "main"
 description = "Core utilities for Python packages"
 name = "packaging"
 optional = false
@@ -1573,7 +1586,7 @@ testing = ["pytest (>=3.5,<3.7.3 || >3.7.3)", "pytest-checkdocs (>=1.2.3)", "pyt
 docs = ["sphinx", "sphinx-rtd-theme", "m2r2"]
 
 [metadata]
-content-hash = "fabac6a881277682e81494c2d8f90a01d3dab6ec8c31aa558aabfef220af1c7d"
+content-hash = "13e8f82904616a24e0859f4805eb5ada861603d45c5217c9096c712135b2ba17"
 lock-version = "1.0"
 python-versions = "^3.7"
 
@@ -2073,6 +2086,10 @@ opencv-python = [
     {file = "opencv_python-4.4.0.46-cp39-cp39-manylinux2014_x86_64.whl", hash = "sha256:744e9ae2fb4c8574e6d4a762146b4d0984bdec60b98480fc54a363c03a07a1ac"},
     {file = "opencv_python-4.4.0.46-cp39-cp39-win32.whl", hash = "sha256:7fe81d08df4eb5dc4c6aa5f09888b6fd390fce5fa7d5624a98cac890b9aa6181"},
     {file = "opencv_python-4.4.0.46-cp39-cp39-win_amd64.whl", hash = "sha256:0548981fe189e0d57b9cc65066b66fd70d4bc84ea906f349a63d9098e1b911c6"},
+]
+osfclient = [
+    {file = "osfclient-0.0.5-py2.py3-none-any.whl", hash = "sha256:2351a61785f2ad662f1f4e7775d77dc4c185379473553f46fbfcfb65da819b80"},
+    {file = "osfclient-0.0.5.tar.gz", hash = "sha256:47c92bbdce57ecc0ed87eabe459025cc549080c48b28ebc86bfc5d82545a75c8"},
 ]
 packaging = [
     {file = "packaging-20.8-py2.py3-none-any.whl", hash = "sha256:24e0da08660a87484d1602c30bb4902d74816b6985b93de36926f5bc95741858"},
