@@ -12,7 +12,7 @@ on:
 jobs:
   build_sphinx_job:
     runs-on: ubuntu-latest
-    container: debian:buster
+    container: ubuntu:latest
 
     steps:
       - name: Get prerequisites and clone repository
