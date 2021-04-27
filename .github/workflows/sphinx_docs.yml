@@ -37,6 +37,7 @@ jobs:
       - name: Run build script for Sphinx pages
         env:
           GITHUB_TOKEN: ${{ secrets.CHESSCOG_PAT_TOKEN }}
+          DEBIAN_FRONTEND: noninteractive
         run: |
           cd docs
           ./buildsite.sh
