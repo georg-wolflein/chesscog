@@ -4,7 +4,7 @@ build-backend = "poetry.masonry.api"
 
 [tool.poetry]
 name = "chesscog"
-version = "1.0.0"
+version = "1.0.1"
 description = "Recognise chess positions using computer vision."
 authors = [ "Georg Wölflein <georgw7777@gmail.com>",]
 include = [ "config/*.yaml", "config/**/_*.yaml",]
