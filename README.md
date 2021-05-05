@@ -7,7 +7,7 @@ _chesscog_ combines traditional computer vision techniques with deep learning to
 This repository contains the official code for the paper:
 > [**Determining Chess Game State From an Image**](http://arxiv.org/abs/2104.14963)           
 > Georg Wölflein and Ognjen Arandjelović                         
-> *arXiv technical report ([arXiv 2104.14963](http://arxiv.org/abs/2104.14963))*
+> *arXiv preprint ([arXiv 2104.14963](http://arxiv.org/abs/2104.14963))*
 
 I originally developed this project as part of my [master thesis](https://docs.google.com/viewer?url=https://github.com/georgw777/chesscog-report/raw/master/report.pdf) at the University of St Andrews. Documentation is available [here](https://georgw777.github.io/chesscog).
 
