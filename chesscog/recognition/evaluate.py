@@ -25,8 +25,8 @@ import logging
 import json
 import cv2
 import chess
+from chess import Status
 import numpy as np
-import torch
 from timeit import default_timer as timer
 
 from .recognition import TimedChessRecognizer
@@ -82,7 +82,7 @@ def evaluate(recognizer: TimedChessRecognizer, output_file: typing.IO, dataset_f
                                 "piece_classification_mistakes",
                                 "actual_num_pieces",
                                 "predicted_num_pieces",
-                                *(["fen_actual", "fen_predicted"]
+                                *(["fen_actual", "fen_predicted", "fen_predicted_is_valid"]
                                   if save_fens else []),
                                 "time_corner_detection",
                                 "time_occupancy_classification",
@@ -126,7 +126,8 @@ def evaluate(recognizer: TimedChessRecognizer, output_file: typing.IO, dataset_f
                                              len(groundtruth_board.piece_map()),
                                              len(predicted_board.piece_map()),
                                              *([groundtruth_board.board_fen(),
-                                                predicted_board.board_fen(), ]
+                                                predicted_board.board_fen(),
+                                                predicted_board.status() == Status.VALID]
                                                if save_fens else []),
                                              *(times[k] for k in time_keys)])) + "\n")
         if (i+1) % 5 == 0:

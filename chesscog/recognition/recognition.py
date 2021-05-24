@@ -22,6 +22,7 @@ This module simultaneously acts as a script to perform a single inference:
 
 import numpy as np
 import chess
+from chess import Status
 from pathlib import Path
 import torch
 from PIL import Image
@@ -163,7 +164,8 @@ class TimedChessRecognizer(ChessRecognizer):
             t4 = timer()
 
             board = chess.Board()
-            board.clear_board()
+            board.clear()
+            board.turn = turn
             for square, piece in zip(self._squares, pieces):
                 if piece:
                     board.set_piece_at(square, piece)
@@ -210,6 +212,11 @@ def main(classifiers_folder: Path = URI("models://"), setup: callable = lambda: 
     print()
     print(
         f"You can view this position at https://lichess.org/editor/{board.board_fen()}")
+
+    if board.status() != Status.VALID:
+        print()
+        print("WARNING: The predicted chess position is not legal according to the rules of chess.")
+        print("         You might want to try again with another picture.")
 
 
 if __name__ == "__main__":
