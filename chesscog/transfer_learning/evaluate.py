@@ -49,4 +49,4 @@ if __name__ == "__main__":
         folder = URI("data://transfer_learning/images") / dataset.value
         logger.info(f"Evaluating dataset {folder}")
         with (output_folder / f"{dataset.value}.csv").open("w") as f:
-            evaluate(recognizer, f, folder)
+            evaluate(recognizer, f, folder, save_fens=True)
