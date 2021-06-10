@@ -1,8 +1,8 @@
 name: publish-docs
 
 env:
-  GITHUB_ACTOR: georgw777
-  GITHUB_REPOSITORY: georgw777/chesscog
+  GITHUB_ACTOR: georg-wolflein
+  GITHUB_REPOSITORY: georg-wolflein/chesscog
   GITHUB_TOKEN: ${{ secrets.CHESSCOG_PAT_TOKEN }}
 
 on:

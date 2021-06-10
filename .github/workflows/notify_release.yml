@@ -14,5 +14,5 @@ jobs:
             -u "${{ secrets.CHESSCOG_PAT_USERNAME}}:${{secrets.CHESSCOG_PAT_TOKEN}}" \
             -H "Accept: application/vnd.github.v3+json" \
             -H "Content-Type: application/json" \
-            https://api.github.com/repos/georgw777/chesscog-app/dispatches \
+            https://api.github.com/repos/georg-wolflein/chesscog-app/dispatches \
             --data '{"event_type": "chesscog_release", "client_payload": { "chesscog_version": "${{ github.event.release.tag_name }}" } }'

@@ -21,7 +21,7 @@ from chesscog.core.io import download_zip_folder
 
 
 ensure_models = functools.partial(download_zip_folder,
-                                  "https://github.com/georgw777/chesscog/releases/download/0.2.7/transfer_learning_models.zip",
+                                  "https://github.com/georg-wolflein/chesscog/releases/download/0.2.7/transfer_learning_models.zip",
                                   "models://transfer_learning")
 
 

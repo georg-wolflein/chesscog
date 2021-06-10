@@ -39,7 +39,7 @@ touch .nojekyll
 # Add README
 cat > README.md <<EOF
 # README for the GitHub Pages Branch
-This branch is simply a cache for the website served from https://georgw777.github.io/chesscog/.
+This branch is simply a cache for the website served from https://georg-wolflein.github.io/chesscog/.
 EOF
  
 # Copy the resulting html pages built from Sphinx to the gh-pages branch 
