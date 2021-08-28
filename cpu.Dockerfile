@@ -1,17 +1,4 @@
-FROM nvidia/cuda:10.2-cudnn7-devel-ubuntu18.04
-
-# Install Python 3.8
-RUN apt update && \
-    apt install -y software-properties-common && \
-    add-apt-repository ppa:deadsnakes/ppa && \
-    apt update && \
-    apt install -y python3.8 python3-pip && \
-    update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.8 1 && \
-    update-alternatives --install /usr/bin/python python /usr/bin/python3.8 1 && \
-    update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 1
-
-# OpenGL is needed for OpenCV
-RUN apt install -y libgl1-mesa-glx
+FROM python:3.8
 
 # Install poetry
 RUN pip install --upgrade pip && \
@@ -55,9 +42,6 @@ COPY chesscog ./chesscog
 
 # Scratch volume
 VOLUME /chess/scratch
-
-# Weird fix for poetry in the GPU container (not required for CPU)
-RUN python3 -m pip install idna
 
 # Entrypoint (password is "chesscog")
 CMD poetry run tensorboard --logdir ./runs --host 0.0.0.0 --port 9999  & \
