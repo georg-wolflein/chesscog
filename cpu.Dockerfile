@@ -1,5 +1,9 @@
 FROM python:3.8
 
+# Install zip
+RUN apt update && \
+    apt install -y zip
+
 # Install poetry
 RUN pip install --upgrade pip && \
     pip install poetry && \

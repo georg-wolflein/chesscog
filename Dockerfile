@@ -13,6 +13,9 @@ RUN apt update && \
 # OpenGL is needed for OpenCV
 RUN apt install -y libgl1-mesa-glx
 
+# Install zip
+RUN apt install -y zip
+
 # Install poetry
 RUN pip install --upgrade pip && \
     pip install poetry && \
