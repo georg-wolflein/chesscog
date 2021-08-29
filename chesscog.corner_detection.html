@@ -1,0 +1,416 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>chesscog.corner_detection package &mdash; chesscog 1.0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="chesscog.data_synthesis package" href="chesscog.data_synthesis.html" />
+    <link rel="prev" title="chesscog.core.training package" href="chesscog.core.training.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> chesscog
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="chesscog.html">chesscog package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="chesscog.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="chesscog.core.html">chesscog.core package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">chesscog.corner_detection package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-chesscog.corner_detection.create_configs">chesscog.corner_detection.create_configs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-chesscog.corner_detection.detect_corners">chesscog.corner_detection.detect_corners module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-chesscog.corner_detection.evaluate">chesscog.corner_detection.evaluate module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-chesscog.corner_detection.find_best_configs">chesscog.corner_detection.find_best_configs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-chesscog.corner_detection.visualize">chesscog.corner_detection.visualize module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="chesscog.data_synthesis.html">chesscog.data_synthesis package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="chesscog.occupancy_classifier.html">chesscog.occupancy_classifier package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="chesscog.piece_classifier.html">chesscog.piece_classifier package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="chesscog.recognition.html">chesscog.recognition package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="chesscog.report.html">chesscog.report package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="chesscog.transfer_learning.html">chesscog.transfer_learning package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">chesscog</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="chesscog.html">chesscog package</a> &raquo;</li>
+        
+      <li>chesscog.corner_detection package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/chesscog.corner_detection.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-chesscog.corner_detection">
+<span id="chesscog-corner-detection-package"></span><h1>chesscog.corner_detection package<a class="headerlink" href="#module-chesscog.corner_detection" title="Permalink to this headline">¶</a></h1>
+<p>Chessboard localization module.</p>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-chesscog.corner_detection.create_configs">
+<span id="chesscog-corner-detection-create-configs-module"></span><h2>chesscog.corner_detection.create_configs module<a class="headerlink" href="#module-chesscog.corner_detection.create_configs" title="Permalink to this headline">¶</a></h2>
+<p>Script to create config files for the grid search.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>python -m chesscog.corner_detection.create_configs --help
+<span class="go">usage: create_configs.py [-h]</span>
+
+<span class="go">Create YAML config files for grid search.</span>
+
+<span class="go">optional arguments:</span>
+<span class="go">  -h, --help  show this help message and exit</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="module-chesscog.corner_detection.detect_corners">
+<span id="chesscog-corner-detection-detect-corners-module"></span><h2>chesscog.corner_detection.detect_corners module<a class="headerlink" href="#module-chesscog.corner_detection.detect_corners" title="Permalink to this headline">¶</a></h2>
+<p>Module to perform chessboard localization.</p>
+<p>The entire board localization pipeline is implemented end-to-end in this module.
+Use the <a class="reference internal" href="#chesscog.corner_detection.detect_corners.find_corners" title="chesscog.corner_detection.detect_corners.find_corners"><code class="xref py py-meth docutils literal notranslate"><span class="pre">find_corners()</span></code></a> to run it.</p>
+<p>This module simultaneously acts as a script:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>python -m chesscog.corner_detection.detect_corners --help
+<span class="go">usage: detect_corners.py [-h] [--config CONFIG] file</span>
+
+<span class="go">Chessboard corner detector.</span>
+
+<span class="go">positional arguments:</span>
+<span class="go">  file             URI of the input image file</span>
+
+<span class="go">optional arguments:</span>
+<span class="go">  -h, --help       show this help message and exit</span>
+<span class="go">  --config CONFIG  path to the config file</span>
+</pre></div>
+</div>
+<dl class="py function">
+<dt class="sig sig-object py" id="chesscog.corner_detection.detect_corners.compute_transformation_matrix">
+<span class="sig-prename descclassname"><span class="pre">chesscog.corner_detection.detect_corners.</span></span><span class="sig-name descname"><span class="pre">compute_transformation_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">src_points</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dst_points</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="headerlink" href="#chesscog.corner_detection.detect_corners.compute_transformation_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the transformation matrix based on source and destination points.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>src_points</strong> (<em>np.ndarray</em>) – the source points (shape: […, 2])</p></li>
+<li><p><strong>dst_points</strong> (<em>np.ndarray</em>) – the source points (shape: […, 2])</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the transformation matrix</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chesscog.corner_detection.detect_corners.find_corners">
+<span class="sig-prename descclassname"><span class="pre">chesscog.corner_detection.detect_corners.</span></span><span class="sig-name descname"><span class="pre">find_corners</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">recap.config.CfgNode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="headerlink" href="#chesscog.corner_detection.detect_corners.find_corners" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine the four corner points of the chessboard in an image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cfg</strong> (<em>CN</em>) – the configuration object</p></li>
+<li><p><strong>img</strong> (<em>np.ndarray</em>) – the input image (as a numpy array)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="chesscog.core.html#chesscog.core.exceptions.ChessboardNotLocatedException" title="chesscog.core.exceptions.ChessboardNotLocatedException"><strong>ChessboardNotLocatedException</strong></a> – if the chessboard could not be found</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>the pixel coordinates of the four corners</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chesscog.corner_detection.detect_corners.get_intersection_point">
+<span class="sig-prename descclassname"><span class="pre">chesscog.corner_detection.detect_corners.</span></span><span class="sig-name descname"><span class="pre">get_intersection_point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho1</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta1</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho2</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta2</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#chesscog.corner_detection.detect_corners.get_intersection_point" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtain the intersection point of two lines in Hough space.</p>
+<p>This method can be batched</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rho1</strong> (<em>np.ndarray</em>) – first line’s rho</p></li>
+<li><p><strong>theta1</strong> (<em>np.ndarray</em>) – first line’s theta</p></li>
+<li><p><strong>rho2</strong> (<em>np.ndarray</em>) – second lines’s rho</p></li>
+<li><p><strong>theta2</strong> (<em>np.ndarray</em>) – second line’s theta</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the x and y coordinates of the intersection point(s)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>typing.Tuple[np.ndarray, np.ndarray]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chesscog.corner_detection.detect_corners.resize_image">
+<span class="sig-prename descclassname"><span class="pre">chesscog.corner_detection.detect_corners.</span></span><span class="sig-name descname"><span class="pre">resize_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">recap.config.CfgNode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#chesscog.corner_detection.detect_corners.resize_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resize an image for use in the corner detection pipeline, maintaining the aspect ratio.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cfg</strong> (<em>CN</em>) – the configuration object</p></li>
+<li><p><strong>img</strong> (<em>np.ndarray</em>) – the input image</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the resized image along with the scale of this new image</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>typing.Tuple[np.ndarray, float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-chesscog.corner_detection.evaluate">
+<span id="chesscog-corner-detection-evaluate-module"></span><h2>chesscog.corner_detection.evaluate module<a class="headerlink" href="#module-chesscog.corner_detection.evaluate" title="Permalink to this headline">¶</a></h2>
+<p>Script to evaluate the chessboard localisation algorithm.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>python -m chesscog.corner_detection.evaluate --help
+<span class="go">usage: evaluate.py [-h] [--config CONFIG]</span>
+<span class="go">                   [--dataset {train,val,test}] [--out OUT]</span>
+
+<span class="go">Evaluate the chessboard corner detector.</span>
+
+<span class="go">optional arguments:</span>
+<span class="go">  -h, --help            show this help message and exit</span>
+<span class="go">  --config CONFIG       path to a folder with YAML config files</span>
+<span class="go">                        (or path to a YAML config file)</span>
+<span class="go">  --dataset {train,val,test}</span>
+<span class="go">                        the dataset to evaluate (if unspecified,</span>
+<span class="go">                        train and val will be evaluated)</span>
+<span class="go">  --out OUT             output folder</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="module-chesscog.corner_detection.find_best_configs">
+<span id="chesscog-corner-detection-find-best-configs-module"></span><h2>chesscog.corner_detection.find_best_configs module<a class="headerlink" href="#module-chesscog.corner_detection.find_best_configs" title="Permalink to this headline">¶</a></h2>
+<p>Script to execute the grid search over the generated YAML config files in order to determine which configuration achieves the best performance of the chessboard localization algorithm.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>python -m chesscog.corner_detection.find_best_configs --help
+<span class="go">usage: find_best_configs.py [-h] [--n N] [--in INPUT]</span>
+<span class="go">                            [--out OUT]</span>
+
+<span class="go">Get the best n configs of the results obtained via grid search</span>
+
+<span class="go">optional arguments:</span>
+<span class="go">  -h, --help  show this help message and exit</span>
+<span class="go">  --n N       the number of configs to retain</span>
+<span class="go">  --in INPUT  the CSV file containing the results of the grid</span>
+<span class="go">              search</span>
+<span class="go">  --out OUT   the output folder for the YAML files     output folder</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="module-chesscog.corner_detection.visualize">
+<span id="chesscog-corner-detection-visualize-module"></span><h2>chesscog.corner_detection.visualize module<a class="headerlink" href="#module-chesscog.corner_detection.visualize" title="Permalink to this headline">¶</a></h2>
+<p>Utilities for visualizing the functionality of the chessboard corner detector.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="chesscog.corner_detection.visualize.draw_lines">
+<span class="sig-prename descclassname"><span class="pre">chesscog.corner_detection.visualize.</span></span><span class="sig-name descname"><span class="pre">draw_lines</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lines</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">tuple</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">(0,</span> <span class="pre">0,</span> <span class="pre">255)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thickness</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chesscog.corner_detection.visualize.draw_lines" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw lines specified in Hough space on top of the input image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img</strong> (<em>np.ndarray</em>) – the input image</p></li>
+<li><p><strong>lines</strong> (<em>np.ndarray</em>) – the lines of shape [N, 2] where the last dimension are the rho and theta values</p></li>
+<li><p><strong>color</strong> (<em>tuple</em><em>, </em><em>optional</em>) – the color to draw the lines in. Defaults to (0, 0, 255).</p></li>
+<li><p><strong>thickness</strong> (<em>int</em><em>, </em><em>optional</em>) – thickness of the lines. Defaults to 2.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="chesscog.data_synthesis.html" class="btn btn-neutral float-right" title="chesscog.data_synthesis package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="chesscog.core.training.html" class="btn btn-neutral float-left" title="chesscog.core.training package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Georg Wölflein.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

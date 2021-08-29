@@ -1,0 +1,309 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>chesscog.data_synthesis package &mdash; chesscog 1.0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="chesscog.occupancy_classifier package" href="chesscog.occupancy_classifier.html" />
+    <link rel="prev" title="chesscog.corner_detection package" href="chesscog.corner_detection.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> chesscog
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="chesscog.html">chesscog package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="chesscog.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="chesscog.core.html">chesscog.core package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="chesscog.corner_detection.html">chesscog.corner_detection package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">chesscog.data_synthesis package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-chesscog.data_synthesis.create_fens">chesscog.data_synthesis.create_fens module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-chesscog.data_synthesis.download_dataset">chesscog.data_synthesis.download_dataset module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-chesscog.data_synthesis.download_pgn">chesscog.data_synthesis.download_pgn module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-chesscog.data_synthesis.split_dataset">chesscog.data_synthesis.split_dataset module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-chesscog.data_synthesis.visualize">chesscog.data_synthesis.visualize module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="chesscog.occupancy_classifier.html">chesscog.occupancy_classifier package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="chesscog.piece_classifier.html">chesscog.piece_classifier package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="chesscog.recognition.html">chesscog.recognition package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="chesscog.report.html">chesscog.report package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="chesscog.transfer_learning.html">chesscog.transfer_learning package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">chesscog</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="chesscog.html">chesscog package</a> &raquo;</li>
+        
+      <li>chesscog.data_synthesis package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/chesscog.data_synthesis.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-chesscog.data_synthesis">
+<span id="chesscog-data-synthesis-package"></span><h1>chesscog.data_synthesis package<a class="headerlink" href="#module-chesscog.data_synthesis" title="Permalink to this headline">¶</a></h1>
+<p>Module containing scripts for creating and reproducing the dataset synthesised from a 3D model of a chess set.</p>
+<p>Notice that the Blender script for actually creating the dataset is located in <code class="docutils literal notranslate"><span class="pre">scripts/synthesize_data.py</span></code> and not the <cite>chesscog</cite> package itself because it uses <code class="docutils literal notranslate"><span class="pre">bpy</span></code> and Blender’s bundled Python interpreter.
+Thus the dependencies are not in line with <cite>chesscog</cite> itself.</p>
+<p>It is recommended to use the <a class="reference internal" href="#module-chesscog.data_synthesis.download_dataset" title="chesscog.data_synthesis.download_dataset"><code class="xref py py-mod docutils literal notranslate"><span class="pre">download_dataset</span></code></a> script to download the rendered dataset and then to split it into train/val/test using the <a class="reference internal" href="#module-chesscog.data_synthesis.split_dataset" title="chesscog.data_synthesis.split_dataset"><code class="xref py py-mod docutils literal notranslate"><span class="pre">split_dataset</span></code></a> script.</p>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-chesscog.data_synthesis.create_fens">
+<span id="chesscog-data-synthesis-create-fens-module"></span><h2>chesscog.data_synthesis.create_fens module<a class="headerlink" href="#module-chesscog.data_synthesis.create_fens" title="Permalink to this headline">¶</a></h2>
+<p>Script to extract FEN positions from the <code class="docutils literal notranslate"><span class="pre">data://games.pgn</span></code> database of chess game.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>python -m chesscog.data_synthesis.create_fens --help
+<span class="go">usage: create_fens.py [-h]</span>
+
+<span class="go">Create the fens.txt file by selecting 2%% of the positions from</span>
+<span class="go">games.pgn.</span>
+
+<span class="go">optional arguments:</span>
+<span class="go">  -h, --help  show this help message and exit</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="module-chesscog.data_synthesis.download_dataset">
+<span id="chesscog-data-synthesis-download-dataset-module"></span><h2>chesscog.data_synthesis.download_dataset module<a class="headerlink" href="#module-chesscog.data_synthesis.download_dataset" title="Permalink to this headline">¶</a></h2>
+<p>Script to download the rendered dataset.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>python -m chesscog.data_synthesis.download_dataset --help
+<span class="go">usage: download_dataset.py [-h]</span>
+
+<span class="go">Download the rendered dataset.</span>
+
+<span class="go">optional arguments:</span>
+<span class="go">  -h, --help  show this help message and exit</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="module-chesscog.data_synthesis.download_pgn">
+<span id="chesscog-data-synthesis-download-pgn-module"></span><h2>chesscog.data_synthesis.download_pgn module<a class="headerlink" href="#module-chesscog.data_synthesis.download_pgn" title="Permalink to this headline">¶</a></h2>
+<p>Script to download Magnus Carlsen’s chess games to <code class="docutils literal notranslate"><span class="pre">data://games.pgn</span></code>.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>python -m chesscog.data_synthesis.download_pgn --help
+<span class="go">usage: download_pgn.py [-h]</span>
+
+<span class="go">Download Magnus Carlsen&#39;s chess games to data://games.pgn.</span>
+
+<span class="go">optional arguments:</span>
+<span class="go">  -h, --help  show this help message and exit</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="module-chesscog.data_synthesis.split_dataset">
+<span id="chesscog-data-synthesis-split-dataset-module"></span><h2>chesscog.data_synthesis.split_dataset module<a class="headerlink" href="#module-chesscog.data_synthesis.split_dataset" title="Permalink to this headline">¶</a></h2>
+<p>Script to split the rendered dataset into train (90%), val (3%), and test (7%) sets.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>python -m chesscog.data_synthesis.split_dataset --help
+<span class="go">usage: split_dataset.py [-h]</span>
+
+<span class="go">Split the dataset into train/val/test.</span>
+
+<span class="go">optional arguments:</span>
+<span class="go">  -h, --help  show this help message and exit</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="module-chesscog.data_synthesis.visualize">
+<span id="chesscog-data-synthesis-visualize-module"></span><h2>chesscog.data_synthesis.visualize module<a class="headerlink" href="#module-chesscog.data_synthesis.visualize" title="Permalink to this headline">¶</a></h2>
+<p>Script to visualize the image and labels for a sample from the dataset.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>python -m chesscog.data_synthesis.visualize --help
+<span class="go">usage: visualize.py [-h] [--file FILE]</span>
+
+<span class="go">Visualize a sample from the dataset.</span>
+
+<span class="go">optional arguments:</span>
+<span class="go">  -h, --help   show this help message and exit</span>
+<span class="go">  --file FILE  path to image file</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="chesscog.occupancy_classifier.html" class="btn btn-neutral float-right" title="chesscog.occupancy_classifier package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="chesscog.corner_detection.html" class="btn btn-neutral float-left" title="chesscog.corner_detection package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Georg Wölflein.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

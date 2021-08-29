@@ -1,0 +1,715 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>chesscog.occupancy_classifier package &mdash; chesscog 1.0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="chesscog.piece_classifier package" href="chesscog.piece_classifier.html" />
+    <link rel="prev" title="chesscog.data_synthesis package" href="chesscog.data_synthesis.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> chesscog
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="chesscog.html">chesscog package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="chesscog.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="chesscog.core.html">chesscog.core package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="chesscog.corner_detection.html">chesscog.corner_detection package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="chesscog.data_synthesis.html">chesscog.data_synthesis package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">chesscog.occupancy_classifier package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-chesscog.occupancy_classifier.create_configs">chesscog.occupancy_classifier.create_configs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-chesscog.occupancy_classifier.create_dataset">chesscog.occupancy_classifier.create_dataset module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-chesscog.occupancy_classifier.download_model">chesscog.occupancy_classifier.download_model module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-chesscog.occupancy_classifier.evaluate">chesscog.occupancy_classifier.evaluate module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-chesscog.occupancy_classifier.models">chesscog.occupancy_classifier.models module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-chesscog.occupancy_classifier.train">chesscog.occupancy_classifier.train module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="chesscog.piece_classifier.html">chesscog.piece_classifier package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="chesscog.recognition.html">chesscog.recognition package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="chesscog.report.html">chesscog.report package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="chesscog.transfer_learning.html">chesscog.transfer_learning package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">chesscog</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="chesscog.html">chesscog package</a> &raquo;</li>
+        
+      <li>chesscog.occupancy_classifier package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/chesscog.occupancy_classifier.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-chesscog.occupancy_classifier">
+<span id="chesscog-occupancy-classifier-package"></span><h1>chesscog.occupancy_classifier package<a class="headerlink" href="#module-chesscog.occupancy_classifier" title="Permalink to this headline">¶</a></h1>
+<p>Module for occupancy classification.</p>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-chesscog.occupancy_classifier.create_configs">
+<span id="chesscog-occupancy-classifier-create-configs-module"></span><h2>chesscog.occupancy_classifier.create_configs module<a class="headerlink" href="#module-chesscog.occupancy_classifier.create_configs" title="Permalink to this headline">¶</a></h2>
+<p>Script to generate the YAML configuration files for each of the candidate occupancy classification model architectures.
+The candidates are defined in the <a class="reference internal" href="#module-chesscog.occupancy_classifier.models" title="chesscog.occupancy_classifier.models"><code class="xref py py-mod docutils literal notranslate"><span class="pre">models</span></code></a> module.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>python -m chesscog.occupancy_classifier.create_configs --help
+<span class="go">usage: create_configs.py [-h]</span>
+
+<span class="go">Generate the YAML configuration for the occupancy</span>
+<span class="go">classifiers.</span>
+
+<span class="go">optional arguments:</span>
+<span class="go">  -h, --help  show this help message and exit</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="module-chesscog.occupancy_classifier.create_dataset">
+<span id="chesscog-occupancy-classifier-create-dataset-module"></span><h2>chesscog.occupancy_classifier.create_dataset module<a class="headerlink" href="#module-chesscog.occupancy_classifier.create_dataset" title="Permalink to this headline">¶</a></h2>
+<p>Script to create the occupancy classification dataset.</p>
+<p>Based on the four chessboard corner points which are supplied as labels, this module is responsible for warping the image and cutting out the squares.
+Note that before running this module requires the rendered dataset to be downloaded and split (see the <a class="reference internal" href="chesscog.data_synthesis.html#module-chesscog.data_synthesis" title="chesscog.data_synthesis"><code class="xref py py-mod docutils literal notranslate"><span class="pre">chesscog.data_synthesis</span></code></a> module for more information).</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>python -m chesscog.occupancy_classifier.create_dataset --help
+<span class="go">usage: create_dataset.py [-h]</span>
+
+<span class="go">Create the dataset for occupancy classification.</span>
+
+<span class="go">optional arguments:</span>
+<span class="go">  -h, --help  show this help message and exit</span>
+</pre></div>
+</div>
+<dl class="py function">
+<dt class="sig sig-object py" id="chesscog.occupancy_classifier.create_dataset.create_dataset">
+<span class="sig-prename descclassname"><span class="pre">chesscog.occupancy_classifier.create_dataset.</span></span><span class="sig-name descname"><span class="pre">create_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dir</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pathlib.Path</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">URI('data://render')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pathlib.Path</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">URI('data://occupancy')</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chesscog.occupancy_classifier.create_dataset.create_dataset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the occupancy classification dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_dir</strong> (<em>Path</em><em>, </em><em>optional</em>) – the input folder of the rendered images. Defaults to <code class="docutils literal notranslate"><span class="pre">data://render</span></code>.</p></li>
+<li><p><strong>output_dir</strong> (<em>Path</em><em>, </em><em>optional</em>) – the output folder. Defaults to <code class="docutils literal notranslate"><span class="pre">data://occupancy</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chesscog.occupancy_classifier.create_dataset.crop_square">
+<span class="sig-prename descclassname"><span class="pre">chesscog.occupancy_classifier.create_dataset.</span></span><span class="sig-name descname"><span class="pre">crop_square</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">square</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">turn</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="headerlink" href="#chesscog.occupancy_classifier.create_dataset.crop_square" title="Permalink to this definition">¶</a></dt>
+<dd><p>Crop a chess square from the warped input image for occupancy classification.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img</strong> (<em>np.ndarray</em>) – the warped input image</p></li>
+<li><p><strong>square</strong> (<em>chess.Square</em>) – the square to crop</p></li>
+<li><p><strong>turn</strong> (<em>chess.Color</em>) – the current player</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the cropped square</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chesscog.occupancy_classifier.create_dataset.warp_chessboard_image">
+<span class="sig-prename descclassname"><span class="pre">chesscog.occupancy_classifier.create_dataset.</span></span><span class="sig-name descname"><span class="pre">warp_chessboard_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">corners</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.ndarray</span></span></span><a class="headerlink" href="#chesscog.occupancy_classifier.create_dataset.warp_chessboard_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Warp the image of the chessboard onto a regular grid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img</strong> (<em>np.ndarray</em>) – the image of the chessboard</p></li>
+<li><p><strong>corners</strong> (<em>np.ndarray</em>) – pixel locations of the four corner points</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the warped image</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-chesscog.occupancy_classifier.download_model">
+<span id="chesscog-occupancy-classifier-download-model-module"></span><h2>chesscog.occupancy_classifier.download_model module<a class="headerlink" href="#module-chesscog.occupancy_classifier.download_model" title="Permalink to this headline">¶</a></h2>
+<p>Script to download the best occupancy classifier (already trained).</p>
+<p>Running this script will download the classifier that was used in the report.
+It will be downloaded to <code class="docutils literal notranslate"><span class="pre">models://occupancy_classifier</span></code>.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>python -m chesscog.occupancy_classifier.download_model --help
+<span class="go">usage: download_model.py [-h]</span>
+
+<span class="go">Download the occupancy classifier.</span>
+
+<span class="go">optional arguments:</span>
+<span class="go">  -h, --help  show this help message and exit</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="module-chesscog.occupancy_classifier.evaluate">
+<span id="chesscog-occupancy-classifier-evaluate-module"></span><h2>chesscog.occupancy_classifier.evaluate module<a class="headerlink" href="#module-chesscog.occupancy_classifier.evaluate" title="Permalink to this headline">¶</a></h2>
+<p>Script to evaluate one or more occupancy classifiers.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>python -m chesscog.occupancy_classifier.evaluate --help
+<span class="go">usage: evaluate.py [-h] [--model MODEL]</span>
+<span class="go">                   [--dataset {train,val,test}] [--out OUT]</span>
+<span class="go">                   [--find-mistakes]</span>
+
+<span class="go">Evaluate trained models.</span>
+
+<span class="go">optional arguments:</span>
+<span class="go">  -h, --help            show this help message and exit</span>
+<span class="go">  --model MODEL         the model to evaluate (if unspecified,</span>
+<span class="go">                        all models in</span>
+<span class="go">                        &#39;runs://occupancy_classifier&#39; will be</span>
+<span class="go">                        evaluated)</span>
+<span class="go">  --dataset {train,val,test}</span>
+<span class="go">                        the dataset to evaluate (if unspecified,</span>
+<span class="go">                        train and val will be evaluated)</span>
+<span class="go">  --out OUT             output folder</span>
+<span class="go">  --find-mistakes       whether to output all misclassification</span>
+<span class="go">                        images</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="module-chesscog.occupancy_classifier.models">
+<span id="chesscog-occupancy-classifier-models-module"></span><h2>chesscog.occupancy_classifier.models module<a class="headerlink" href="#module-chesscog.occupancy_classifier.models" title="Permalink to this headline">¶</a></h2>
+<p>Module containing the CNN architecture definitions of the candidate piece classifiers.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="chesscog.occupancy_classifier.models.AlexNet">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">chesscog.occupancy_classifier.models.</span></span><span class="sig-name descname"><span class="pre">AlexNet</span></span><a class="headerlink" href="#chesscog.occupancy_classifier.models.AlexNet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>AlexNet model.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="chesscog.occupancy_classifier.models.AlexNet.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chesscog.occupancy_classifier.models.AlexNet.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="chesscog.occupancy_classifier.models.AlexNet.input_size">
+<span class="sig-name descname"><span class="pre">input_size</span></span><em class="property"> <span class="pre">=</span> <span class="pre">(100,</span> <span class="pre">100)</span></em><a class="headerlink" href="#chesscog.occupancy_classifier.models.AlexNet.input_size" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="chesscog.occupancy_classifier.models.AlexNet.pretrained">
+<span class="sig-name descname"><span class="pre">pretrained</span></span><em class="property"> <span class="pre">=</span> <span class="pre">True</span></em><a class="headerlink" href="#chesscog.occupancy_classifier.models.AlexNet.pretrained" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="chesscog.occupancy_classifier.models.AlexNet.training">
+<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="pre">:</span> <span class="pre">bool</span></em><a class="headerlink" href="#chesscog.occupancy_classifier.models.AlexNet.training" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="chesscog.occupancy_classifier.models.CNN100_3Conv_3Pool_2FC">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">chesscog.occupancy_classifier.models.</span></span><span class="sig-name descname"><span class="pre">CNN100_3Conv_3Pool_2FC</span></span><a class="headerlink" href="#chesscog.occupancy_classifier.models.CNN100_3Conv_3Pool_2FC" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>CNN (100, 3, 3, 2) model.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="chesscog.occupancy_classifier.models.CNN100_3Conv_3Pool_2FC.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chesscog.occupancy_classifier.models.CNN100_3Conv_3Pool_2FC.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="chesscog.occupancy_classifier.models.CNN100_3Conv_3Pool_2FC.input_size">
+<span class="sig-name descname"><span class="pre">input_size</span></span><em class="property"> <span class="pre">=</span> <span class="pre">(100,</span> <span class="pre">100)</span></em><a class="headerlink" href="#chesscog.occupancy_classifier.models.CNN100_3Conv_3Pool_2FC.input_size" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="chesscog.occupancy_classifier.models.CNN100_3Conv_3Pool_2FC.pretrained">
+<span class="sig-name descname"><span class="pre">pretrained</span></span><em class="property"> <span class="pre">=</span> <span class="pre">False</span></em><a class="headerlink" href="#chesscog.occupancy_classifier.models.CNN100_3Conv_3Pool_2FC.pretrained" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="chesscog.occupancy_classifier.models.CNN100_3Conv_3Pool_2FC.training">
+<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="pre">:</span> <span class="pre">bool</span></em><a class="headerlink" href="#chesscog.occupancy_classifier.models.CNN100_3Conv_3Pool_2FC.training" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="chesscog.occupancy_classifier.models.CNN100_3Conv_3Pool_3FC">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">chesscog.occupancy_classifier.models.</span></span><span class="sig-name descname"><span class="pre">CNN100_3Conv_3Pool_3FC</span></span><a class="headerlink" href="#chesscog.occupancy_classifier.models.CNN100_3Conv_3Pool_3FC" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>CNN (100, 3, 3, 3) model.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="chesscog.occupancy_classifier.models.CNN100_3Conv_3Pool_3FC.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chesscog.occupancy_classifier.models.CNN100_3Conv_3Pool_3FC.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="chesscog.occupancy_classifier.models.CNN100_3Conv_3Pool_3FC.input_size">
+<span class="sig-name descname"><span class="pre">input_size</span></span><em class="property"> <span class="pre">=</span> <span class="pre">(100,</span> <span class="pre">100)</span></em><a class="headerlink" href="#chesscog.occupancy_classifier.models.CNN100_3Conv_3Pool_3FC.input_size" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="chesscog.occupancy_classifier.models.CNN100_3Conv_3Pool_3FC.pretrained">
+<span class="sig-name descname"><span class="pre">pretrained</span></span><em class="property"> <span class="pre">=</span> <span class="pre">False</span></em><a class="headerlink" href="#chesscog.occupancy_classifier.models.CNN100_3Conv_3Pool_3FC.pretrained" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="chesscog.occupancy_classifier.models.CNN100_3Conv_3Pool_3FC.training">
+<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="pre">:</span> <span class="pre">bool</span></em><a class="headerlink" href="#chesscog.occupancy_classifier.models.CNN100_3Conv_3Pool_3FC.training" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="chesscog.occupancy_classifier.models.CNN50_2Conv_2Pool_2FC">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">chesscog.occupancy_classifier.models.</span></span><span class="sig-name descname"><span class="pre">CNN50_2Conv_2Pool_2FC</span></span><a class="headerlink" href="#chesscog.occupancy_classifier.models.CNN50_2Conv_2Pool_2FC" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>CNN (50, 2, 2, 2) model.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="chesscog.occupancy_classifier.models.CNN50_2Conv_2Pool_2FC.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chesscog.occupancy_classifier.models.CNN50_2Conv_2Pool_2FC.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="chesscog.occupancy_classifier.models.CNN50_2Conv_2Pool_2FC.input_size">
+<span class="sig-name descname"><span class="pre">input_size</span></span><em class="property"> <span class="pre">=</span> <span class="pre">(50,</span> <span class="pre">50)</span></em><a class="headerlink" href="#chesscog.occupancy_classifier.models.CNN50_2Conv_2Pool_2FC.input_size" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="chesscog.occupancy_classifier.models.CNN50_2Conv_2Pool_2FC.pretrained">
+<span class="sig-name descname"><span class="pre">pretrained</span></span><em class="property"> <span class="pre">=</span> <span class="pre">False</span></em><a class="headerlink" href="#chesscog.occupancy_classifier.models.CNN50_2Conv_2Pool_2FC.pretrained" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="chesscog.occupancy_classifier.models.CNN50_2Conv_2Pool_2FC.training">
+<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="pre">:</span> <span class="pre">bool</span></em><a class="headerlink" href="#chesscog.occupancy_classifier.models.CNN50_2Conv_2Pool_2FC.training" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="chesscog.occupancy_classifier.models.CNN50_2Conv_2Pool_3FC">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">chesscog.occupancy_classifier.models.</span></span><span class="sig-name descname"><span class="pre">CNN50_2Conv_2Pool_3FC</span></span><a class="headerlink" href="#chesscog.occupancy_classifier.models.CNN50_2Conv_2Pool_3FC" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>CNN (50, 2, 2, 3) model.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="chesscog.occupancy_classifier.models.CNN50_2Conv_2Pool_3FC.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chesscog.occupancy_classifier.models.CNN50_2Conv_2Pool_3FC.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="chesscog.occupancy_classifier.models.CNN50_2Conv_2Pool_3FC.input_size">
+<span class="sig-name descname"><span class="pre">input_size</span></span><em class="property"> <span class="pre">=</span> <span class="pre">(50,</span> <span class="pre">50)</span></em><a class="headerlink" href="#chesscog.occupancy_classifier.models.CNN50_2Conv_2Pool_3FC.input_size" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="chesscog.occupancy_classifier.models.CNN50_2Conv_2Pool_3FC.pretrained">
+<span class="sig-name descname"><span class="pre">pretrained</span></span><em class="property"> <span class="pre">=</span> <span class="pre">False</span></em><a class="headerlink" href="#chesscog.occupancy_classifier.models.CNN50_2Conv_2Pool_3FC.pretrained" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="chesscog.occupancy_classifier.models.CNN50_2Conv_2Pool_3FC.training">
+<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="pre">:</span> <span class="pre">bool</span></em><a class="headerlink" href="#chesscog.occupancy_classifier.models.CNN50_2Conv_2Pool_3FC.training" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="chesscog.occupancy_classifier.models.CNN50_3Conv_1Pool_2FC">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">chesscog.occupancy_classifier.models.</span></span><span class="sig-name descname"><span class="pre">CNN50_3Conv_1Pool_2FC</span></span><a class="headerlink" href="#chesscog.occupancy_classifier.models.CNN50_3Conv_1Pool_2FC" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>CNN (50, 3, 1, 2) model.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="chesscog.occupancy_classifier.models.CNN50_3Conv_1Pool_2FC.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chesscog.occupancy_classifier.models.CNN50_3Conv_1Pool_2FC.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="chesscog.occupancy_classifier.models.CNN50_3Conv_1Pool_2FC.input_size">
+<span class="sig-name descname"><span class="pre">input_size</span></span><em class="property"> <span class="pre">=</span> <span class="pre">(50,</span> <span class="pre">50)</span></em><a class="headerlink" href="#chesscog.occupancy_classifier.models.CNN50_3Conv_1Pool_2FC.input_size" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="chesscog.occupancy_classifier.models.CNN50_3Conv_1Pool_2FC.pretrained">
+<span class="sig-name descname"><span class="pre">pretrained</span></span><em class="property"> <span class="pre">=</span> <span class="pre">False</span></em><a class="headerlink" href="#chesscog.occupancy_classifier.models.CNN50_3Conv_1Pool_2FC.pretrained" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="chesscog.occupancy_classifier.models.CNN50_3Conv_1Pool_2FC.training">
+<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="pre">:</span> <span class="pre">bool</span></em><a class="headerlink" href="#chesscog.occupancy_classifier.models.CNN50_3Conv_1Pool_2FC.training" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="chesscog.occupancy_classifier.models.CNN50_3Conv_1Pool_3FC">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">chesscog.occupancy_classifier.models.</span></span><span class="sig-name descname"><span class="pre">CNN50_3Conv_1Pool_3FC</span></span><a class="headerlink" href="#chesscog.occupancy_classifier.models.CNN50_3Conv_1Pool_3FC" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>CNN (50, 3, 1, 3) model.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="chesscog.occupancy_classifier.models.CNN50_3Conv_1Pool_3FC.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chesscog.occupancy_classifier.models.CNN50_3Conv_1Pool_3FC.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="chesscog.occupancy_classifier.models.CNN50_3Conv_1Pool_3FC.input_size">
+<span class="sig-name descname"><span class="pre">input_size</span></span><em class="property"> <span class="pre">=</span> <span class="pre">(50,</span> <span class="pre">50)</span></em><a class="headerlink" href="#chesscog.occupancy_classifier.models.CNN50_3Conv_1Pool_3FC.input_size" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="chesscog.occupancy_classifier.models.CNN50_3Conv_1Pool_3FC.pretrained">
+<span class="sig-name descname"><span class="pre">pretrained</span></span><em class="property"> <span class="pre">=</span> <span class="pre">False</span></em><a class="headerlink" href="#chesscog.occupancy_classifier.models.CNN50_3Conv_1Pool_3FC.pretrained" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="chesscog.occupancy_classifier.models.CNN50_3Conv_1Pool_3FC.training">
+<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="pre">:</span> <span class="pre">bool</span></em><a class="headerlink" href="#chesscog.occupancy_classifier.models.CNN50_3Conv_1Pool_3FC.training" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="chesscog.occupancy_classifier.models.MODEL_REGISTRY">
+<span class="sig-prename descclassname"><span class="pre">chesscog.occupancy_classifier.models.</span></span><span class="sig-name descname"><span class="pre">MODEL_REGISTRY</span></span><em class="property"> <span class="pre">=</span> <span class="pre">&lt;chesscog.core.registry.Registry</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#chesscog.occupancy_classifier.models.MODEL_REGISTRY" title="Permalink to this definition">¶</a></dt>
+<dd><p>Registry of occupancy classifiers (registered in the global <a class="reference internal" href="chesscog.core.html#chesscog.core.models.MODELS_REGISTRY" title="chesscog.core.models.MODELS_REGISTRY"><code class="xref py py-attr docutils literal notranslate"><span class="pre">chesscog.core.models.MODELS_REGISTRY</span></code></a> under the key <code class="docutils literal notranslate"><span class="pre">OCCUPANCY_CLASSIFIER</span></code>)</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="chesscog.occupancy_classifier.models.ResNet">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">chesscog.occupancy_classifier.models.</span></span><span class="sig-name descname"><span class="pre">ResNet</span></span><a class="headerlink" href="#chesscog.occupancy_classifier.models.ResNet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>ResNet model.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="chesscog.occupancy_classifier.models.ResNet.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chesscog.occupancy_classifier.models.ResNet.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="chesscog.occupancy_classifier.models.ResNet.input_size">
+<span class="sig-name descname"><span class="pre">input_size</span></span><em class="property"> <span class="pre">=</span> <span class="pre">(100,</span> <span class="pre">100)</span></em><a class="headerlink" href="#chesscog.occupancy_classifier.models.ResNet.input_size" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="chesscog.occupancy_classifier.models.ResNet.pretrained">
+<span class="sig-name descname"><span class="pre">pretrained</span></span><em class="property"> <span class="pre">=</span> <span class="pre">True</span></em><a class="headerlink" href="#chesscog.occupancy_classifier.models.ResNet.pretrained" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="chesscog.occupancy_classifier.models.ResNet.training">
+<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="pre">:</span> <span class="pre">bool</span></em><a class="headerlink" href="#chesscog.occupancy_classifier.models.ResNet.training" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="chesscog.occupancy_classifier.models.VGG">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">chesscog.occupancy_classifier.models.</span></span><span class="sig-name descname"><span class="pre">VGG</span></span><a class="headerlink" href="#chesscog.occupancy_classifier.models.VGG" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>VGG model.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="chesscog.occupancy_classifier.models.VGG.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chesscog.occupancy_classifier.models.VGG.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="chesscog.occupancy_classifier.models.VGG.input_size">
+<span class="sig-name descname"><span class="pre">input_size</span></span><em class="property"> <span class="pre">=</span> <span class="pre">(100,</span> <span class="pre">100)</span></em><a class="headerlink" href="#chesscog.occupancy_classifier.models.VGG.input_size" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="chesscog.occupancy_classifier.models.VGG.pretrained">
+<span class="sig-name descname"><span class="pre">pretrained</span></span><em class="property"> <span class="pre">=</span> <span class="pre">True</span></em><a class="headerlink" href="#chesscog.occupancy_classifier.models.VGG.pretrained" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="chesscog.occupancy_classifier.models.VGG.training">
+<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="pre">:</span> <span class="pre">bool</span></em><a class="headerlink" href="#chesscog.occupancy_classifier.models.VGG.training" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-chesscog.occupancy_classifier.train">
+<span id="chesscog-occupancy-classifier-train-module"></span><h2>chesscog.occupancy_classifier.train module<a class="headerlink" href="#module-chesscog.occupancy_classifier.train" title="Permalink to this headline">¶</a></h2>
+<p>Script to train the candidate occupancy classifiers.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>python -m chesscog.occupancy_classifier.train --help
+<span class="go">usage: train.py [-h]</span>
+<span class="go">                [--config {AlexNet,ResNet,VGG_centercrop,AlexNet_centercrop,CNN50_3Conv_1Pool_2FC,CNN100_3Conv_3Pool_2FC,CNN50_2Conv_2Pool_2FC,VGG,CNN100_3Conv_3Pool_3FC_centercrop,CNN50_3Conv_1Pool_3FC_centercrop,CNN50_2Conv_2Pool_2FC_centercrop,CNN100_3Conv_3Pool_2FC_centercrop,CNN50_3Conv_1Pool_2FC_centercrop,CNN50_2Conv_2Pool_3FC_centercrop,ResNet_centercrop,CNN50_3Conv_1Pool_3FC,CNN50_2Conv_2Pool_3FC,CNN100_3Conv_3Pool_3FC}]</span>
+
+<span class="go">Train the network.</span>
+
+<span class="go">optional arguments:</span>
+<span class="go">  -h, --help            show this help message and exit</span>
+<span class="go">  --config {AlexNet,ResNet,VGG_centercrop,AlexNet_centercrop,CNN50_3Conv_1Pool_2FC,CNN100_3Conv_3Pool_2FC,CNN50_2Conv_2Pool_2FC,VGG,CNN100_3Conv_3Pool_3FC_centercrop,CNN50_3Conv_1Pool_3FC_centercrop,CNN50_2Conv_2Pool_2FC_centercrop,CNN100_3Conv_3Pool_2FC_centercrop,CNN50_3Conv_1Pool_2FC_centercrop,CNN50_2Conv_2Pool_3FC_centercrop,ResNet_centercrop,CNN50_3Conv_1Pool_3FC,CNN50_2Conv_2Pool_3FC,CNN100_3Conv_3Pool_3FC}</span>
+<span class="go">                        the configuration to train (default: all)</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="chesscog.piece_classifier.html" class="btn btn-neutral float-right" title="chesscog.piece_classifier package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="chesscog.data_synthesis.html" class="btn btn-neutral float-left" title="chesscog.data_synthesis package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Georg Wölflein.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

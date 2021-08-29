@@ -1,0 +1,361 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>chesscog.recognition package &mdash; chesscog 1.0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="chesscog.report package" href="chesscog.report.html" />
+    <link rel="prev" title="chesscog.piece_classifier package" href="chesscog.piece_classifier.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> chesscog
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="chesscog.html">chesscog package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="chesscog.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="chesscog.core.html">chesscog.core package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="chesscog.corner_detection.html">chesscog.corner_detection package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="chesscog.data_synthesis.html">chesscog.data_synthesis package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="chesscog.occupancy_classifier.html">chesscog.occupancy_classifier package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="chesscog.piece_classifier.html">chesscog.piece_classifier package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">chesscog.recognition package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-chesscog.recognition.evaluate">chesscog.recognition.evaluate module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-chesscog.recognition.recognition">chesscog.recognition.recognition module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="chesscog.report.html">chesscog.report package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="chesscog.transfer_learning.html">chesscog.transfer_learning package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">chesscog</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="chesscog.html">chesscog package</a> &raquo;</li>
+        
+      <li>chesscog.recognition package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/chesscog.recognition.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-chesscog.recognition">
+<span id="chesscog-recognition-package"></span><h1>chesscog.recognition package<a class="headerlink" href="#module-chesscog.recognition" title="Permalink to this headline">¶</a></h1>
+<p>Chess inference module that brings the whole pipeline together.</p>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-chesscog.recognition.evaluate">
+<span id="chesscog-recognition-evaluate-module"></span><h2>chesscog.recognition.evaluate module<a class="headerlink" href="#module-chesscog.recognition.evaluate" title="Permalink to this headline">¶</a></h2>
+<p>Script to evaluate the performance of the recognition pipeline.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>python -m chesscog.recognition.evaluate --help
+<span class="go">usage: evaluate.py [-h] [--dataset {train,val,test}] [--out OUT]</span>
+<span class="go">                   [--save-fens]</span>
+
+<span class="go">Evaluate the chess recognition system end-to-end.</span>
+
+<span class="go">optional arguments:</span>
+<span class="go">  -h, --help            show this help message and exit</span>
+<span class="go">  --dataset {train,val,test}</span>
+<span class="go">                        the dataset to evaluate (if unspecified, train and</span>
+<span class="go">                        val will be evaluated)</span>
+<span class="go">  --out OUT             output folder</span>
+<span class="go">  --save-fens           store predicted and actual FEN strings</span>
+</pre></div>
+</div>
+<dl class="py function">
+<dt class="sig sig-object py" id="chesscog.recognition.evaluate.evaluate">
+<span class="sig-prename descclassname"><span class="pre">chesscog.recognition.evaluate.</span></span><span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">recognizer</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#chesscog.recognition.recognition.TimedChessRecognizer" title="chesscog.recognition.recognition.TimedChessRecognizer"><span class="pre">chesscog.recognition.recognition.TimedChessRecognizer</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">IO</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset_folder</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pathlib.Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_fens</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chesscog.recognition.evaluate.evaluate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform the performance evaluation, saving the results to a CSV output file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>recognizer</strong> (<a class="reference internal" href="#chesscog.recognition.recognition.TimedChessRecognizer" title="chesscog.recognition.recognition.TimedChessRecognizer"><em>TimedChessRecognizer</em></a>) – the instance of the chess recognition pipeline</p></li>
+<li><p><strong>output_file</strong> (<em>typing.IO</em>) – the output file object</p></li>
+<li><p><strong>dataset_folder</strong> (<em>Path</em>) – the folder of the dataset to evaluate</p></li>
+<li><p><strong>save_fens</strong> (<em>bool</em><em>, </em><em>optional</em>) – whether to save the FEN outputs for every sample. Defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-chesscog.recognition.recognition">
+<span id="chesscog-recognition-recognition-module"></span><h2>chesscog.recognition.recognition module<a class="headerlink" href="#module-chesscog.recognition.recognition" title="Permalink to this headline">¶</a></h2>
+<p>Module that brings together the whole recognition pipeline into a single class so it can be conveniently executed.</p>
+<p>This module simultaneously acts as a script to perform a single inference:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>python -m chesscog.recognition.recognition --help
+<span class="go">usage: recognition.py [-h] [--white] [--black] file</span>
+
+<span class="go">Run the chess recognition pipeline on an input image</span>
+
+<span class="go">positional arguments:</span>
+<span class="go">  file        path to the input image</span>
+
+<span class="go">optional arguments:</span>
+<span class="go">  -h, --help  show this help message and exit</span>
+<span class="go">  --white     indicate that the image is from the white player&#39;s</span>
+<span class="go">              perspective (default)</span>
+<span class="go">  --black     indicate that the image is from the black player&#39;s</span>
+<span class="go">              perspective</span>
+</pre></div>
+</div>
+<dl class="py class">
+<dt class="sig sig-object py" id="chesscog.recognition.recognition.ChessRecognizer">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">chesscog.recognition.recognition.</span></span><span class="sig-name descname"><span class="pre">ChessRecognizer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">classifiers_folder</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pathlib.Path</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">URI('models://')</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chesscog.recognition.recognition.ChessRecognizer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A class implementing the entire chess inference pipeline.</p>
+<p>Once you create an instance of this class, the CNNs are loaded into memory (possibly the GPU if available), so if you want to perform multiple inferences, they should all use one instance of this class for performance purposes.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="chesscog.recognition.recognition.ChessRecognizer.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">turn</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">chess.Board</span><span class="p"><span class="pre">,</span> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#chesscog.recognition.recognition.ChessRecognizer.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform an inference.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img</strong> (<em>np.ndarray</em>) – the input image (RGB)</p></li>
+<li><p><strong>turn</strong> (<em>chess.Color</em><em>, </em><em>optional</em>) – the current player. Defaults to chess.WHITE.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the predicted position on the board and the four corner points</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>typing.Tuple[chess.Board, np.ndarray]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="chesscog.recognition.recognition.TimedChessRecognizer">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">chesscog.recognition.recognition.</span></span><span class="sig-name descname"><span class="pre">TimedChessRecognizer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">classifiers_folder</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pathlib.Path</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">URI('models://')</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#chesscog.recognition.recognition.TimedChessRecognizer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#chesscog.recognition.recognition.ChessRecognizer" title="chesscog.recognition.recognition.ChessRecognizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">chesscog.recognition.recognition.ChessRecognizer</span></code></a></p>
+<p>A subclass of <a class="reference internal" href="#chesscog.recognition.recognition.ChessRecognizer" title="chesscog.recognition.recognition.ChessRecognizer"><code class="xref py py-class docutils literal notranslate"><span class="pre">ChessRecognizer</span></code></a> that additionally records the time taken for each step of the pipeline during inference.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="chesscog.recognition.recognition.TimedChessRecognizer.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">turn</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">chess.Board</span><span class="p"><span class="pre">,</span> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#chesscog.recognition.recognition.TimedChessRecognizer.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform an inference.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img</strong> (<em>np.ndarray</em>) – the input image (RGB)</p></li>
+<li><p><strong>turn</strong> (<em>chess.Color</em><em>, </em><em>optional</em>) – the current player. Defaults to chess.WHITE.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the predicted position on the board, the four corner points, and a dict containing the time taken for each stage of the inference pipeline</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>typing.Tuple[chess.Board, np.ndarray, dict]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="chesscog.recognition.recognition.main">
+<span class="sig-prename descclassname"><span class="pre">chesscog.recognition.recognition.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">classifiers_folder:</span> <span class="pre">pathlib.Path</span> <span class="pre">=</span> <span class="pre">URI('models://')</span></em>, <em class="sig-param"><span class="pre">setup:</span> <span class="pre">callable</span> <span class="pre">=</span> <span class="pre">&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;</span></em><span class="sig-paren">)</span><a class="headerlink" href="#chesscog.recognition.recognition.main" title="Permalink to this definition">¶</a></dt>
+<dd><p>Main method for running inference from the command line.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>classifiers_folder</strong> (<em>Path</em><em>, </em><em>optional</em>) – the path to the classifiers (supplying a different path is especially useful because the transfer learning classifiers are located at <code class="docutils literal notranslate"><span class="pre">models://transfer_learning</span></code>). Defaults to <code class="docutils literal notranslate"><span class="pre">models://</span></code>.</p></li>
+<li><p><strong>setup</strong> (<em>callable</em><em>, </em><em>optional</em>) – An optional setup function to be called after the CLI argument parser has been setup. Defaults to lambda:None.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="chesscog.report.html" class="btn btn-neutral float-right" title="chesscog.report package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="chesscog.piece_classifier.html" class="btn btn-neutral float-left" title="chesscog.piece_classifier package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Georg Wölflein.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

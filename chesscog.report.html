@@ -1,0 +1,302 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>chesscog.report package &mdash; chesscog 1.0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="chesscog.transfer_learning package" href="chesscog.transfer_learning.html" />
+    <link rel="prev" title="chesscog.recognition package" href="chesscog.recognition.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> chesscog
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="chesscog.html">chesscog package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="chesscog.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="chesscog.core.html">chesscog.core package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="chesscog.corner_detection.html">chesscog.corner_detection package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="chesscog.data_synthesis.html">chesscog.data_synthesis package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="chesscog.occupancy_classifier.html">chesscog.occupancy_classifier package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="chesscog.piece_classifier.html">chesscog.piece_classifier package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="chesscog.recognition.html">chesscog.recognition package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">chesscog.report package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-chesscog.report.prepare_classifier_results">chesscog.report.prepare_classifier_results module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-chesscog.report.prepare_confusion_matrix">chesscog.report.prepare_confusion_matrix module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-chesscog.report.prepare_error_distribution">chesscog.report.prepare_error_distribution module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-chesscog.report.prepare_recognition_results">chesscog.report.prepare_recognition_results module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="chesscog.transfer_learning.html">chesscog.transfer_learning package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">chesscog</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="chesscog.html">chesscog package</a> &raquo;</li>
+        
+      <li>chesscog.report package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/chesscog.report.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-chesscog.report">
+<span id="chesscog-report-package"></span><h1>chesscog.report package<a class="headerlink" href="#module-chesscog.report" title="Permalink to this headline">¶</a></h1>
+<p>This module contains scripts that convert various data files stored in the <code class="docutils literal notranslate"><span class="pre">results://</span></code> folder in a format to be used in the report.
+Thus, some scripts might generate LaTeX snippets.</p>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-chesscog.report.prepare_classifier_results">
+<span id="chesscog-report-prepare-classifier-results-module"></span><h2>chesscog.report.prepare_classifier_results module<a class="headerlink" href="#module-chesscog.report.prepare_classifier_results" title="Permalink to this headline">¶</a></h2>
+<p>Script to prepare the results of a (occupancy or piece) classifier for LaTeX.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>python -m chesscog.report.prepare_classifier_results --help
+<span class="go">usage: prepare_classifier_results.py [-h]</span>
+<span class="go">                                     [--classifier {occupancy_classifier,piece_classifier}]</span>
+
+<span class="go">Prepare results for LaTeX</span>
+
+<span class="go">optional arguments:</span>
+<span class="go">  -h, --help            show this help message and exit</span>
+<span class="go">  --classifier {occupancy_classifier,piece_classifier}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="module-chesscog.report.prepare_confusion_matrix">
+<span id="chesscog-report-prepare-confusion-matrix-module"></span><h2>chesscog.report.prepare_confusion_matrix module<a class="headerlink" href="#module-chesscog.report.prepare_confusion_matrix" title="Permalink to this headline">¶</a></h2>
+<p>Script to prepare the inference results as a confusion matrix for use in a LaTeX table.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>python -m chesscog.report.prepare_confusion_matrix --help
+<span class="go">usage: prepare_confusion_matrix.py [-h] [--results RESULTS]</span>
+<span class="go">                                   [--dataset DATASET]</span>
+
+<span class="go">Prepare confusion matrix for LaTeX</span>
+
+<span class="go">optional arguments:</span>
+<span class="go">  -h, --help         show this help message and exit</span>
+<span class="go">  --results RESULTS  parent results folder</span>
+<span class="go">  --dataset DATASET  the dataset to evaluate</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="module-chesscog.report.prepare_error_distribution">
+<span id="chesscog-report-prepare-error-distribution-module"></span><h2>chesscog.report.prepare_error_distribution module<a class="headerlink" href="#module-chesscog.report.prepare_error_distribution" title="Permalink to this headline">¶</a></h2>
+<p>Script to output some information about the distribution of errors in the recognition.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>python -m chesscog.report.prepare_error_distribution --help
+<span class="go">usage: prepare_error_distribution.py [-h] [--results RESULTS]</span>
+<span class="go">                                     [--dataset DATASET]</span>
+
+<span class="go">Prepare distribution of mistakes per board for LaTeX</span>
+
+<span class="go">optional arguments:</span>
+<span class="go">  -h, --help         show this help message and exit</span>
+<span class="go">  --results RESULTS  parent results folder</span>
+<span class="go">  --dataset DATASET  the dataset to evaluate</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="module-chesscog.report.prepare_recognition_results">
+<span id="chesscog-report-prepare-recognition-results-module"></span><h2>chesscog.report.prepare_recognition_results module<a class="headerlink" href="#module-chesscog.report.prepare_recognition_results" title="Permalink to this headline">¶</a></h2>
+<p>Main script to output accuracy statistics and other benchmarks of the inference pipeline.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>python -m chesscog.report.prepare_recognition_results --help
+<span class="go">usage: prepare_recognition_results.py [-h] [--results RESULTS]</span>
+<span class="go">                                      [--dataset DATASET]</span>
+
+<span class="go">Prepare results for LaTeX</span>
+
+<span class="go">optional arguments:</span>
+<span class="go">  -h, --help         show this help message and exit</span>
+<span class="go">  --results RESULTS  parent results folder</span>
+<span class="go">  --dataset DATASET  the dataset to evaluate</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="chesscog.transfer_learning.html" class="btn btn-neutral float-right" title="chesscog.transfer_learning package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="chesscog.recognition.html" class="btn btn-neutral float-left" title="chesscog.recognition package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Georg Wölflein.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

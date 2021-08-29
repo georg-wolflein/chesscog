@@ -1,0 +1,431 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>chesscog &mdash; chesscog 1.0.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="chesscog package" href="chesscog.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="#" class="icon icon-home"> chesscog
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="chesscog.html">chesscog package</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">chesscog</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="#" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>chesscog</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="chesscog">
+<h1>chesscog<a class="headerlink" href="#chesscog" title="Permalink to this headline">¶</a></h1>
+<a class="reference external image-reference" href="https://github.com/georg-wolflein/chesscog/workflows/build/badge.svg"><img alt="build" src="https://github.com/georg-wolflein/chesscog/workflows/build/badge.svg" /></a>
+<p><em>chesscog</em> combines traditional computer vision techniques with deep learning to recognise chess positions from photos.</p>
+<p>This repository contains the official code for the paper:</p>
+<blockquote>
+<div><p><a class="reference external" href="https://doi.org/10.3390/jimaging7060094">**Determining Chess Game State From an Image**</a><span class="raw-html-m2r"><br></span>
+Georg Wölflein and Ognjen Arandjelović<span class="raw-html-m2r"><br></span>
+<em>Journal of Imaging</em>, vol. 7, no. 6, p. 94, June 2021.</p>
+</div></blockquote>
+<p>I originally developed this project as part of my <a class="reference external" href="https://github.com/georg-wolflein/chesscog-report/raw/master/report.pdf">master thesis</a> at the University of St Andrews. Documentation is available <a class="reference external" href="https://georg-wolflein.github.io/chesscog">here</a>.</p>
+<div class="section" id="related-repositories">
+<h2>Related repositories<a class="headerlink" href="#related-repositories" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/georg-wolflein/chesscog-report">chesscog-report</a>: the master thesis</p></li>
+<li><p><a class="reference external" href="https://github.com/georg-wolflein/chesscog-app">chesscog-app</a>: the proof-of-concept web app</p></li>
+<li><p><a class="reference external" href="https://github.com/georg-wolflein/recap">recap</a>: configuration management system developed as part of this project</p></li>
+</ul>
+</div>
+<div class="section" id="demo">
+<h2>Demo<a class="headerlink" href="#demo" title="Permalink to this headline">¶</a></h2>
+<p>See it in action at <a class="reference external" href="https://www.chesscog.com">chesscog.com</a>!</p>
+<a class="reference external image-reference" href="https://github.com/georg-wolflein/chesscog/raw/master/docs/demo_screenshot.png"><img alt="Screenshot" src="https://github.com/georg-wolflein/chesscog/raw/master/docs/demo_screenshot.png" /></a>
+</div>
+<div class="section" id="background">
+<h2>Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h2>
+<p>A casual over-the-board game between two friends will often reach an interesting position. After the game, the players will want to analyse that position on a computer, so they take a photo of the position. On the computer, they need to drag and drop pieces onto a virtual chessboard until the position matches the one they had on the photograph, and then they must double-check that they did not miss any pieces.</p>
+<p>The goal of this project is to develop a system that is able to map a photo of a chess position to a structured format that can be understood by chess engines, such as the widely-used Forsyth–Edwards Notation (FEN).</p>
+</div>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>The chess recognition system is trained using a dataset of ~5,000 synthetically generated images of chess positions (3D renderings of different chess positions at various camera angles and lighting conditions).
+The dataset is available <a class="reference external" href="https://doi.org/10.17605/OSF.IO/XF3KA">here</a>.
+At a high level, the recognition system itself consists of the following pipeline:</p>
+<ol class="arabic simple">
+<li><p>board localisation (square and corner detection)</p></li>
+<li><p>occupancy classification</p></li>
+<li><p>piece classification</p></li>
+<li><p>post-processing to generate the FEN string</p></li>
+</ol>
+</div>
+<div class="section" id="installing">
+<h2>Installing<a class="headerlink" href="#installing" title="Permalink to this headline">¶</a></h2>
+<p>Please consult Appendix C of my <a class="reference external" href="https://github.com/georg-wolflein/chesscog-report/raw/master/report.pdf">master thesis</a> for a detailed set of instructions pertaining to the installation and usage of <em>chesscog</em>.</p>
+<p>There are three methods of installing and running chesscog.</p>
+<ol class="arabic">
+<li><p><strong>Using poetry (recommended).</strong>
+Ensure you have <a class="reference external" href="https://python-poetry.org">poetry</a> installed, then clone this repository, and install the <em>chesscog</em>:
+.. code-block:: bash</p>
+<blockquote>
+<div><p>git clone <a class="reference external" href="https://github.com/georgw777/">https://github.com/georgw777/</a> chesscog.git
+cd chesscog
+poetry install</p>
+</div></blockquote>
+<p>Note that you need to run <code class="docutils literal notranslate"><span class="pre">poetry</span> <span class="pre">shell</span></code> to activate the virtual environment in your shell before running any of the commands later in this README.</p>
+</li>
+<li><p><strong>Using pip.</strong>
+This option will install <em>chesscog</em> locally on your machine using pip (without a virtual environment).
+.. code-block:: bash</p>
+<blockquote>
+<div><p>git clone <a class="reference external" href="https://github.com/georgw777/">https://github.com/georgw777/</a> chesscog.git
+cd chesscog
+pip install .</p>
+</div></blockquote>
+</li>
+<li><p><strong>Using Docker.</strong>
+Two Dockerfiles are provided: one for CPU (<em>cpu.Dockerfile</em>) and another with enabled GPU-acceleration (<em>Dockerfile</em>). Simply subsitute the name in the following command.
+First, build the image:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker build -t chesscog -f cpu.Dockerfile .
+</pre></div>
+</div>
+<p>Then, run the image using:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>docker run -it -p <span class="m">8888</span>:8888 -p <span class="m">9999</span>:9999 chesscog
+</pre></div>
+</div>
+<p>Open a browser to <a class="reference external" href="http://localhost:8888">http://localhost:8888</a> which will display Jupyter lab running in the Docker container (the password is <code class="docutils literal notranslate"><span class="pre">chesscog</span></code>). Simply open a terminal in Jupyter lab and run the remaining instructions in this README.</p>
+</li>
+</ol>
+<div class="section" id="downloading-the-dataset-and-models">
+<h3>Downloading the dataset and models<a class="headerlink" href="#downloading-the-dataset-and-models" title="Permalink to this headline">¶</a></h3>
+<p>To download and split the dataset, run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m chesscog.data_synthesis.download_dataset
+python -m chesscog.data_synthesis.split_dataset
+</pre></div>
+</div>
+<p>Finally, ensure that you download the trained models:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m chesscog.occupancy_classifier.download_model
+python -m chesscog.piece_classifier.download_model
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="command-line-usage">
+<h2>Command line usage<a class="headerlink" href="#command-line-usage" title="Permalink to this headline">¶</a></h2>
+<p>As detailed in Appendix C.2 of my <a class="reference external" href="https://github.com/georg-wolflein/chesscog-report/raw/master/report.pdf">master thesis</a>, <em>chesscog</em> provides various scripts that can be executed from the command line.</p>
+<p>One particularly useful one is to perform an inference (see Appendix C.2.4) which can be carried out using:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python -m chesscog.recognition.recognition path_to_image.png --white
+</pre></div>
+</div>
+<p>The output will look as follows:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python -m chesscog.recognition.recognition data://render/train/3828.png --white
+. K R . . R . .
+P . P P Q . . P
+. P B B . . . .
+. . . . . P . .
+. . b . . p . q
+. p . . . . . .
+p b p p . . . p
+. k r . . . r .
+
+You can view this position at https://lichess.org/editor/1KR2R2/P1PPQ2P/1PBB4/5P2/2b2p1q/1p6/pbpp3p/1kr3r1
+</pre></div>
+</div>
+<p>Other scripts are available for tasks such as:</p>
+<ul class="simple">
+<li><p>training the models</p></li>
+<li><p>fine-tuning on custom datasets</p></li>
+<li><p>performing inference on fine-tuned models</p></li>
+<li><p>locating the corner points</p></li>
+<li><p>performing automated tests</p></li>
+</ul>
+<p>Relevant documentation is available in Appendix C.2 of my <a class="reference external" href="https://github.com/georg-wolflein/chesscog-report/raw/master/report.pdf">master thesis</a>.</p>
+<p>To see an example of how the Python API is used in practice, check out the REST API developed for the <em>chesscog-app</em> <a class="reference external" href="https://github.com/georg-wolflein/chesscog-app/tree/master/api">here</a>.</p>
+</div>
+<div class="section" id="citation">
+<h2>Citation<a class="headerlink" href="#citation" title="Permalink to this headline">¶</a></h2>
+<p>If you find this work helpful, please consider citing:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@article</span><span class="p">{</span><span class="n">wolflein2021jimaging</span><span class="p">,</span>
+  <span class="n">author</span>         <span class="o">=</span> <span class="p">{</span><span class="n">W</span>\<span class="s2">&quot;</span><span class="si">{o}</span><span class="s2">lflein, Georg and Arandjelovi</span><span class="se">\&#39;</span><span class="si">{c}</span><span class="s2">, Ognjen},</span>
+  <span class="n">title</span>          <span class="o">=</span> <span class="p">{</span><span class="n">Determining</span> <span class="n">Chess</span> <span class="n">Game</span> <span class="n">State</span> <span class="kn">from</span> <span class="nn">an</span> <span class="n">Image</span><span class="p">},</span>
+  <span class="n">journal</span>        <span class="o">=</span> <span class="p">{</span><span class="n">Journal</span> <span class="n">of</span> <span class="n">Imaging</span><span class="p">},</span>
+  <span class="n">volume</span>         <span class="o">=</span> <span class="p">{</span><span class="mi">7</span><span class="p">},</span>
+  <span class="n">year</span>           <span class="o">=</span> <span class="p">{</span><span class="mi">2021</span><span class="p">},</span>
+  <span class="n">number</span>         <span class="o">=</span> <span class="p">{</span><span class="mi">6</span><span class="p">},</span>
+  <span class="n">article</span><span class="o">-</span><span class="n">number</span> <span class="o">=</span> <span class="p">{</span><span class="mi">94</span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="chesscog.html">chesscog package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="chesscog.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="chesscog.core.html">chesscog.core package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="chesscog.core.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chesscog.core.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chesscog.core.html#module-chesscog.core.coordinates">chesscog.core.coordinates module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chesscog.core.html#module-chesscog.core.evaluation">chesscog.core.evaluation module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chesscog.core.html#module-chesscog.core.exceptions">chesscog.core.exceptions module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chesscog.core.html#module-chesscog.core.models">chesscog.core.models module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chesscog.core.html#module-chesscog.core.registry">chesscog.core.registry module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chesscog.core.html#module-chesscog.core.statistics">chesscog.core.statistics module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="chesscog.corner_detection.html">chesscog.corner_detection package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="chesscog.corner_detection.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chesscog.corner_detection.html#module-chesscog.corner_detection.create_configs">chesscog.corner_detection.create_configs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chesscog.corner_detection.html#module-chesscog.corner_detection.detect_corners">chesscog.corner_detection.detect_corners module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chesscog.corner_detection.html#module-chesscog.corner_detection.evaluate">chesscog.corner_detection.evaluate module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chesscog.corner_detection.html#module-chesscog.corner_detection.find_best_configs">chesscog.corner_detection.find_best_configs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chesscog.corner_detection.html#module-chesscog.corner_detection.visualize">chesscog.corner_detection.visualize module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="chesscog.data_synthesis.html">chesscog.data_synthesis package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="chesscog.data_synthesis.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chesscog.data_synthesis.html#module-chesscog.data_synthesis.create_fens">chesscog.data_synthesis.create_fens module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chesscog.data_synthesis.html#module-chesscog.data_synthesis.download_dataset">chesscog.data_synthesis.download_dataset module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chesscog.data_synthesis.html#module-chesscog.data_synthesis.download_pgn">chesscog.data_synthesis.download_pgn module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chesscog.data_synthesis.html#module-chesscog.data_synthesis.split_dataset">chesscog.data_synthesis.split_dataset module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chesscog.data_synthesis.html#module-chesscog.data_synthesis.visualize">chesscog.data_synthesis.visualize module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="chesscog.occupancy_classifier.html">chesscog.occupancy_classifier package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="chesscog.occupancy_classifier.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chesscog.occupancy_classifier.html#module-chesscog.occupancy_classifier.create_configs">chesscog.occupancy_classifier.create_configs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chesscog.occupancy_classifier.html#module-chesscog.occupancy_classifier.create_dataset">chesscog.occupancy_classifier.create_dataset module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chesscog.occupancy_classifier.html#module-chesscog.occupancy_classifier.download_model">chesscog.occupancy_classifier.download_model module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chesscog.occupancy_classifier.html#module-chesscog.occupancy_classifier.evaluate">chesscog.occupancy_classifier.evaluate module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chesscog.occupancy_classifier.html#module-chesscog.occupancy_classifier.models">chesscog.occupancy_classifier.models module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chesscog.occupancy_classifier.html#module-chesscog.occupancy_classifier.train">chesscog.occupancy_classifier.train module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="chesscog.piece_classifier.html">chesscog.piece_classifier package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="chesscog.piece_classifier.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chesscog.piece_classifier.html#module-chesscog.piece_classifier.create_configs">chesscog.piece_classifier.create_configs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chesscog.piece_classifier.html#module-chesscog.piece_classifier.create_dataset">chesscog.piece_classifier.create_dataset module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chesscog.piece_classifier.html#module-chesscog.piece_classifier.download_model">chesscog.piece_classifier.download_model module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chesscog.piece_classifier.html#module-chesscog.piece_classifier.evaluate">chesscog.piece_classifier.evaluate module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chesscog.piece_classifier.html#module-chesscog.piece_classifier.models">chesscog.piece_classifier.models module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chesscog.piece_classifier.html#module-chesscog.piece_classifier.train">chesscog.piece_classifier.train module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="chesscog.recognition.html">chesscog.recognition package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="chesscog.recognition.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chesscog.recognition.html#module-chesscog.recognition.evaluate">chesscog.recognition.evaluate module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chesscog.recognition.html#module-chesscog.recognition.recognition">chesscog.recognition.recognition module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="chesscog.report.html">chesscog.report package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="chesscog.report.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chesscog.report.html#module-chesscog.report.prepare_classifier_results">chesscog.report.prepare_classifier_results module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chesscog.report.html#module-chesscog.report.prepare_confusion_matrix">chesscog.report.prepare_confusion_matrix module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chesscog.report.html#module-chesscog.report.prepare_error_distribution">chesscog.report.prepare_error_distribution module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chesscog.report.html#module-chesscog.report.prepare_recognition_results">chesscog.report.prepare_recognition_results module</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="chesscog.transfer_learning.html">chesscog.transfer_learning package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="chesscog.transfer_learning.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chesscog.transfer_learning.html#module-chesscog.transfer_learning.create_dataset">chesscog.transfer_learning.create_dataset module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chesscog.transfer_learning.html#module-chesscog.transfer_learning.download_dataset">chesscog.transfer_learning.download_dataset module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chesscog.transfer_learning.html#module-chesscog.transfer_learning.download_models">chesscog.transfer_learning.download_models module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chesscog.transfer_learning.html#module-chesscog.transfer_learning.evaluate">chesscog.transfer_learning.evaluate module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chesscog.transfer_learning.html#module-chesscog.transfer_learning.recognition">chesscog.transfer_learning.recognition module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="chesscog.transfer_learning.html#module-chesscog.transfer_learning.train">chesscog.transfer_learning.train module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="chesscog.html" class="btn btn-neutral float-right" title="chesscog package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Georg Wölflein.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
