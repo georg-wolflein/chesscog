@@ -75,11 +75,11 @@ There are three methods of installing and running chesscog.
    docker run -it -p 8888:8888 -p 9999:9999 chesscog
    ```
 
-   Open a browser to [http://localhost:8888](http://localhost:8888) which will display Jupyter lab running in the Docker container. Simply open a terminal in Jupyter lab and run the remaining instructions in this README.
+   Open a browser to [http://localhost:8888](http://localhost:8888) which will display Jupyter lab running in the Docker container (the password is `chesscog`). Simply open a terminal in Jupyter lab and run the remaining instructions in this README.
 
 ### Downloading the dataset and models
 
-Then, to download and split the dataset, run:
+To download and split the dataset, run:
 
 ```bash
 python -m chesscog.data_synthesis.download_dataset
