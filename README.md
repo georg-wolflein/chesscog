@@ -128,6 +128,8 @@ Other scripts are available for tasks such as:
 - performing automated tests
 
 Relevant documentation is available in Appendix C.2 of my [master thesis](https://github.com/georg-wolflein/chesscog-report/raw/master/report.pdf).
+In particular, Appendix C.2.6 contains instructions for fine-tuning the model to your own chess set, using only two input images. 
+Be sure to run `python -m chesscog.transfer_learning.create_dataset` before training (a step I forgot to mention in those instructions, see [this issue](https://github.com/georg-wolflein/chesscog/issues/15).
 
 To see an example of how the Python API is used in practice, check out the REST API developed for the _chesscog-app_ [here](https://github.com/georg-wolflein/chesscog-app/tree/master/api).
 
