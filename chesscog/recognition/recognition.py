@@ -108,7 +108,7 @@ class ChessRecognizer:
         pieces = self._pieces_model(piece_imgs)
         pieces = pieces.argmax(axis=-1).cpu().numpy()
         pieces = self._piece_classes[pieces]
-        all_pieces = np.full(len(self._squares), None, dtype=np.object)
+        all_pieces = np.full(len(self._squares), None, dtype=object)
         all_pieces[occupancy] = pieces
         return all_pieces
 

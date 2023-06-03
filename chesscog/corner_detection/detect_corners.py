@@ -103,7 +103,7 @@ def find_corners(cfg: CN, img: np.ndarray) -> np.ndarray:
     inverse_transformation_matrix = np.linalg.inv(transformation_matrix)
 
     # Warp grayscale image
-    dims = tuple(warped_img_size.astype(np.int))
+    dims = tuple(warped_img_size.astype(np.int32))
     warped = cv2.warpPerspective(gray, transformation_matrix, dims)
     borders = np.zeros_like(gray)
     borders[3:-3, 3:-3] = 1
@@ -122,7 +122,7 @@ def find_corners(cfg: CN, img: np.ndarray) -> np.ndarray:
     corners = np.array([[xmin, ymin],
                         [xmax, ymin],
                         [xmax, ymax],
-                        [xmin, ymax]]).astype(np.float)
+                        [xmin, ymax]]).astype(np.float32)
     corners = corners * scale
     img_corners = _warp_points(inverse_transformation_matrix, corners)
     img_corners = img_corners / img_scale
@@ -353,8 +353,8 @@ def _quantize_points(cfg: CN, warped_scaled_points: np.ndarray, intersection_poi
     mean_col_xs = warped_scaled_points[..., 0].mean(axis=0)
     mean_row_ys = warped_scaled_points[..., 1].mean(axis=1)
 
-    col_xs = np.rint(mean_col_xs).astype(np.int)
-    row_ys = np.rint(mean_row_ys).astype(np.int)
+    col_xs = np.rint(mean_col_xs).astype(np.int32)
+    row_ys = np.rint(mean_row_ys).astype(np.int32)
 
     # Remove duplicates
     col_xs, col_indices = np.unique(col_xs, return_index=True)
@@ -407,7 +407,7 @@ def _compute_vertical_borders(cfg: CN, warped: np.ndarray, mask: np.ndarray, sca
     G_x[~mask] = 0
 
     def get_nonmax_supressed(x):
-        x = (x * scale[0]).astype(np.int)
+        x = (x * scale[0]).astype(np.int32)
         thresh = cfg.BORDER_REFINEMENT.LINE_WIDTH // 2
         return G_x[:, x-thresh:x+thresh+1].max(axis=1)
 
@@ -431,7 +431,7 @@ def _compute_horizontal_borders(cfg: CN, warped: np.ndarray, mask: np.ndarray, s
     G_y[~mask] = 0
 
     def get_nonmax_supressed(y):
-        y = (y * scale[1]).astype(np.int)
+        y = (y * scale[1]).astype(np.int32)
         thresh = cfg.BORDER_REFINEMENT.LINE_WIDTH // 2
         return G_y[y-thresh:y+thresh+1].max(axis=0)
 

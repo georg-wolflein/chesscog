@@ -73,7 +73,7 @@ def warp_chessboard_image(img: np.ndarray, corners: np.ndarray) -> np.ndarray:
                            [BOARD_SIZE + SQUARE_SIZE, BOARD_SIZE + \
                             SQUARE_SIZE],  # bottom right
                            [SQUARE_SIZE, BOARD_SIZE + SQUARE_SIZE]  # bottom left
-                           ], dtype=np.float)
+                           ], dtype=np.float32)
     transformation_matrix, mask = cv2.findHomography(src_points, dst_points)
     return cv2.warpPerspective(img, transformation_matrix, (IMG_SIZE, IMG_SIZE))
 
@@ -84,7 +84,7 @@ def _extract_squares_from_sample(id: str, subset: str = "", input_dir: Path = RE
     with (input_dir / subset / (id + ".json")).open("r") as f:
         label = json.load(f)
 
-    corners = np.array(label["corners"], dtype=np.float)
+    corners = np.array(label["corners"], dtype=np.float32)
     unwarped = warp_chessboard_image(img, corners)
 
     board = chess.Board(label["fen"])

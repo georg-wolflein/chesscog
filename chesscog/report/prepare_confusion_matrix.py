@@ -54,7 +54,7 @@ def _get_category(piece: typing.Union[chess.Piece, None]) -> str:
 
 
 def _get_confusion_matrix(predicted: chess.Board, actual: chess.Board) -> np.ndarray:
-    matrix = np.zeros((len(CATEGORIES), len(CATEGORIES)), dtype=np.int)
+    matrix = np.zeros((len(CATEGORIES), len(CATEGORIES)), dtype=np.int32)
     for square in chess.SQUARES:
         pred = _get_category(predicted.piece_at(square))
         act = _get_category(actual.piece_at(square))
@@ -81,7 +81,7 @@ if __name__ == "__main__":
     # Filter out samples where the corners could not be detected
     df = df[(df["num_incorrect_corners"] != 4) | (df["error"] != "None")]
 
-    matrix = np.zeros((len(CATEGORIES), len(CATEGORIES)), dtype=np.int)
+    matrix = np.zeros((len(CATEGORIES), len(CATEGORIES)), dtype=np.int32)
     for i, row in df.iterrows():
         actual = chess.Board(row.fen_actual)
         predicted = chess.Board(row.fen_predicted)
