@@ -49,7 +49,7 @@ There are three methods of installing and running chesscog.
 1. **Using poetry (recommended).**
    Ensure you have [poetry](https://python-poetry.org) installed, then clone this repository, and install the _chesscog_:
    ```bash
-   git clone https://github.com/georgw777/ chesscog.git
+   git clone https://github.com/georg-wolflein/chesscog.git
    cd chesscog
    poetry install
    ```
@@ -57,7 +57,7 @@ There are three methods of installing and running chesscog.
 2. **Using pip.**
    This option will install _chesscog_ locally on your machine using pip (without a virtual environment).
    ```bash
-   git clone https://github.com/georgw777/ chesscog.git
+   git clone https://github.com/georg-wolflein/chesscog.git
    cd chesscog
    pip install .
    ```
