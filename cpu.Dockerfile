@@ -1,8 +1,8 @@
 FROM python:3.8
 
-# Install zip
+# Install zip and OpenGL (the latter is needed for OpenCV)
 RUN apt update && \
-    apt install -y zip
+    apt install -y zip libgl1-mesa-glx
 
 # Install poetry
 RUN pip install --upgrade pip && \
