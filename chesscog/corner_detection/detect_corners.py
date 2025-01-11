@@ -368,10 +368,10 @@ def _quantize_points(cfg: CN, warped_scaled_points: np.ndarray, intersection_poi
     ymax = row_ys.max()
 
     # Ensure we a have a maximum of 9 rows/cols
-    while xmax - xmin > 9:
+    while xmax - xmin > 8:
         xmax -= 1
         xmin += 1
-    while ymax - ymin > 9:
+    while ymax - ymin > 8:
         ymax -= 1
         ymin += 1
     col_mask = (col_xs >= xmin) & (col_xs <= xmax)
