@@ -1,13 +1,48 @@
 [build-system]
-requires = [ "poetry>=0.12",]
-build-backend = "poetry.masonry.api"
+requires = ["setuptools>=45", "wheel", "setuptools_scm[toml]>=6.2"]
+build-backend = "setuptools.build_meta"
 
+[project]
+name = "chesscog"
+version = "1.0.1"
+description = "Recognise chess positions using computer vision."
+authors = [{ name = "Georg Wölflein", email = "georgw7777@gmail.com" }]
+requires-python = ">=3.8,<3.11"
+dependencies = [
+    "opencv-python>=4.5.3",
+    "numpy>=1.21.2",
+    "Pillow>=8.3.1",
+    "matplotlib>=3.4.3",
+    "torch>=1.9.1",
+    "torchvision>=0.10.0",
+    "tensorboard>=2.6.0",
+    "pandas>=1.3.2",
+    "scikit-learn>=0.24.2",
+    "tqdm>=4.62.2",
+    "googledrivedownloader>=0.4",
+    "recap>=0.1.6",
+    "chess>=1.6.1",
+    "osfclient>=0.0.5",
+    "setuptools==59.5.0",
+]
+
+[project.optional-dependencies]
+docs = ["sphinx>=4.1.2", "sphinx-rtd-theme>=0.5.2", "m2r2>=0.3.1"]
+
+[tool.setuptools]
+packages = ["chesscog"]   # points to the chesscog/ folder in root (flat layout)
+
+[tool.setuptools.package-data]
+chesscog = ["**/*.yaml"]   # includes your config/*.yaml and subfolders
+
+# Keep original Poetry sections for reference
 [tool.poetry]
 name = "chesscog"
 version = "1.0.1"
 description = "Recognise chess positions using computer vision."
-authors = [ "Georg Wölflein <georgw7777@gmail.com>",]
-include = [ "config/*.yaml", "config/**/_*.yaml",]
+authors = ["Georg Wölflein <georgw7777@gmail.com>"]
+include = ["config/*.yaml", "config/**/_*.yaml"]
+
 [[tool.poetry.packages]]
 include = "chesscog"
 

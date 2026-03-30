@@ -104,9 +104,9 @@ celerybeat-schedule
 
 # Environments
 .env
-.venv
+.chess_bot_venv
 env/
-venv/
+chess_bot_venv/
 ENV/
 env.bak/
 venv.bak/
